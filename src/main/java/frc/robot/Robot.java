@@ -145,7 +145,6 @@ public class Robot extends LoggedRobot {
     // schedule the autonomous command (example)
 
     if (autonomousCommand != null) {
-      robotContainer.getPivotStartCommand().schedule();
       autonomousCommand.schedule();
     }
   }
@@ -165,8 +164,6 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-
-    robotContainer.getPivotStartCommand().schedule();
   }
 
   /** This function is called periodically during operator control. */

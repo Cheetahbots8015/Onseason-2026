@@ -1,8 +1,5 @@
 package frc.robot.util;
 
-import frc.robot.constants.ClimberConstants;
-import frc.robot.constants.IntakeConstants;
-import frc.robot.constants.PivotConstants;
 import java.util.function.DoubleSupplier;
 
 public class CheetahUtil {
@@ -96,56 +93,4 @@ public class CheetahUtil {
    *     calculation divides the rotations by 6 (gear ratio) and multiplies by the effective
    *     distance per rotation (0.005 * 30 meters).
    */
-  public static double elevatorRotationToMeters(double rotations) {
-    return rotations / 6.0 * (0.005 * 30) + 0.362;
-  }
-
-  /**
-   * Converts meters to elevator rotations.
-   *
-   * @param meters The distance in meters.
-   * @return The equivalent number of rotations based on the gear ratio and conversion factor. The
-   *     calculation subtracts the offset (0.362) and reverses the scaling.
-   */
-  public static double elevatorMetersToRotation(double meters) {
-    return (meters - 0.362) * 6.0 / (0.005 * 30);
-  }
-
-  /**
-   * Converts pivot rotations to degrees.
-   *
-   * @param rotations The number of rotations of the pivot mechanism.
-   * @return The equivalent angle in degrees. The calculation multiplies the rotations by 360 and
-   *     divides by the effective ratio, which is derived from the product of (1/8 * 18/64 * 24/90).
-   */
-  public static double pivotRotationToDegrees(double rotations) {
-    return rotations * 360.0 * PivotConstants.ReductionRatio;
-  }
-
-  /**
-   * Converts degrees to pivot rotations.
-   *
-   * @param degrees The angle in degrees.
-   * @return The equivalent number of rotations. The calculation divides the degrees by 360 and
-   *     reverses the effective ratio.
-   */
-  public static double pivotDegreesToRotation(double degrees) {
-    return degrees / 360.0 / PivotConstants.ReductionRatio;
-  }
-
-  public static double intakeArmRotationToDegrees(double rotations) {
-    return rotations * 360.0 * IntakeConstants.ReductionRatio;
-  }
-
-  public static double intakeArmDegreesToRotation(double degrees) {
-    return degrees / 360.0 / IntakeConstants.ReductionRatio;
-  }
-
-  public static double climberPivotRotationToDegrees(double rotations) {
-    return rotations * 360.0 * ClimberConstants.ReductionRatio;
-  }
-
-  public static double climberPivotDegreesToRotation(double degrees) {
-    return degrees / 360.0 / ClimberConstants.ReductionRatio;
-  }
 }
