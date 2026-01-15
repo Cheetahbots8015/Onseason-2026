@@ -17,4 +17,11 @@ public class ShooterConstants {
   public static final double shooterkA = 0.0;
   public static final double shooterkS = 0.1;
   public static final double shooterkV = 0.13;
+
+  public static final double foc_shooterkP = 0.0;
+  public static final double foc_shooterkI = 0.0;
+  public static final double foc_shooterkD = 0.0;
+  public static final double foc_shooterkA = 0.0;
+  public static final double foc_shooterkS = 0.0;
+  public static final double foc_shooterkV = 0.0;
 }

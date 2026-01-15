@@ -3,13 +3,13 @@ package frc.robot.commands.ShooterCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
-public class ShooterShootCommand extends Command {
+public class ShooterShootCurrentCommand extends Command {
 
   private final ShooterSubsystem m_subsystem;
   private final double shootVelocity = 55;
   private final double idleVelocity = 3;
 
-  public ShooterShootCommand(ShooterSubsystem subsystem) {
+  public ShooterShootCurrentCommand(ShooterSubsystem subsystem) {
     m_subsystem = subsystem;
     addRequirements(subsystem);
   }
@@ -19,12 +19,12 @@ public class ShooterShootCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.ShooterVelocityVoltage(shootVelocity);
+    m_subsystem.ShooterVelocityTorqueCurrentFoc(shootVelocity);
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.ShooterVelocityVoltage(idleVelocity);
+    m_subsystem.ShooterVelocityTorqueCurrentFoc(idleVelocity);
   }
 
   @Override
