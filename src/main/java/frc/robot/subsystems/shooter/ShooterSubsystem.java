@@ -27,5 +27,4 @@ public class ShooterSubsystem extends SubsystemBase {
   public void ShooterVelocityTorqueCurrentFoc(double velocity) {
     io.ShooterVelocityTorqueCurrentFoc(velocity);
   }
-
 }

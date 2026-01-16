@@ -23,7 +23,8 @@ public class ShooterIOTalonFX implements ShooterIO {
   private TalonFXConfiguration shooterConfigs = new TalonFXConfiguration();
   // Voltage control requests
   final VelocityVoltage m_velocity = new VelocityVoltage(0).withSlot(0);
-  final VelocityTorqueCurrentFOC m_velocityTorqueCurrentFOC = new VelocityTorqueCurrentFOC(0).withSlot(1);
+  final VelocityTorqueCurrentFOC m_velocityTorqueCurrentFOC =
+      new VelocityTorqueCurrentFOC(0).withSlot(1);
 
   // Inputs from Shooter
   private final StatusSignal<Angle> ShooterPosition;
@@ -70,7 +71,6 @@ public class ShooterIOTalonFX implements ShooterIO {
     shooterConfigs.Slot1.kS = ShooterConstants.foc_shooterkS;
     shooterConfigs.Slot1.kV = ShooterConstants.foc_shooterkV;
 
-    // 怕死
     shooterConfigs.CurrentLimits.StatorCurrentLimit = 60.0;
     shooterConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     // shooterConfigs.CurrentLimits.SupplyCurrentLimit = 40.0;
@@ -125,6 +125,4 @@ public class ShooterIOTalonFX implements ShooterIO {
   public void ShooterVelocityTorqueCurrentFoc(double velocity) {
     shooter.setControl(m_velocityTorqueCurrentFOC.withVelocity(velocity).withSlot(1));
   }
-
-
 }
