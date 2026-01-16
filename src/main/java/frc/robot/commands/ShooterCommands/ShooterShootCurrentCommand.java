@@ -1,13 +1,12 @@
 package frc.robot.commands.ShooterCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class ShooterShootCurrentCommand extends Command {
 
   private final ShooterSubsystem m_subsystem;
-  private final double shootVelocity = 55;
-  private final double idleVelocity = 3;
 
   public ShooterShootCurrentCommand(ShooterSubsystem subsystem) {
     m_subsystem = subsystem;
@@ -19,12 +18,16 @@ public class ShooterShootCurrentCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.ShooterVelocityTorqueCurrentFoc(shootVelocity);
+    m_subsystem.ShooterVelocityTorqueCurrentFoc(
+      SmartDashboard.getNumber("Shooter Velocity", 0),
+      SmartDashboard.getNumber("Hood Velocity", 0)
+    );
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.ShooterVelocityTorqueCurrentFoc(idleVelocity);
+    m_subsystem.ShooterVelocityTorqueCurrentFoc(
+        SmartDashboard.getNumber("Shooter Idle", 0), SmartDashboard.getNumber("Hood Idle", 0));
   }
 
   @Override

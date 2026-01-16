@@ -1,13 +1,12 @@
 package frc.robot.commands.ShooterCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class ShooterShootVoltageCommand extends Command {
 
   private final ShooterSubsystem m_subsystem;
-  private final double shootVelocity = 55;
-  private final double idleVelocity = 3;
 
   public ShooterShootVoltageCommand(ShooterSubsystem subsystem) {
     m_subsystem = subsystem;
@@ -19,12 +18,15 @@ public class ShooterShootVoltageCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.ShooterVelocityVoltage(shootVelocity);
+    m_subsystem.ShooterVelocityVoltage();
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.ShooterVelocityVoltage(idleVelocity);
+    m_subsystem.ShooterVelocityVoltage(
+      SmartDashboard.getNumber("Shooter Idle", 0), 
+      SmartDashboard.getNumber("Hood Idle", 0)
+    );
   }
 
   @Override

@@ -9,15 +9,17 @@ public interface ShooterIO {
     public double ShooterVelocityRotPerSec = 0.0;
     public double ShooterAppliedVolts = 0.0;
     public double ShooterCurrentAmps = 0.0;
+
+    public double HoodPositionRad = 0.0;
+    public double HoodVelocityRotPerSec = 0.0;
+    public double HoodAppliedVolts = 0.0;
+    public double HoodCurrentAmps = 0.0;
   }
 
   /** Updates the set of loggable inputs. */
   public default void updateInputs(ShooterIOInputs inputs) {}
 
-  public default void setShooterVoltage(double volts) {}
+  public default void velocityVoltage(double shooterVelocity, double hoodVelocity) {}
 
-  public default void ShooterVelocityVoltage(double velocity) {}
-
-  public default void ShooterVelocityTorqueCurrentFoc(double velocity) {
-  }
+  public default void velocityTorqueCurrentFoc(double shooterVelocity, double hoodVelocity) {}
 }

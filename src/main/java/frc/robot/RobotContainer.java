@@ -116,9 +116,6 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    controller.leftTrigger().whileTrue(new ShooterShootVoltageCommand(shooterSubsystem));
-    controller.rightTrigger().whileTrue(new ShooterShootCurrentCommand(shooterSubsystem));
-
     configureButtonBindings();
   }
 
@@ -129,6 +126,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    controller.leftTrigger().whileTrue(new ShooterShootVoltageCommand(shooterSubsystem));
+    controller.rightTrigger().whileTrue(new ShooterShootCurrentCommand(shooterSubsystem));
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
