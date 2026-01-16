@@ -18,7 +18,10 @@ public class ShooterShootVoltageCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.ShooterVelocityVoltage();
+    m_subsystem.ShooterVelocityVoltage(
+      SmartDashboard.getNumber("Shooter Velocity", 0), 
+      SmartDashboard.getNumber("Hood Velocity", 0)
+    );
   }
 
   @Override
