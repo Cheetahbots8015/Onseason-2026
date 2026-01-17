@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.ShooterCommands.ShooterShootCurrentCommand;
 import frc.robot.commands.ShooterCommands.ShooterShootVoltageCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
@@ -117,7 +116,6 @@ public class RobotContainer {
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     controller.leftTrigger().whileTrue(new ShooterShootVoltageCommand(shooterSubsystem));
-    controller.rightTrigger().whileTrue(new ShooterShootCurrentCommand(shooterSubsystem));
 
     configureButtonBindings();
   }

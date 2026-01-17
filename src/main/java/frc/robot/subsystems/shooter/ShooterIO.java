@@ -18,5 +18,4 @@ public interface ShooterIO {
 
   public default void ShooterVelocityVoltage(double velocity) {}
 
-  public default void ShooterVelocityTorqueCurrentFoc(double velocity) {}
 }

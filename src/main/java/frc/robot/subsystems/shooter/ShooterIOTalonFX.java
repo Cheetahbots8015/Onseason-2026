@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -23,8 +22,6 @@ public class ShooterIOTalonFX implements ShooterIO {
   private TalonFXConfiguration shooterConfigs = new TalonFXConfiguration();
   // Voltage control requests
   final VelocityVoltage m_velocity = new VelocityVoltage(0).withSlot(0);
-  final VelocityTorqueCurrentFOC m_velocityTorqueCurrentFOC =
-      new VelocityTorqueCurrentFOC(0).withSlot(1);
 
   // Inputs from Shooter
   private final StatusSignal<Angle> ShooterPosition;
@@ -64,13 +61,7 @@ public class ShooterIOTalonFX implements ShooterIO {
     shooterConfigs.Slot0.kS = ShooterConstants.shooterkS;
     shooterConfigs.Slot0.kV = ShooterConstants.shooterkV;
 
-    shooterConfigs.Slot1.kP = ShooterConstants.foc_shooterkP;
-    shooterConfigs.Slot1.kI = ShooterConstants.foc_shooterkI;
-    shooterConfigs.Slot1.kD = ShooterConstants.foc_shooterkD;
-    shooterConfigs.Slot1.kA = ShooterConstants.foc_shooterkA;
-    shooterConfigs.Slot1.kS = ShooterConstants.foc_shooterkS;
-    shooterConfigs.Slot1.kV = ShooterConstants.foc_shooterkV;
-
+    // current limit
     shooterConfigs.CurrentLimits.StatorCurrentLimit = 60.0;
     shooterConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     // shooterConfigs.CurrentLimits.SupplyCurrentLimit = 40.0;
@@ -118,11 +109,6 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   @Override
   public void ShooterVelocityVoltage(double velocity) {
-    shooter.setControl(m_velocity.withVelocity(velocity).withSlot(0));
-  }
-
-  @Override
-  public void ShooterVelocityTorqueCurrentFoc(double velocity) {
-    shooter.setControl(m_velocityTorqueCurrentFOC.withVelocity(velocity).withSlot(1));
+    shooter.setControl(m_velocity.withVelocity(velocity));
   }
 }

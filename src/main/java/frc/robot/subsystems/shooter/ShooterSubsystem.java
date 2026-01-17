@@ -24,7 +24,4 @@ public class ShooterSubsystem extends SubsystemBase {
     io.ShooterVelocityVoltage(velocity);
   }
 
-  public void ShooterVelocityTorqueCurrentFoc(double velocity) {
-    io.ShooterVelocityTorqueCurrentFoc(velocity);
-  }
 }

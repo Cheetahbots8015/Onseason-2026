@@ -6,8 +6,8 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 public class ShooterShootVoltageCommand extends Command {
 
   private final ShooterSubsystem m_subsystem;
-  private final double shootVelocity = 55;
-  private final double idleVelocity = 3;
+  private final double shootVelocity = 0;
+  private final double idleVelocity = 0;
 
   public ShooterShootVoltageCommand(ShooterSubsystem subsystem) {
     m_subsystem = subsystem;
