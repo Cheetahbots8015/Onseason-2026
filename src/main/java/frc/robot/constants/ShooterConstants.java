@@ -9,12 +9,12 @@ public class ShooterConstants {
   public static final double dutyCycleDeadband = 0.05;
   public static final double statusUpdateFrequency = 50.0;
 
-  public static final double shooterkP = 0.003;
+  public static final double shooterkP = 0.00;
   public static final double shooterkI = 0.0;
   public static final double shooterkD = 0.0;
   public static final double shooterkA = 0.0;
   public static final double shooterkS = 0.0;
-  public static final double shooterkV = 0.13;
+  public static final double shooterkV = 0.0;
 
   public static final double foc_shooterkP = 0.0;
   public static final double foc_shooterkI = 0.0;
