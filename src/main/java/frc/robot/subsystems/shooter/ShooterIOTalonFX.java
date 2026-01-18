@@ -13,13 +13,17 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.ShooterConstants;
 
 public class ShooterIOTalonFX implements ShooterIO {
   // Hardware objects
   private final TalonFX shooter;
+  private final TalonFX hood;
 
   private TalonFXConfiguration shooterConfigs = new TalonFXConfiguration();
+  private TalonFXConfiguration hoodConfigs = new TalonFXConfiguration();
+
   // Voltage control requests
   final VelocityVoltage m_velocity = new VelocityVoltage(0).withSlot(0);
 
@@ -29,8 +33,15 @@ public class ShooterIOTalonFX implements ShooterIO {
   private final StatusSignal<Voltage> ShooterAppliedVolts;
   private final StatusSignal<Current> ShooterCurrent;
 
+  private final StatusSignal<Angle> HoodPosition;
+  private final StatusSignal<AngularVelocity> HoodVelocity;
+  private final StatusSignal<Voltage> HoodAppliedVolts;
+  private final StatusSignal<Current> HoodCurrent;
+
   public ShooterIOTalonFX() {
     shooter = new TalonFX(ShooterConstants.shooterID, "rio");
+    hood = new TalonFX(ShooterConstants.hoodID, "rio");
+
     shooterConfigs.MotorOutput.withNeutralMode(
         ShooterConstants.shooter_neutralmode_Coast
             ? NeutralModeValue.Coast
@@ -47,9 +58,25 @@ public class ShooterIOTalonFX implements ShooterIO {
             ? NeutralModeValue.Coast
             : NeutralModeValue.Brake);
 
-    // Set motor inversion based on desired rotation direction
-    shooterConfigs.MotorOutput.withInverted(
-        ShooterConstants.shooter_inverted_CounterClockwisePositive
+    // Second
+    hoodConfigs.MotorOutput.withInverted(
+        ShooterConstants.hood_inverted_CounterClockwisePositive
+            ? InvertedValue.CounterClockwise_Positive
+            : InvertedValue.Clockwise_Positive);
+
+    hoodConfigs.MotorOutput.withNeutralMode(
+        ShooterConstants.hood_neutralmode_Coast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
+
+    hoodConfigs.MotorOutput.withInverted(
+        ShooterConstants.hood_inverted_CounterClockwisePositive
+            ? InvertedValue.CounterClockwise_Positive
+            : InvertedValue.Clockwise_Positive);
+
+    hoodConfigs.MotorOutput.withNeutralMode(
+        ShooterConstants.hood_neutralmode_Coast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
+
+    hoodConfigs.MotorOutput.withInverted(
+        ShooterConstants.hood_inverted_CounterClockwisePositive
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive);
 
@@ -69,6 +96,7 @@ public class ShooterIOTalonFX implements ShooterIO {
 
     // Apply the configuration to the motor
     shooter.getConfigurator().apply(shooterConfigs);
+    hood.getConfigurator().apply(hoodConfigs);
 
     // Create drive status signals
     ShooterPosition = shooter.getPosition();
@@ -76,17 +104,23 @@ public class ShooterIOTalonFX implements ShooterIO {
     ShooterAppliedVolts = shooter.getMotorVoltage();
     ShooterCurrent = shooter.getTorqueCurrent();
 
+    HoodPosition = shooter.getPosition();
+    HoodVelocity = shooter.getVelocity();
+    HoodAppliedVolts = shooter.getMotorVoltage();
+    HoodCurrent = shooter.getTorqueCurrent();
+
     BaseStatusSignal.setUpdateFrequencyForAll(
         ShooterConstants.statusUpdateFrequency,
         ShooterPosition,
         ShooterVelocity,
         ShooterAppliedVolts,
         ShooterCurrent,
-        ShooterPosition,
-        ShooterVelocity,
-        ShooterAppliedVolts,
-        ShooterCurrent);
+        HoodPosition,
+        HoodVelocity,
+        HoodAppliedVolts,
+        HoodCurrent);
     ParentDevice.optimizeBusUtilizationForAll(shooter);
+    ParentDevice.optimizeBusUtilizationForAll(hood);
   }
 
   @Override
@@ -96,15 +130,20 @@ public class ShooterIOTalonFX implements ShooterIO {
         ShooterVelocity,
         ShooterAppliedVolts,
         ShooterCurrent,
-        ShooterPosition,
-        ShooterVelocity,
-        ShooterAppliedVolts,
-        ShooterCurrent);
+        HoodPosition,
+        HoodVelocity,
+        HoodAppliedVolts,
+        HoodCurrent);
     // Update Shooter inputs
     inputs.ShooterPositionRad = Units.rotationsToRadians(ShooterPosition.getValueAsDouble());
     inputs.ShooterVelocityRotPerSec = ShooterVelocity.getValueAsDouble();
     inputs.ShooterAppliedVolts = ShooterAppliedVolts.getValueAsDouble();
     inputs.ShooterCurrentAmps = ShooterCurrent.getValueAsDouble();
+
+    inputs.HoodPositionRad = Units.rotationsToRadians(HoodPosition.getValueAsDouble());
+    inputs.HoodVelocityRotPerSec = HoodVelocity.getValueAsDouble();
+    inputs.HoodAppliedVolts = HoodAppliedVolts.getValueAsDouble();
+    inputs.HoodCurrentAmps = HoodCurrent.getValueAsDouble();
   }
 
   @Override
