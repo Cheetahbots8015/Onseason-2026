@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ShooterCommands.ShooterShootCommand;
+import frc.robot.commands.ShooterCommands.ShooterVoltageCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -127,7 +128,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    controller.leftTrigger().whileTrue(new ShooterShootCommand(shooterSubsystem));
+    controller.leftTrigger().whileTrue(new ShooterVoltageCommand(shooterSubsystem));
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(

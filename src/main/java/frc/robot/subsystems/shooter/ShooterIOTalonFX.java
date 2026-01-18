@@ -60,9 +60,9 @@ public class ShooterIOTalonFX implements ShooterIO {
     shooterConfigs.Slot0.kA = ShooterConstants.shooterkA;
     shooterConfigs.Slot0.kS = ShooterConstants.shooterkS;
     shooterConfigs.Slot0.kV = ShooterConstants.shooterkV;
-    
+
     // Set current limits
-    shooterConfigs.CurrentLimits.StatorCurrentLimit = 60.0;
+    shooterConfigs.CurrentLimits.StatorCurrentLimit = 40.0;
     shooterConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     // shooterConfigs.CurrentLimits.SupplyCurrentLimit = 40.0;
     // shooterConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -110,5 +110,10 @@ public class ShooterIOTalonFX implements ShooterIO {
   @Override
   public void ShooterVelocityVoltage(double velocity) {
     shooter.setControl(m_velocity.withVelocity(velocity));
+  }
+
+  @Override
+  public void setShooterVoltage(double volts) {
+    shooter.setVoltage(volts);
   }
 }
