@@ -2,9 +2,12 @@ package frc.robot.constants;
 
 public class ShooterConstants {
   public static final int shooterID = 21;
+  public static final int hoodID = 20;
 
   public static final boolean shooter_neutralmode_Coast = true;
   public static final boolean shooter_inverted_CounterClockwisePositive = false;
+  public static final boolean hood_neutralmode_Coast = true;
+  public static final boolean hood_inverted_CounterClockwisePositive = false;
 
   public static final double dutyCycleDeadband = 0.05;
   public static final double statusUpdateFrequency = 50.0;
@@ -15,4 +18,8 @@ public class ShooterConstants {
   public static final double shooterkA = 0.0;
   public static final double shooterkS = 0.0;
   public static final double shooterkV = 0.0;
+
+  public static final double hoodkP = 0.0;
+  public static final double hoodkI = 0.0;
+  public static final double hoodkD = 0.0;
 }

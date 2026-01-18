@@ -24,7 +24,7 @@ public class ShooterSubsystem extends SubsystemBase {
     io.ShooterVelocityVoltage(velocity);
   }
 
-  public void setShooterVoltage(double volts) {
-    io.setShooterVoltage(volts);
+  public void setVoltage(double shooterVolts, double hoodVolts) {
+    io.setVoltage(shooterVolts, hoodVolts);
   }
 }
