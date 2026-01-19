@@ -1,4 +1,4 @@
-package frc.robot.subsystems.example;
+package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -18,7 +18,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.constants.ExampleConstants;
 
-public class ExampleIOTalonFX implements ExampleIO {
+public class ShooterIOTalonFx implements ShooterIO {
   // Hardware objects
   private final TalonFX motor;
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
@@ -38,7 +38,7 @@ public class ExampleIOTalonFX implements ExampleIO {
   // filter
   private final MedianFilter filter = new MedianFilter(30);
 
-  public ExampleIOTalonFX() {
+  public ShooterIOTalonFx() {
     motor = new TalonFX(ExampleConstants.motorID, "canivore");
     motorConfigs.MotorOutput.withNeutralMode(
         ExampleConstants.motor_neutralmode_Coast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
@@ -76,7 +76,7 @@ public class ExampleIOTalonFX implements ExampleIO {
   }
 
   @Override
-  public void updateInputs(ExampleIOInputs inputs) {
+  public void updateInputs(ShooterIOInputs inputs) {
     BaseStatusSignal.refreshAll(MotorPosition, MotorVelocity, MotorAppliedVolts, MotorCurrent);
     // Update motor inputs
     inputs.MotorPositionRad = Units.rotationsToRadians(MotorPosition.getValueAsDouble());

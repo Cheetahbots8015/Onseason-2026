@@ -1,21 +1,21 @@
-package frc.robot.subsystems.example;
+package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
-public class ExampleIOSim implements ExampleIO {
+public class ShooterIOSim implements ShooterIO {
   private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(1);
   private final DCMotorSim motorSim;
   private double MotorAppliedVolts = 0.0;
 
-  public ExampleIOSim() {
+  public ShooterIOSim() {
     motorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(GEARBOX, 0.001, 1), GEARBOX);
   }
 
   @Override
-  public void updateInputs(ExampleIOInputs inputs) {
+  public void updateInputs(ShooterIOInputs inputs) {
 
     // Update simulation state
     motorSim.setInputVoltage(MathUtil.clamp(MotorAppliedVolts, -12.0, 12.0));

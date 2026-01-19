@@ -1,21 +1,21 @@
 // ExampleSubsystem - Subsystem to control a single TalonFX motor for a example
 
-package frc.robot.subsystems.example;
+package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Volt;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.example.ExampleIO.ExampleIOInputs;
+import frc.robot.subsystems.shooter.ShooterIO.ShooterIOInputs;
 import org.littletonrobotics.junction.Logger;
 
-public class ExampleSubsystem extends SubsystemBase {
-  private final ExampleIO io;
-  private final ExampleIOInputsAutoLogged inputs = new ExampleIOInputsAutoLogged();
+public class ShooterSubsystem extends SubsystemBase {
+  private final ShooterIO io;
+  private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
   private final SysIdRoutine sysId;
 
-  public ExampleSubsystem(ExampleIO io) {
+  public ShooterSubsystem(ShooterIO io) {
     this.io = io;
     sysId =
         new SysIdRoutine(
@@ -41,7 +41,7 @@ public class ExampleSubsystem extends SubsystemBase {
     io.setOpenLoop(0.0);
   }
 
-  public ExampleIO getIO() {
+  public ShooterIO getIO() {
     return io;
   }
 
@@ -57,7 +57,7 @@ public class ExampleSubsystem extends SubsystemBase {
     return sysId.dynamic(direction);
   }
 
-  public ExampleIOInputs getInput() {
+  public ShooterIOInputs getInput() {
     return inputs;
   }
 
