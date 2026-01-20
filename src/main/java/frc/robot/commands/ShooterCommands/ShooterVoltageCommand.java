@@ -17,12 +17,14 @@ public class ShooterVoltageCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.setVoltage(4, 4);
+    m_subsystem.setShooterVoltage(-4);
+    m_subsystem.setHoodVoltage(-4);
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.setVoltage(0, 0);
+    m_subsystem.setShooterVoltage(0);
+    m_subsystem.setHoodVoltage(0);
   }
 
   @Override

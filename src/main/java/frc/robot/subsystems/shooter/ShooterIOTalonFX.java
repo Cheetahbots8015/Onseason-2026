@@ -23,7 +23,8 @@ public class ShooterIOTalonFX implements ShooterIO {
   private TalonFXConfiguration shooterConfigs = new TalonFXConfiguration();
   private TalonFXConfiguration hoodConfigs = new TalonFXConfiguration();
   // Voltage control requests
-  final VelocityVoltage m_velocity = new VelocityVoltage(0).withSlot(0);
+  final VelocityVoltage m_shooterVelocity = new VelocityVoltage(0).withSlot(0);
+  final VelocityVoltage m_hoodVelocity = new VelocityVoltage(0).withSlot(0);
 
   // Inputs from Shooter
   private final StatusSignal<Angle> ShooterPosition;
@@ -70,6 +71,9 @@ public class ShooterIOTalonFX implements ShooterIO {
     hoodConfigs.Slot0.kP = ShooterConstants.hoodkP;
     hoodConfigs.Slot0.kI = ShooterConstants.hoodkI;
     hoodConfigs.Slot0.kD = ShooterConstants.hoodkD;
+    hoodConfigs.Slot0.kA = ShooterConstants.hoodkA;
+    hoodConfigs.Slot0.kS = ShooterConstants.hoodkS;
+    hoodConfigs.Slot0.kV = ShooterConstants.hoodkV;
 
     // Set current limits
     shooterConfigs.CurrentLimits.StatorCurrentLimit = 40.0;
@@ -134,13 +138,18 @@ public class ShooterIOTalonFX implements ShooterIO {
   }
 
   @Override
-  public void ShooterVelocityVoltage(double velocity) {
-    shooter.setControl(m_velocity.withVelocity(velocity));
+  public void velocityVoltage(double shooterVelocity, double hoodVelocity) {
+    shooter.setControl(m_shooterVelocity.withVelocity(shooterVelocity));
+    hood.setControl(m_hoodVelocity.withVelocity(hoodVelocity));
   }
 
   @Override
-  public void setVoltage(double shooterVolts, double hoodVolts) {
+  public void setShooterVoltage(double shooterVolts) {
     shooter.setVoltage(shooterVolts);
+  }
+
+  @Override
+  public void setHoodVoltage(double hoodVolts) {
     hood.setVoltage(hoodVolts);
   }
 }

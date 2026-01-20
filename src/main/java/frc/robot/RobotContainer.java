@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ShooterCommands.ShooterShootCommand;
 import frc.robot.commands.ShooterCommands.ShooterVoltageCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
@@ -127,6 +128,29 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     controller.leftTrigger().whileTrue(new ShooterVoltageCommand(shooterSubsystem));
+    controller.rightTrigger().whileTrue(new ShooterShootCommand(shooterSubsystem));
+
+    controller
+        .a()
+        .whileTrue(shooterSubsystem.shooterSysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    controller
+        .b()
+        .whileTrue(shooterSubsystem.hoodSysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    controller.x().whileTrue(shooterSubsystem.shooterSysIdDynamic(SysIdRoutine.Direction.kForward));
+    controller.y().whileTrue(shooterSubsystem.hoodSysIdDynamic(SysIdRoutine.Direction.kForward));
+
+    controller
+        .leftBumper()
+        .whileTrue(shooterSubsystem.shooterSysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    controller
+        .povLeft()
+        .whileTrue(shooterSubsystem.hoodSysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    controller
+        .povDown()
+        .whileTrue(shooterSubsystem.shooterSysIdDynamic(SysIdRoutine.Direction.kReverse));
+    controller
+        .povRight()
+        .whileTrue(shooterSubsystem.hoodSysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(

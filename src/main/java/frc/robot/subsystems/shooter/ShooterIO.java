@@ -19,7 +19,9 @@ public interface ShooterIO {
   /** Updates the set of loggable inputs. */
   public default void updateInputs(ShooterIOInputs inputs) {}
 
-  public default void setVoltage(double shooterVolts, double hoodVolts) {}
+  public default void setShooterVoltage(double shooterVolts) {}
 
-  public default void ShooterVelocityVoltage(double velocity) {}
+  public default void setHoodVoltage(double hoodVolts) {}
+
+  public default void velocityVoltage(double shooterVelocity, double HoodVelocity) {}
 }
