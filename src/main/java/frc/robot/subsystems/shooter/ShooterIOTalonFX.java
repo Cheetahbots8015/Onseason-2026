@@ -68,8 +68,6 @@ public class ShooterIOTalonFX implements ShooterIO {
     shooterConfigs.Slot0.kS = ShooterConstants.shooterkS;
     shooterConfigs.Slot0.kV = ShooterConstants.shooterkV;
 
-    
-
     hoodConfigs.Slot0.kP = ShooterConstants.hoodkP;
     hoodConfigs.Slot0.kI = ShooterConstants.hoodkI;
     hoodConfigs.Slot0.kD = ShooterConstants.hoodkD;
