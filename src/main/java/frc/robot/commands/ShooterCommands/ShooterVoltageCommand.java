@@ -17,8 +17,8 @@ public class ShooterVoltageCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.setShooterVoltage(-4);
-    m_subsystem.setHoodVoltage(-4);
+    m_subsystem.setShooterVoltage(4);
+    m_subsystem.setHoodVoltage(4);
   }
 
   @Override
