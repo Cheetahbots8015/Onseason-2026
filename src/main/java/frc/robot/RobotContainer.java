@@ -35,9 +35,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.example.ExampleIOSim;
-import frc.robot.subsystems.example.ExampleIOTalonFX;
-import frc.robot.subsystems.example.ExampleSubsystem;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -49,9 +49,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
-  private final ExampleSubsystem exampleSubsystem;
-
-  private final RobotContainer robotContainer = this;
+  public final ShooterSubsystem shooter;
 
   // Controller
   private CommandXboxController controller = new CommandXboxController(0);
@@ -71,7 +69,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-        exampleSubsystem = new ExampleSubsystem(new ExampleIOTalonFX());
+        shooter = new ShooterSubsystem(new ShooterIOTalonFX());
         break;
 
       case SIM:
@@ -83,7 +81,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        exampleSubsystem = new ExampleSubsystem(new ExampleIOSim());
+        shooter = new ShooterSubsystem(new ShooterIOSim());
         break;
 
       default:
@@ -95,7 +93,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        exampleSubsystem = new ExampleSubsystem(new ExampleIOTalonFX());
+        shooter = new ShooterSubsystem(new ShooterIOTalonFX());
         break;
     }
 
