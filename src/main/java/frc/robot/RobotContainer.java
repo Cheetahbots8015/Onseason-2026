@@ -35,9 +35,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.example.ExampleIOSim;
-import frc.robot.subsystems.example.ExampleIOTalonFX;
-import frc.robot.subsystems.example.ExampleSubsystem;
+import frc.robot.subsystems.hood.HoodIOSim;
+import frc.robot.subsystems.hood.HoodIOTalonFX;
+import frc.robot.subsystems.hood.HoodSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -49,7 +49,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
-  private final ExampleSubsystem exampleSubsystem;
+  private final HoodSubsystem hoodSubsystem;
 
   private final RobotContainer robotContainer = this;
 
@@ -71,7 +71,8 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-        exampleSubsystem = new ExampleSubsystem(new ExampleIOTalonFX());
+        hoodSubsystem = new HoodSubsystem(new HoodIOTalonFX());
+
         break;
 
       case SIM:
@@ -83,7 +84,8 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        exampleSubsystem = new ExampleSubsystem(new ExampleIOSim());
+        hoodSubsystem = new HoodSubsystem(new HoodIOSim());
+
         break;
 
       default:
@@ -95,7 +97,8 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        exampleSubsystem = new ExampleSubsystem(new ExampleIOTalonFX());
+        hoodSubsystem = new HoodSubsystem(new HoodIOTalonFX());
+
         break;
     }
 
