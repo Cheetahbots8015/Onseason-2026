@@ -3,6 +3,7 @@ package frc.robot.subsystems.barrel;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -18,7 +19,8 @@ public class BarrelIOTalonFX implements BarrelIO {
   // Hardware objects
   private final TalonFX barrel;
   private TalonFXConfiguration barrelConfigs = new TalonFXConfiguration();
-
+  
+ 
   // Inputs from motor
   private final StatusSignal<Angle> BarrelPosition;
   private final StatusSignal<AngularVelocity> BarrelVelocity;
@@ -83,7 +85,7 @@ public class BarrelIOTalonFX implements BarrelIO {
   }
 
   @Override
-  public void stop() { 
+  public void stop() {
     barrel.setVoltage(0);
   }
 }

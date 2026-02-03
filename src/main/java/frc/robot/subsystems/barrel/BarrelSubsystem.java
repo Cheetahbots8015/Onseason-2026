@@ -27,11 +27,11 @@ public class BarrelSubsystem extends SubsystemBase {
     return inputs;
   }
 
-  public void setBarrelVoltage(double volts){
+  public void setBarrelVoltage(double volts) {
     io.setBarrelVoltage(volts);
   }
 
-  public void stop(){
+  public void stop() {
     io.stop();
   }
 }

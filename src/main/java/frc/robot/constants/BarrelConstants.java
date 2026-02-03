@@ -1,9 +1,9 @@
 package frc.robot.constants;
 
 public class BarrelConstants {
-  public static final int barrelID = 1;
+  public static final int barrelID = 33;
 
-  public static final boolean barrel_neutralmode_Coast = false;
+  public static final boolean barrel_neutralmode_Coast = true;
   public static final boolean barrel_inverted_CounterClockwisePositive = true;
 
   // public static final double reductionRatio = 1.0 / 3.0;
@@ -20,7 +20,7 @@ public class BarrelConstants {
 
   public static final double supplyCurrentLimit = 0;
 
-  public static final boolean statorCurrentLimitEnable = true;;
+  public static final boolean statorCurrentLimitEnable = false;
 
-  public static final boolean supplyCurrentLimitEnable = true;
+  public static final boolean supplyCurrentLimitEnable = false;
 }
