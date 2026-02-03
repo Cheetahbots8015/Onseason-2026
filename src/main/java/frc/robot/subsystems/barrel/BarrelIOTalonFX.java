@@ -19,8 +19,9 @@ public class BarrelIOTalonFX implements BarrelIO {
   // Hardware objects
   private final TalonFX barrel;
   private TalonFXConfiguration barrelConfigs = new TalonFXConfiguration();
-  
- 
+
+  MotionMagicVelocityVoltage m_velocity = new MotionMagicVelocityVoltage(0).withSlot(0);
+
   // Inputs from motor
   private final StatusSignal<Angle> BarrelPosition;
   private final StatusSignal<AngularVelocity> BarrelVelocity;
@@ -73,8 +74,8 @@ public class BarrelIOTalonFX implements BarrelIO {
   public void updateInputs(BarrelIOInputs inputs) {
     BaseStatusSignal.refreshAll(BarrelPosition, BarrelVelocity, BarrelAppliedVolts, BarrelCurrent);
     // Update motor inputs
-    inputs.BarrelPositionRad = Units.rotationsToRadians(BarrelPosition.getValueAsDouble());
-    inputs.BarrelVelocityRadPerSec = Units.rotationsToRadians(BarrelVelocity.getValueAsDouble());
+    inputs.BarrelPositionRad = Units.rotationsToDegrees(BarrelPosition.getValueAsDouble());
+    inputs.BarrelVelocityRotPerSec = BarrelVelocity.getValueAsDouble();
     inputs.BarrelAppliedVolts = BarrelAppliedVolts.getValueAsDouble();
     inputs.BarrelCurrentAmps = BarrelCurrent.getValueAsDouble();
   }
@@ -82,6 +83,11 @@ public class BarrelIOTalonFX implements BarrelIO {
   @Override
   public void setBarrelVoltage(double volts) {
     barrel.setVoltage(volts);
+  }
+
+  @Override
+  public void setBarrelVelocity(double velocity) {
+    barrel.setControl(m_velocity.withVelocity(velocity));
   }
 
   @Override

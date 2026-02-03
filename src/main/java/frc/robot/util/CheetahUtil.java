@@ -84,13 +84,4 @@ public class CheetahUtil {
     }
     return value.getAsDouble();
   }
-
-  /**
-   * Converts elevator rotations to meters.
-   *
-   * @param rotations The number of rotations of the elevator mechanism.
-   * @return The equivalent distance in meters based on the gear ratio and conversion factor. The
-   *     calculation divides the rotations by 6 (gear ratio) and multiplies by the effective
-   *     distance per rotation (0.005 * 30 meters).
-   */
 }

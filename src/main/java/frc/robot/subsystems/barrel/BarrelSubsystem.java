@@ -31,6 +31,10 @@ public class BarrelSubsystem extends SubsystemBase {
     io.setBarrelVoltage(volts);
   }
 
+  public void setBarrelVelocity(double velocity) {
+    io.setBarrelVelocity(velocity);
+  }
+
   public void stop() {
     io.stop();
   }

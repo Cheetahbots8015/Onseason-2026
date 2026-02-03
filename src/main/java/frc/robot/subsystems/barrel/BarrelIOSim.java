@@ -3,6 +3,7 @@ package frc.robot.subsystems.barrel;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class BarrelIOSim implements BarrelIO {
@@ -28,7 +29,7 @@ public class BarrelIOSim implements BarrelIO {
 
     // Update loggable inputs
     inputs.BarrelPositionRad = barrelSim.getAngularPositionRad();
-    inputs.BarrelVelocityRadPerSec = barrelSim.getAngularVelocityRadPerSec();
+    inputs.BarrelVelocityRotPerSec = Units.radiansToRotations(barrelSim.getAngularVelocityRadPerSec());
     inputs.BarrelAppliedVolts = barrelAppliedVolts;
     inputs.BarrelCurrentAmps = Math.abs(barrelSim.getCurrentDrawAmps());
   }
