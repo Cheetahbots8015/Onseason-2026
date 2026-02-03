@@ -33,6 +33,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.hood.HoodIOSim;
 import frc.robot.subsystems.hood.HoodIOTalonFX;
 import frc.robot.subsystems.hood.HoodSubsystem;
@@ -47,6 +50,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
+  public final ShooterSubsystem shooter;
   private final HoodSubsystem hoodSubsystem;
   private final FeederSubsystem feederSubsystem;
 
@@ -68,6 +72,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
+        shooter = new ShooterSubsystem(new ShooterIOTalonFX());
         hoodSubsystem = new HoodSubsystem(new HoodIOTalonFX());
         feederSubsystem = new FeederSubsystem(new FeederIOTalonFX());
         break;
@@ -81,6 +86,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        shooter = new ShooterSubsystem(new ShooterIOSim());
         hoodSubsystem = new HoodSubsystem(new HoodIOSim());
         feederSubsystem = new FeederSubsystem(new FeederIOSim());
         break;
@@ -94,6 +100,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        shooter = new ShooterSubsystem(new ShooterIOTalonFX());
         hoodSubsystem = new HoodSubsystem(new HoodIOTalonFX());
         feederSubsystem = new FeederSubsystem(new FeederIOTalonFX());
         break;
