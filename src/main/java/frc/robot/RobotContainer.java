@@ -14,7 +14,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -23,7 +22,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
@@ -38,6 +36,9 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.hood.HoodIOSim;
+import frc.robot.subsystems.hood.HoodIOTalonFX;
+import frc.robot.subsystems.hood.HoodSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -50,6 +51,8 @@ public class RobotContainer {
   // Subsystems
   public final Drive drive;
   public final ShooterSubsystem shooter;
+  private final HoodSubsystem hoodSubsystem;
+  private final FeederSubsystem feederSubsystem;
 
   // Controller
   private CommandXboxController controller = new CommandXboxController(0);
@@ -70,6 +73,8 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
         shooter = new ShooterSubsystem(new ShooterIOTalonFX());
+        hoodSubsystem = new HoodSubsystem(new HoodIOTalonFX());
+        feederSubsystem = new FeederSubsystem(new FeederIOTalonFX());
         break;
 
       case SIM:
@@ -82,6 +87,8 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
         shooter = new ShooterSubsystem(new ShooterIOSim());
+        hoodSubsystem = new HoodSubsystem(new HoodIOSim());
+        feederSubsystem = new FeederSubsystem(new FeederIOSim());
         break;
 
       default:
@@ -94,6 +101,8 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
         shooter = new ShooterSubsystem(new ShooterIOTalonFX());
+        hoodSubsystem = new HoodSubsystem(new HoodIOTalonFX());
+        feederSubsystem = new FeederSubsystem(new FeederIOTalonFX());
         break;
     }
 
@@ -115,9 +124,6 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-    // Configure the button bindings
-    NamedCommands.registerCommand("Wait 3s", new WaitCommand(3));
 
     configureButtonBindings();
   }
