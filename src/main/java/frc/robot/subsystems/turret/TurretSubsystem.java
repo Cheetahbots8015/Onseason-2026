@@ -20,9 +20,8 @@ public class TurretSubsystem extends SubsystemBase {
     io.setMotorVoltage(volts);
   }
 
-  /** Set turret position in radians (MotionMagic / PositionVoltage). */
-  public void setPosition(double positionRad) {
-    io.setPosition(positionRad);
+  /** Set turret position in degrees */
+  public void setPosition(double positionDeg) {
+    io.setPosition(positionDeg);
   }
-
 }

@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.util.CheetahUtil;
 
 public class TurretIOSim implements TurretIO {
   private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(1);
@@ -20,10 +21,13 @@ public class TurretIOSim implements TurretIO {
     motorSim.setInputVoltage(MathUtil.clamp(appliedVolts, -12.0, 12.0));
     motorSim.update(0.02);
 
-    inputs.motorPositionRad = motorSim.getAngularPositionRad();
-    inputs.motorVelocityRadPerSec = motorSim.getAngularVelocityRadPerSec();
+    inputs.motorPositionDeg = Math.toDegrees(motorSim.getAngularPositionRad());
+    inputs.motorVelocityRotPerSec = motorSim.getAngularVelocityRadPerSec();
     inputs.motorAppliedVolts = motorSim.getInputVoltage();
     inputs.motorCurrentAmps = Math.abs(motorSim.getCurrentDrawAmps());
+
+    inputs.turretPositionDeg =
+        CheetahUtil.turretRotationsToDeg(motorSim.getAngularPositionRad() / (2.0 * Math.PI));
 
     // Simulate pigeon yaw from motor position (convert to degrees)
     pigeonYawDeg = Math.toDegrees(motorSim.getAngularPositionRad());

@@ -21,4 +21,8 @@ public final class TurretConstants {
   public static final double kSlot_kD = 0.0;
   public static final double kSlot_kS = 0.0;
   public static final double kSlot_kV = 0.0;
+
+  public static final double kToleranceDeg = 0.0;
+
+  public static final double gearRatio = 0.0;
 }

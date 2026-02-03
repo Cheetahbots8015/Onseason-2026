@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+import frc.robot.constants.TurretConstants;
 import java.util.function.DoubleSupplier;
 
 public class CheetahUtil {
@@ -93,4 +94,12 @@ public class CheetahUtil {
    *     calculation divides the rotations by 6 (gear ratio) and multiplies by the effective
    *     distance per rotation (0.005 * 30 meters).
    */
+  public static double turretRotationsToDeg(double rotations) {
+    // Assuming a gear ratio of 6:1 and 360 degrees per rotation
+    return rotations * TurretConstants.gearRatio * 360.0;
+  }
+
+  public static double turretDegToRotations(double degrees) {
+    return degrees / TurretConstants.gearRatio / 360.0;
+  }
 }

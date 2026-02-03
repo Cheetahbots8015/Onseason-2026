@@ -6,10 +6,12 @@ public interface TurretIO {
   @AutoLog
   public static class TurretIOInputs {
     // Motor
-    public double motorPositionRad = 0.0;
-    public double motorVelocityRadPerSec = 0.0;
+    public double motorPositionDeg = 0.0;
+    public double motorVelocityRotPerSec = 0.0;
     public double motorAppliedVolts = 0.0;
     public double motorCurrentAmps = 0.0;
+
+    public double turretPositionDeg = 0.0;
 
     // Pigeon / yaw
     public double pigeonYawDeg = 0.0;
