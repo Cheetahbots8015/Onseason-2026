@@ -13,7 +13,7 @@ public class BarrelConstants {
   public static final double barrelkI = 0.0;
   public static final double barrelkD = 0.0;
   public static final double barrelkS = 0.0;
-  public static final double barrelkV = 0.115;
+  public static final double barrelkV = 0.112;
   public static final double barrelkA = 0.0;
 
   public static final double statorCurrentLimit = 0;
@@ -24,7 +24,6 @@ public class BarrelConstants {
 
   public static final boolean supplyCurrentLimitEnable = false;
 
-  public static final double BarrelForwardVelocity = -25;
+  public static final double BarrelForwardVelocity = -50;
   public static final double BarrelReverseVelocity = 25;
-  
 }

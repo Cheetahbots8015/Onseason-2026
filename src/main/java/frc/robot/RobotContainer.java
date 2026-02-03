@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.BarrelCommands.BarrelForwardCommand;
 import frc.robot.commands.BarrelCommands.BarrelForwardVelocityCommand;
 import frc.robot.commands.BarrelCommands.BarrelReverseVelocityCommand;
 import frc.robot.commands.DriveCommands;
@@ -144,7 +143,7 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));   
+        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     configureButtonBindings();
   }
@@ -181,6 +180,8 @@ public class RobotContainer {
 
     controller.leftTrigger().whileTrue(new BarrelReverseVelocityCommand(barrelSubsystem));
     controller.rightTrigger().whileTrue(new BarrelForwardVelocityCommand(barrelSubsystem));
+
+    SmartDashboard.putNumber("BarrelForwardVelocity", -50); 
   }
 
   /**
