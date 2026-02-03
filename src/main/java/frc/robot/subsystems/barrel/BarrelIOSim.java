@@ -29,7 +29,8 @@ public class BarrelIOSim implements BarrelIO {
 
     // Update loggable inputs
     inputs.BarrelPositionRad = barrelSim.getAngularPositionRad();
-    inputs.BarrelVelocityRotPerSec = Units.radiansToRotations(barrelSim.getAngularVelocityRadPerSec());
+    inputs.BarrelVelocityRotPerSec =
+        Units.radiansToRotations(barrelSim.getAngularVelocityRadPerSec());
     inputs.BarrelAppliedVolts = barrelAppliedVolts;
     inputs.BarrelCurrentAmps = Math.abs(barrelSim.getCurrentDrawAmps());
   }

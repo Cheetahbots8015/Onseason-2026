@@ -28,7 +28,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.BarrelCommands.BarrelForwardCommand;
-import frc.robot.commands.BarrelCommands.BarrelReverseCommand;
+import frc.robot.commands.BarrelCommands.BarrelForwardVelocityCommand;
+import frc.robot.commands.BarrelCommands.BarrelReverseVelocityCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
@@ -119,11 +120,9 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    // Configure the button bindings
-    NamedCommands.registerCommand("Wait 3s", new WaitCommand(3));
+   
 
-    SmartDashboard.putNumber("BarrelForwardVoltage", 1);
-    SmartDashboard.putNumber("BarrelReverseVoltage", -1);
+   
 
     configureButtonBindings();
   }
@@ -158,8 +157,8 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.leftTrigger().whileTrue(new BarrelForwardCommand(barrelSubsystem));
-    controller.rightTrigger().whileTrue(new BarrelReverseCommand(barrelSubsystem));
+    controller.leftTrigger().whileTrue(new BarrelReverseVelocityCommand(barrelSubsystem));
+    controller.rightTrigger().whileTrue(new BarrelForwardVelocityCommand(barrelSubsystem));
   }
 
   /**

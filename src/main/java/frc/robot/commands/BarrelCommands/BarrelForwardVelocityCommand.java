@@ -1,14 +1,14 @@
 package frc.robot.commands.BarrelCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.BarrelConstants;
 import frc.robot.subsystems.barrel.BarrelSubsystem;
 
-public class BarrelForwardCommand extends Command {
+public class BarrelForwardVelocityCommand extends Command {
 
   private final BarrelSubsystem m_subsystem;
 
-  public BarrelForwardCommand(BarrelSubsystem subsystem) {
+  public BarrelForwardVelocityCommand(BarrelSubsystem subsystem) {
     m_subsystem = subsystem;
     addRequirements(subsystem);
   }
@@ -18,12 +18,12 @@ public class BarrelForwardCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.setBarrelVoltage(SmartDashboard.getNumber("BarrelForwardVoltage", 0));
+    m_subsystem.setBarrelVelocity(BarrelConstants.BarrelForwardVelocity);
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.setBarrelVoltage(0);
+    m_subsystem.stop();
   }
 
   @Override
