@@ -33,6 +33,18 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.feeder.FeederIOSim;
+import frc.robot.subsystems.feeder.FeederIOTalonFX;
+import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.hood.HoodIOSim;
+import frc.robot.subsystems.hood.HoodIOTalonFX;
+import frc.robot.subsystems.hood.HoodSubsystem;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.turret.TurretIOSim;
+import frc.robot.subsystems.turret.TurretIOTalonFX;
+import frc.robot.subsystems.turret.TurretSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -45,8 +57,9 @@ public class RobotContainer {
   // Subsystems
   public final Drive drive;
   public final ShooterSubsystem shooter;
-  private final HoodSubsystem hoodSubsystem;
-  private final FeederSubsystem feederSubsystem;
+  private final HoodSubsystem hood;
+  private final FeederSubsystem feeder;
+  private final TurretSubsystem turret;
 
   // Controller
   private CommandXboxController controller = new CommandXboxController(0);
@@ -67,8 +80,9 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
         shooter = new ShooterSubsystem(new ShooterIOTalonFX());
-        hoodSubsystem = new HoodSubsystem(new HoodIOTalonFX());
-        feederSubsystem = new FeederSubsystem(new FeederIOTalonFX());
+        hood = new HoodSubsystem(new HoodIOTalonFX());
+        feeder = new FeederSubsystem(new FeederIOTalonFX());
+        turret = new TurretSubsystem(new TurretIOTalonFX());
         break;
 
       case SIM:
@@ -81,8 +95,9 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
         shooter = new ShooterSubsystem(new ShooterIOSim());
-        hoodSubsystem = new HoodSubsystem(new HoodIOSim());
-        feederSubsystem = new FeederSubsystem(new FeederIOSim());
+        hood = new HoodSubsystem(new HoodIOSim());
+        feeder = new FeederSubsystem(new FeederIOSim());
+        turret = new TurretSubsystem(new TurretIOSim());
         break;
 
       default:
@@ -95,8 +110,9 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
         shooter = new ShooterSubsystem(new ShooterIOTalonFX());
-        hoodSubsystem = new HoodSubsystem(new HoodIOTalonFX());
-        feederSubsystem = new FeederSubsystem(new FeederIOTalonFX());
+        hood = new HoodSubsystem(new HoodIOTalonFX());
+        feeder = new FeederSubsystem(new FeederIOTalonFX());
+        turret = new TurretSubsystem(new TurretIOTalonFX());
         break;
     }
 
