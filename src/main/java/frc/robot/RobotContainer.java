@@ -14,7 +14,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,7 +23,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.BarrelCommands.BarrelForwardCommand;
@@ -42,6 +40,18 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.feeder.FeederIOSim;
+import frc.robot.subsystems.feeder.FeederIOTalonFX;
+import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.hood.HoodIOSim;
+import frc.robot.subsystems.hood.HoodIOTalonFX;
+import frc.robot.subsystems.hood.HoodSubsystem;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.turret.TurretIOSim;
+import frc.robot.subsystems.turret.TurretIOTalonFX;
+import frc.robot.subsystems.turret.TurretSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -54,6 +64,10 @@ public class RobotContainer {
   // Subsystems
   public final Drive drive;
   private final BarrelSubsystem barrelSubsystem;
+  public final ShooterSubsystem shooter;
+  private final HoodSubsystem hood;
+  private final FeederSubsystem feeder;
+  private final TurretSubsystem turret;
 
   // Controller
   private CommandXboxController controller = new CommandXboxController(0);
@@ -74,6 +88,10 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
         barrelSubsystem = new BarrelSubsystem(new BarrelIOTalonFX());
+        shooter = new ShooterSubsystem(new ShooterIOTalonFX());
+        hood = new HoodSubsystem(new HoodIOTalonFX());
+        feeder = new FeederSubsystem(new FeederIOTalonFX());
+        turret = new TurretSubsystem(new TurretIOTalonFX());
         break;
 
       case SIM:
@@ -86,6 +104,10 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
         barrelSubsystem = new BarrelSubsystem(new BarrelIOSim());
+        shooter = new ShooterSubsystem(new ShooterIOSim());
+        hood = new HoodSubsystem(new HoodIOSim());
+        feeder = new FeederSubsystem(new FeederIOSim());
+        turret = new TurretSubsystem(new TurretIOSim());
         break;
 
       default:
@@ -98,6 +120,10 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
         barrelSubsystem = new BarrelSubsystem(new BarrelIOTalonFX());
+        shooter = new ShooterSubsystem(new ShooterIOTalonFX());
+        hood = new HoodSubsystem(new HoodIOTalonFX());
+        feeder = new FeederSubsystem(new FeederIOTalonFX());
+        turret = new TurretSubsystem(new TurretIOTalonFX());
         break;
     }
 
@@ -118,11 +144,7 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-   
-
-   
+        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));   
 
     configureButtonBindings();
   }
