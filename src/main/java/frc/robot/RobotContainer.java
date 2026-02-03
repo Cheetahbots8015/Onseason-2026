@@ -33,6 +33,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.hood.HoodIOSim;
+import frc.robot.subsystems.hood.HoodIOTalonFX;
+import frc.robot.subsystems.hood.HoodSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -44,6 +47,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
+  private final HoodSubsystem hoodSubsystem;
   private final FeederSubsystem feederSubsystem;
 
   // Controller
@@ -64,6 +68,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
+        hoodSubsystem = new HoodSubsystem(new HoodIOTalonFX());
         feederSubsystem = new FeederSubsystem(new FeederIOTalonFX());
         break;
 
@@ -76,6 +81,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        hoodSubsystem = new HoodSubsystem(new HoodIOSim());
         feederSubsystem = new FeederSubsystem(new FeederIOSim());
         break;
 
@@ -88,6 +94,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        hoodSubsystem = new HoodSubsystem(new HoodIOTalonFX());
         feederSubsystem = new FeederSubsystem(new FeederIOTalonFX());
         break;
     }
