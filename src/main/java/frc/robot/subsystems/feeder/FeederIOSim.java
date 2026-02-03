@@ -24,7 +24,8 @@ public class FeederIOSim implements FeederIO {
 
     // Update motor inputs
     inputs.FeederPositionRad = motorSim.getAngularPositionRad();
-    inputs.FeederVelocityRotPerSec = Units.radiansToRotations(motorSim.getAngularVelocityRadPerSec());
+    inputs.FeederVelocityRotPerSec =
+        Units.radiansToRotations(motorSim.getAngularVelocityRadPerSec());
     inputs.FeederAppliedVolts = motorSim.getInputVoltage();
     inputs.FeederCurrentAmps = Math.abs(motorSim.getCurrentDrawAmps());
   }

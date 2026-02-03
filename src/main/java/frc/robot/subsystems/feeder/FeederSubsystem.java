@@ -31,9 +31,10 @@ public class FeederSubsystem extends SubsystemBase {
     return inputs;
   }
 
-  public void setOpenLoop(double motorOutput){
+  public void setOpenLoop(double motorOutput) {
     io.setOpenLoop(motorOutput);
   }
+
   public void setFeederVelocityVoltage(double velocity) {
     io.setFeederVelocityVoltage(velocity);
   }

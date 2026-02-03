@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class ShooterIOSim implements ShooterIO {
@@ -26,12 +27,13 @@ public class ShooterIOSim implements ShooterIO {
     rightSim.update(0.02);
 
     inputs.leftPositionRad = leftSim.getAngularPositionRad();
-    inputs.leftVelocityRadPerSec = leftSim.getAngularVelocityRadPerSec();
+    inputs.leftVelocityRotPerSec = Units.radiansToRotations(leftSim.getAngularVelocityRadPerSec());
     inputs.leftAppliedVolts = leftSim.getInputVoltage();
     inputs.leftCurrentAmps = Math.abs(leftSim.getCurrentDrawAmps());
 
     inputs.rightPositionRad = rightSim.getAngularPositionRad();
-    inputs.rightVelocityRadPerSec = rightSim.getAngularVelocityRadPerSec();
+    inputs.rightVelocityRotPerSec =
+        Units.radiansToRotations(rightSim.getAngularVelocityRadPerSec());
     inputs.rightAppliedVolts = rightSim.getInputVoltage();
     inputs.rightCurrentAmps = Math.abs(rightSim.getCurrentDrawAmps());
   }

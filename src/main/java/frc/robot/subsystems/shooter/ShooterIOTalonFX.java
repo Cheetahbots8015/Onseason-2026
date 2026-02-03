@@ -4,7 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -26,10 +26,8 @@ public class ShooterIOTalonFX implements ShooterIO {
   private TalonFXConfiguration rightConfigs = new TalonFXConfiguration();
 
   // Controls
-  private final MotionMagicVelocityTorqueCurrentFOC m_velocityLeft =
-      new MotionMagicVelocityTorqueCurrentFOC(0).withSlot(0);
-  private final MotionMagicVelocityTorqueCurrentFOC m_velocityRight =
-      new MotionMagicVelocityTorqueCurrentFOC(0).withSlot(0);
+  private final VelocityVoltage m_velocityLeft = new VelocityVoltage(0).withSlot(0);
+  private final VelocityVoltage m_velocityRight = new VelocityVoltage(0).withSlot(0);
 
   // Status signals
   private final StatusSignal<Angle> leftPosition;
@@ -116,12 +114,12 @@ public class ShooterIOTalonFX implements ShooterIO {
         rightCurrent);
 
     inputs.leftPositionRad = Units.rotationsToRadians(leftPosition.getValueAsDouble());
-    inputs.leftVelocityRadPerSec = Units.rotationsToRadians(leftVelocity.getValueAsDouble());
+    inputs.leftVelocityRotPerSec = leftVelocity.getValueAsDouble();
     inputs.leftAppliedVolts = leftAppliedVolts.getValueAsDouble();
     inputs.leftCurrentAmps = leftCurrent.getValueAsDouble();
 
     inputs.rightPositionRad = Units.rotationsToRadians(rightPosition.getValueAsDouble());
-    inputs.rightVelocityRadPerSec = Units.rotationsToRadians(rightVelocity.getValueAsDouble());
+    inputs.rightVelocityRotPerSec = rightVelocity.getValueAsDouble();
     inputs.rightAppliedVolts = rightAppliedVolts.getValueAsDouble();
     inputs.rightCurrentAmps = rightCurrent.getValueAsDouble();
   }
