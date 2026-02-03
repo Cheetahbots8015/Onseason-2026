@@ -16,4 +16,5 @@ public class ExampleConstants {
   public static final double motorkA = 0.0;
   public static final double motorkS = 0.5;
   public static final double motorkV = 0.0;
+  public static final double motorkG = 0.0;
 }
