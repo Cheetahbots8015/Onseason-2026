@@ -2,6 +2,8 @@ package frc.robot.util;
 
 import java.util.function.DoubleSupplier;
 
+import frc.robot.constants.ClimberConstants;
+
 public class CheetahUtil {
   /*
    * This class is a placeholder for utility methods related to the Cheetah robot.
@@ -85,12 +87,11 @@ public class CheetahUtil {
     return value.getAsDouble();
   }
 
-  /**
-   * Converts elevator rotations to meters.
-   *
-   * @param rotations The number of rotations of the elevator mechanism.
-   * @return The equivalent distance in meters based on the gear ratio and conversion factor. The
-   *     calculation divides the rotations by 6 (gear ratio) and multiplies by the effective
-   *     distance per rotation (0.005 * 30 meters).
-   */
+  public static double climberRotationsToDeg(double rotations) {
+    return rotations * ClimberConstants.gearRatio * 360.0;
+  }
+
+    public static double climberDegToRotations(double degrees) {
+    return degrees / (ClimberConstants.gearRatio * 360.0);
+  }
 }
