@@ -20,13 +20,19 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.BarrelCommands.BarrelForwardVelocityCommand;
+import frc.robot.commands.BarrelCommands.BarrelReverseVelocityCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.barrel.BarrelIOSim;
+import frc.robot.subsystems.barrel.BarrelIOTalonFX;
+import frc.robot.subsystems.barrel.BarrelSubsystem;
 import frc.robot.subsystems.climber.ClimberIOSim;
 import frc.robot.subsystems.climber.ClimberIOTalonFX;
 import frc.robot.subsystems.climber.ClimberSubsystem;
@@ -36,6 +42,7 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -47,6 +54,11 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
+  private final BarrelSubsystem barrelSubsystem;
+  public final ShooterSubsystem shooter;
+  private final HoodSubsystem hood;
+  private final FeederSubsystem feeder;
+  private final TurretSubsystem turret;
   private final ClimberSubsystem climberSubsystem;
 
   // Controller
@@ -67,6 +79,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
+        barrelSubsystem = new BarrelSubsystem(new BarrelIOTalonFX());
+        shooter = new ShooterSubsystem(new ShooterIOTalonFX());
+        hood = new HoodSubsystem(new HoodIOTalonFX());
+        feeder = new FeederSubsystem(new FeederIOTalonFX());
+        turret = new TurretSubsystem(new TurretIOTalonFX());
         climberSubsystem = new ClimberSubsystem(new ClimberIOTalonFX());
         break;
 
@@ -79,6 +96,11 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        barrelSubsystem = new BarrelSubsystem(new BarrelIOSim());
+        shooter = new ShooterSubsystem(new ShooterIOSim());
+        hood = new HoodSubsystem(new HoodIOSim());
+        feeder = new FeederSubsystem(new FeederIOSim());
+        turret = new TurretSubsystem(new TurretIOSim());
         climberSubsystem = new ClimberSubsystem(new ClimberIOSim());
         break;
 
@@ -91,6 +113,11 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        barrelSubsystem = new BarrelSubsystem(new BarrelIOTalonFX());
+        shooter = new ShooterSubsystem(new ShooterIOTalonFX());
+        hood = new HoodSubsystem(new HoodIOTalonFX());
+        feeder = new FeederSubsystem(new FeederIOTalonFX());
+        turret = new TurretSubsystem(new TurretIOTalonFX());
         climberSubsystem = new ClimberSubsystem(new ClimberIOTalonFX());
         break;
     }
@@ -146,6 +173,11 @@ public class RobotContainer {
                     },
                     drive)
                 .ignoringDisable(true));
+
+    controller.leftTrigger().whileTrue(new BarrelReverseVelocityCommand(barrelSubsystem));
+    controller.rightTrigger().whileTrue(new BarrelForwardVelocityCommand(barrelSubsystem));
+
+    SmartDashboard.putNumber("BarrelForwardVelocity", -50); 
   }
 
   /**
