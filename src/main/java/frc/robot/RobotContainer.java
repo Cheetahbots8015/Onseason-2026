@@ -188,7 +188,7 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(new BarrelReverseVelocityCommand(barrelSubsystem));
     controller.rightTrigger().whileTrue(new BarrelForwardVelocityCommand(barrelSubsystem));
 
-    SmartDashboard.putNumber("BarrelForwardVelocity", -50);
+    SmartDashboard.putNumber("BarrelForwardVelocity", -60);
   }
 
   /**
