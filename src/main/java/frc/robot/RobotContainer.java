@@ -33,24 +33,16 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.barrel.BarrelIOSim;
 import frc.robot.subsystems.barrel.BarrelIOTalonFX;
 import frc.robot.subsystems.barrel.BarrelSubsystem;
+import frc.robot.subsystems.climber.ClimberIOSim;
+import frc.robot.subsystems.climber.ClimberIOTalonFX;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.feeder.FeederIOSim;
-import frc.robot.subsystems.feeder.FeederIOTalonFX;
-import frc.robot.subsystems.feeder.FeederSubsystem;
-import frc.robot.subsystems.hood.HoodIOSim;
-import frc.robot.subsystems.hood.HoodIOTalonFX;
-import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.shooter.ShooterIOSim;
-import frc.robot.subsystems.shooter.ShooterIOTalonFX;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.turret.TurretIOSim;
-import frc.robot.subsystems.turret.TurretIOTalonFX;
-import frc.robot.subsystems.turret.TurretSubsystem;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -67,6 +59,7 @@ public class RobotContainer {
   private final HoodSubsystem hood;
   private final FeederSubsystem feeder;
   private final TurretSubsystem turret;
+  private final ClimberSubsystem climberSubsystem;
 
   // Controller
   private CommandXboxController controller = new CommandXboxController(0);
@@ -91,6 +84,7 @@ public class RobotContainer {
         hood = new HoodSubsystem(new HoodIOTalonFX());
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         turret = new TurretSubsystem(new TurretIOTalonFX());
+        climberSubsystem = new ClimberSubsystem(new ClimberIOTalonFX());
         break;
 
       case SIM:
@@ -107,6 +101,7 @@ public class RobotContainer {
         hood = new HoodSubsystem(new HoodIOSim());
         feeder = new FeederSubsystem(new FeederIOSim());
         turret = new TurretSubsystem(new TurretIOSim());
+        climberSubsystem = new ClimberSubsystem(new ClimberIOSim());
         break;
 
       default:
@@ -123,6 +118,7 @@ public class RobotContainer {
         hood = new HoodSubsystem(new HoodIOTalonFX());
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         turret = new TurretSubsystem(new TurretIOTalonFX());
+        climberSubsystem = new ClimberSubsystem(new ClimberIOTalonFX());
         break;
     }
 

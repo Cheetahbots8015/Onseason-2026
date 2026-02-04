@@ -4,10 +4,8 @@ import frc.robot.constants.HoodConstants;
 import frc.robot.constants.TurretConstants;
 import java.util.function.DoubleSupplier;
 
-/**
- * CheetahUtil contains utility methods for mathematical calculations and unit conversions for the
- * Hood and Elevator subsystems.
- */
+import frc.robot.constants.ClimberConstants;
+
 public class CheetahUtil {
 
   // --- General Math Utilities ---
@@ -91,5 +89,12 @@ public class CheetahUtil {
 
   public static double hoodDegreesToRotation(double degrees) {
     return degrees / 360.0 / HoodConstants.reductionRatio;
+  }
+  public static double climberRotationsToDeg(double rotations) {
+    return rotations * ClimberConstants.gearRatio * 360.0;
+  }
+
+    public static double climberDegToRotations(double degrees) {
+    return degrees / (ClimberConstants.gearRatio * 360.0);
   }
 }
