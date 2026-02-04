@@ -23,7 +23,8 @@ public class ClimberIOSim implements ClimberIO {
     climberSim.update(0.02);
 
     // Update motor inputs
-    inputs.ClimberPositionDeg = CheetahUtil.climberRotationsToDeg(climberSim.getAngularPositionRotations());
+    inputs.ClimberPositionDeg =
+        CheetahUtil.climberRotationsToDeg(climberSim.getAngularPositionRotations());
     inputs.ClimberVelocityRadPerSec = climberSim.getAngularVelocityRadPerSec();
     inputs.ClimberAppliedVolts = climberSim.getInputVoltage();
     inputs.ClimberCurrentAmps = Math.abs(climberSim.getCurrentDrawAmps());

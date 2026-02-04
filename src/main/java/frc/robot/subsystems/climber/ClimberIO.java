@@ -6,7 +6,7 @@ public interface ClimberIO {
   @AutoLog
   public static class ClimberIOInputs {
     public double ClimberPositionDeg = 0.0;
-    public double ClimberVelocityRadPerSec = 0.0;  
+    public double ClimberVelocityRadPerSec = 0.0;
     public double ClimberAppliedVolts = 0.0;
     public double ClimberCurrentAmps = 0.0;
   }

@@ -1,10 +1,9 @@
 package frc.robot.util;
 
+import frc.robot.constants.ClimberConstants;
 import frc.robot.constants.HoodConstants;
 import frc.robot.constants.TurretConstants;
 import java.util.function.DoubleSupplier;
-
-import frc.robot.constants.ClimberConstants;
 
 public class CheetahUtil {
 
@@ -90,11 +89,12 @@ public class CheetahUtil {
   public static double hoodDegreesToRotation(double degrees) {
     return degrees / 360.0 / HoodConstants.reductionRatio;
   }
+
   public static double climberRotationsToDeg(double rotations) {
     return rotations * ClimberConstants.gearRatio * 360.0;
   }
 
-    public static double climberDegToRotations(double degrees) {
+  public static double climberDegToRotations(double degrees) {
     return degrees / (ClimberConstants.gearRatio * 360.0);
   }
 }

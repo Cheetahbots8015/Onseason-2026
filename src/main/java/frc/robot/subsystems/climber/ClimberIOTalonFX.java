@@ -32,7 +32,9 @@ public class ClimberIOTalonFX implements ClimberIO {
   public ClimberIOTalonFX() {
     climber = new TalonFX(ClimberConstants.climberID, "rio");
     climberConfigs.MotorOutput.withNeutralMode(
-        ClimberConstants.climber_neutralmode_Coast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
+        ClimberConstants.climber_neutralmode_Coast
+            ? NeutralModeValue.Coast
+            : NeutralModeValue.Brake);
 
     // Set motor inversion based on desired rotation direction
     climberConfigs.MotorOutput.withInverted(
@@ -51,7 +53,8 @@ public class ClimberIOTalonFX implements ClimberIO {
 
     climberConfigs.MotionMagic.MotionMagicCruiseVelocity =
         ClimberConstants.climberMotionMagicCruiseVelocity;
-    climberConfigs.MotionMagic.MotionMagicAcceleration = ClimberConstants.climberMotionMagicAcceleration;
+    climberConfigs.MotionMagic.MotionMagicAcceleration =
+        ClimberConstants.climberMotionMagicAcceleration;
 
     // Apply the configuration to the motor
     climber.getConfigurator().apply(climberConfigs);
@@ -73,9 +76,11 @@ public class ClimberIOTalonFX implements ClimberIO {
 
   @Override
   public void updateInputs(ClimberIOInputs inputs) {
-    BaseStatusSignal.refreshAll(ClimberPosition, ClimberVelocity, ClimberAppliedVolts, ClimberCurrent);
+    BaseStatusSignal.refreshAll(
+        ClimberPosition, ClimberVelocity, ClimberAppliedVolts, ClimberCurrent);
     // Update motor inputs
-    inputs.ClimberPositionDeg = CheetahUtil.climberRotationsToDeg(ClimberPosition.getValueAsDouble());
+    inputs.ClimberPositionDeg =
+        CheetahUtil.climberRotationsToDeg(ClimberPosition.getValueAsDouble());
     inputs.ClimberVelocityRadPerSec = Units.rotationsToRadians(ClimberVelocity.getValueAsDouble());
     inputs.ClimberAppliedVolts = ClimberAppliedVolts.getValueAsDouble();
     inputs.ClimberCurrentAmps = ClimberCurrent.getValueAsDouble();
