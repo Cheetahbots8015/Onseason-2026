@@ -19,19 +19,11 @@ public class ShooterSubsystem extends SubsystemBase {
     io.setMotorVoltage(0.0);
   }
 
-  public void setMotorVoltage(double leftVolts, double rightVolts) {
-    io.setMotorVoltage(leftVolts, rightVolts);
-  }
-
   public void setMotorVoltage(double volts) {
     io.setMotorVoltage(volts);
   }
 
-  public void setVelocityControl(double leftRadPerSec, double rightRadPerSec) {
-    io.setVelocityControl(leftRadPerSec, rightRadPerSec);
-  }
-
-  public void setVelocityControl(double radPerSec) {
-    io.setVelocityControl(radPerSec);
+  public void setVelocityControl(double rotPerSec) {
+    io.setVelocityControl(rotPerSec);
   }
 }

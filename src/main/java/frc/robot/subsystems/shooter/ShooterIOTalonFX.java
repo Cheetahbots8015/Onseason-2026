@@ -17,19 +17,16 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.constants.ShooterConstants;
 
-/** TalonFX-based implementation of ShooterIO for two motors. */
 public class ShooterIOTalonFX implements ShooterIO {
   private final TalonFX left;
   private final TalonFX right;
 
-  private TalonFXConfiguration leftConfigs = new TalonFXConfiguration();
-  private TalonFXConfiguration rightConfigs = new TalonFXConfiguration();
-
-  // Controls
   private final VelocityVoltage m_velocityLeft = new VelocityVoltage(0).withSlot(0);
-  private final VelocityVoltage m_velocityRight = new VelocityVoltage(0).withSlot(0);
 
-  // Status signals
+  private final Follower m_follower =
+      new Follower(ShooterConstants.kLeftMotorID, MotorAlignmentValue.Aligned);
+
+  // Status signals for telemetry and odometry
   private final StatusSignal<Angle> leftPosition;
   private final StatusSignal<AngularVelocity> leftVelocity;
   private final StatusSignal<Voltage> leftAppliedVolts;
@@ -41,42 +38,47 @@ public class ShooterIOTalonFX implements ShooterIO {
   private final StatusSignal<Current> rightCurrent;
 
   public ShooterIOTalonFX() {
-    left = new TalonFX(ShooterConstants.kLeftMotorID, "canivore");
-    right = new TalonFX(ShooterConstants.kRightMotorID, "canivore");
+    // Initialize hardware on the RIO CAN bus
+    left = new TalonFX(ShooterConstants.kLeftMotorID, "rio");
+    right = new TalonFX(ShooterConstants.kRightMotorID, "rio");
 
-    leftConfigs.MotorOutput.withNeutralMode(
-        ShooterConstants.kMotorNeutralCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
-    rightConfigs.MotorOutput.withNeutralMode(
-        ShooterConstants.kMotorNeutralCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
+    TalonFXConfiguration leftConfigs = new TalonFXConfiguration();
+    TalonFXConfiguration rightConfigs = new TalonFXConfiguration();
 
-    leftConfigs.MotorOutput.withInverted(
+    // Configure neutral mode
+    NeutralModeValue neutralMode =
+        ShooterConstants.kMotorNeutralCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake;
+    leftConfigs.MotorOutput.NeutralMode = neutralMode;
+    rightConfigs.MotorOutput.NeutralMode = neutralMode;
+
+    // Configure motor inversions
+    leftConfigs.MotorOutput.Inverted =
         ShooterConstants.kMotorInvertLeftCCWPositive
             ? InvertedValue.CounterClockwise_Positive
-            : InvertedValue.Clockwise_Positive);
+            : InvertedValue.Clockwise_Positive;
 
-    rightConfigs.MotorOutput.withInverted(
+    rightConfigs.MotorOutput.Inverted =
         ShooterConstants.kMotorInvertRightCCWPositive
             ? InvertedValue.CounterClockwise_Positive
-            : InvertedValue.Clockwise_Positive);
+            : InvertedValue.Clockwise_Positive;
+
+    // Apply PID and Feedforward gains
+    leftConfigs.Slot0.kP = ShooterConstants.kLeftSlot_kP;
+    leftConfigs.Slot0.kI = ShooterConstants.kLeftSlot_kI;
+    leftConfigs.Slot0.kD = ShooterConstants.kLeftSlot_kD;
+    leftConfigs.Slot0.kS = ShooterConstants.kLeftSlot_kS;
+    leftConfigs.Slot0.kV = ShooterConstants.kLeftSlot_kV;
 
     rightConfigs.Slot0.kP = ShooterConstants.kRightSlot_kP;
     rightConfigs.Slot0.kI = ShooterConstants.kRightSlot_kI;
     rightConfigs.Slot0.kD = ShooterConstants.kRightSlot_kD;
-    rightConfigs.Slot0.kA = ShooterConstants.kRightSlot_kA;
     rightConfigs.Slot0.kS = ShooterConstants.kRightSlot_kS;
     rightConfigs.Slot0.kV = ShooterConstants.kRightSlot_kV;
-
-    leftConfigs.Slot0.kP = ShooterConstants.kLeftSlot_kP;
-    leftConfigs.Slot0.kI = ShooterConstants.kLeftSlot_kI;
-    leftConfigs.Slot0.kD = ShooterConstants.kLeftSlot_kD;
-    leftConfigs.Slot0.kA = ShooterConstants.kLeftSlot_kA;
-    leftConfigs.Slot0.kS = ShooterConstants.kLeftSlot_kS;
-    leftConfigs.Slot0.kV = ShooterConstants.kLeftSlot_kV;
 
     left.getConfigurator().apply(leftConfigs);
     right.getConfigurator().apply(rightConfigs);
 
-    // Signals
+    // Setup status signals
     leftPosition = left.getPosition();
     leftVelocity = left.getVelocity();
     leftAppliedVolts = left.getMotorVoltage();
@@ -87,6 +89,7 @@ public class ShooterIOTalonFX implements ShooterIO {
     rightAppliedVolts = right.getMotorVoltage();
     rightCurrent = right.getTorqueCurrent();
 
+    // Optimize CAN bus usage
     BaseStatusSignal.setUpdateFrequencyForAll(
         ShooterConstants.kStatusUpdateFrequency,
         leftPosition,
@@ -125,26 +128,14 @@ public class ShooterIOTalonFX implements ShooterIO {
   }
 
   @Override
-  public void setMotorVoltage(double leftVolts, double rightVolts) {
-    left.setVoltage(leftVolts);
-    right.setVoltage(rightVolts);
-  }
-
-  @Override
   public void setMotorVoltage(double volts) {
     left.setVoltage(volts);
-    right.setControl(new Follower(ShooterConstants.kLeftMotorID, MotorAlignmentValue.Opposed));
-  }
-
-  @Override
-  public void setVelocityControl(double leftRotPerSec, double rightRotPerSec) {
-    left.setControl(m_velocityLeft.withVelocity(leftRotPerSec));
-    right.setControl(m_velocityRight.withVelocity(rightRotPerSec));
+    right.setControl(m_follower);
   }
 
   @Override
   public void setVelocityControl(double rotPerSec) {
     left.setControl(m_velocityLeft.withVelocity(rotPerSec));
-    right.setControl(new Follower(ShooterConstants.kLeftMotorID, MotorAlignmentValue.Opposed));
+    right.setControl(m_follower);
   }
 }

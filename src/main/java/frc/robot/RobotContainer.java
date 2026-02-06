@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.BarrelCommands.BarrelForwardVelocityCommand;
 import frc.robot.commands.BarrelCommands.BarrelReverseVelocityCommand;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
+import frc.robot.commands.FeederCommands.FeederReverseVelocityCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.barrel.BarrelIOSim;
@@ -65,12 +67,12 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
-  private final BarrelSubsystem barrelSubsystem;
+  private final BarrelSubsystem barrel;
   public final ShooterSubsystem shooter;
   private final HoodSubsystem hood;
   private final FeederSubsystem feeder;
   private final TurretSubsystem turret;
-  private final ClimberSubsystem climberSubsystem;
+  private final ClimberSubsystem climber;
 
   // Controller
   private CommandXboxController controller = new CommandXboxController(0);
@@ -90,12 +92,12 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-        barrelSubsystem = new BarrelSubsystem(new BarrelIOTalonFX());
+        barrel = new BarrelSubsystem(new BarrelIOTalonFX());
         shooter = new ShooterSubsystem(new ShooterIOTalonFX());
         hood = new HoodSubsystem(new HoodIOTalonFX());
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         turret = new TurretSubsystem(new TurretIOTalonFX());
-        climberSubsystem = new ClimberSubsystem(new ClimberIOTalonFX());
+        climber = new ClimberSubsystem(new ClimberIOTalonFX());
         break;
 
       case SIM:
@@ -107,12 +109,12 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        barrelSubsystem = new BarrelSubsystem(new BarrelIOSim());
+        barrel = new BarrelSubsystem(new BarrelIOSim());
         shooter = new ShooterSubsystem(new ShooterIOSim());
         hood = new HoodSubsystem(new HoodIOSim());
         feeder = new FeederSubsystem(new FeederIOSim());
         turret = new TurretSubsystem(new TurretIOSim());
-        climberSubsystem = new ClimberSubsystem(new ClimberIOSim());
+        climber = new ClimberSubsystem(new ClimberIOSim());
         break;
 
       default:
@@ -124,12 +126,12 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        barrelSubsystem = new BarrelSubsystem(new BarrelIOTalonFX());
+        barrel = new BarrelSubsystem(new BarrelIOTalonFX());
         shooter = new ShooterSubsystem(new ShooterIOTalonFX());
         hood = new HoodSubsystem(new HoodIOTalonFX());
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         turret = new TurretSubsystem(new TurretIOTalonFX());
-        climberSubsystem = new ClimberSubsystem(new ClimberIOTalonFX());
+        climber = new ClimberSubsystem(new ClimberIOTalonFX());
         break;
     }
 
@@ -185,10 +187,19 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.leftTrigger().whileTrue(new BarrelReverseVelocityCommand(barrelSubsystem));
-    controller.rightTrigger().whileTrue(new BarrelForwardVelocityCommand(barrelSubsystem));
+    controller
+        .leftTrigger()
+        .whileTrue(
+            new BarrelForwardVelocityCommand(barrel)
+                .alongWith(new FeederForwardVelocityCommand(feeder)));
+    controller
+        .rightTrigger()
+        .whileTrue(
+            new BarrelReverseVelocityCommand(barrel)
+                .alongWith(new FeederReverseVelocityCommand(feeder)));
 
-    SmartDashboard.putNumber("BarrelForwardVelocity", -60);
+    SmartDashboard.putNumber("FeederForwardVelocity", 60);
+    SmartDashboard.putNumber("FeederReverseVelocity", -20);
   }
 
   /**

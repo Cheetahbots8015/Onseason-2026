@@ -24,6 +24,6 @@ public class BarrelConstants {
 
   public static final boolean supplyCurrentLimitEnable = true;
 
-  public static final double BarrelForwardVelocity = -60;
-  public static final double BarrelReverseVelocity = 25;
+  public static final double BarrelForwardVelocity = 60;
+  public static final double BarrelReverseVelocity = -60;
 }

@@ -10,7 +10,7 @@ public final class ShooterConstants {
   // Motor configuration
   public static final boolean kMotorNeutralCoast = true;
   public static final boolean kMotorInvertLeftCCWPositive = true;
-  public static final boolean kMotorInvertRightCCWPositive = false;
+  public static final boolean kMotorInvertRightCCWPositive = true;
 
   // Control slots / tuning
   public static final double kStatusUpdateFrequency = 50.0;
@@ -30,6 +30,9 @@ public final class ShooterConstants {
   public static final double kRightSlot_kV = 0.0;
 
   public static final double kTolerence = 0.0;
+
+  // Voltage Constants
+  public static final double kShootingVoltage = 0.0;
 
   // Velocity Constants
   public static final double kShootingSpeed = 0.0;

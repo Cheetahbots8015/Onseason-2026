@@ -52,8 +52,6 @@ public class BarrelIOTalonFX implements BarrelIO {
     barrelConfigs.CurrentLimits.SupplyCurrentLimit = BarrelConstants.supplyCurrentLimit;
     barrelConfigs.CurrentLimits.SupplyCurrentLimitEnable = BarrelConstants.supplyCurrentLimitEnable;
 
-    
-
     // Apply the configuration to the motor
     barrel.getConfigurator().apply(barrelConfigs);
 

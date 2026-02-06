@@ -25,8 +25,8 @@ public interface ShooterIO {
   public default void setMotorVoltage(double volts) {}
 
   /** Velocity control using VelocityVoltage / MotionMagic style - two motor overload. */
-  public default void setVelocityControl(double leftRadPerSec, double rightRadPerSec) {}
+  public default void setVelocityControl(double leftRotPerSec, double rightRotPerSec) {}
 
   /** Velocity control - single argument follower. */
-  public default void setVelocityControl(double radPerSec) {}
+  public default void setVelocityControl(double rotPerSec) {}
 }
