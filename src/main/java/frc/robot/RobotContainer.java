@@ -198,7 +198,7 @@ public class RobotContainer {
             new BarrelReverseVelocityCommand(barrel)
                 .alongWith(new FeederReverseVelocityCommand(feeder)));
 
-    SmartDashboard.putNumber("FeederForwardVelocity", 60);
+    SmartDashboard.putNumber("FeederForwardVelocity", 90);
     SmartDashboard.putNumber("FeederReverseVelocity", -20);
   }
 
