@@ -20,6 +20,7 @@ public class IntakeConstants {
   public static final double flywheelkA = 0.0;
   public static final double flywheelkS = 0.5;
   public static final double flywheelkV = 0.0;
+
   public static final double armkP = 0.1;
   public static final double armkI = 0.0;
   public static final double armkD = 0.0;
@@ -28,8 +29,9 @@ public class IntakeConstants {
   public static final double armkV = 0.0;
   public static final double armkG = 0.5;
 
-  public static final double flywheelMotionMagicCruiseVelocity = 10.0;
-  public static final double flywheelMotionMagicAcceleration = 50.0;
   public static final double armMotionMagicCruiseVelocity = 1.5;
   public static final double armMotionMagicAcceleration = 3.0;
+
+  public static final double armDeployPosition = 0.0;
+  public static final double armRetractPosition = 0.0;
 }

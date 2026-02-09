@@ -2,32 +2,17 @@
 
 package frc.robot.subsystems.intake;
 
-import static edu.wpi.first.units.Units.Volt;
-
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeIO.IntakeIOInputs;
 import org.littletonrobotics.junction.Logger;
 
 public class IntakeSubsystem extends SubsystemBase {
   private final IntakeIO io;
   private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-  private final SysIdRoutine sysId;
-  private static final double ARM_DEPLOY_POSITION = 1.2;
-  private static final double ARM_RETRACT_POSITION = 0.0;
 
   public IntakeSubsystem(IntakeIO io) {
     this.io = io;
-    sysId =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,
-                null,
-                null,
-                (state) -> Logger.recordOutput("Intake/Arm/SysIdState", state.toString())),
-            new SysIdRoutine.Mechanism(
-                (voltage) -> setFlywheelVoltage(voltage.in(Volt)), null, this));
   }
 
   public void periodic() {
@@ -51,14 +36,6 @@ public class IntakeSubsystem extends SubsystemBase {
     io.setOpenLoop(0.0, 0.0);
   }
 
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysId.quasistatic(direction);
-  }
-
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysId.dynamic(direction);
-  }
-
   public IntakeIOInputs getInput() {
     return inputs;
   }
@@ -76,12 +53,10 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void deployIntake() {
-    io.armMotionMagic(ARM_DEPLOY_POSITION);
-    io.flywheelVelocityVoltage(0.0);
+    io.armMotionMagic(IntakeConstants.armDeployPosition);
   }
 
   public void retractIntake() {
-    io.armMotionMagic(ARM_RETRACT_POSITION);
-    io.flywheelStop();
+    io.armMotionMagic(IntakeConstants.armRetractPosition);
   }
 }

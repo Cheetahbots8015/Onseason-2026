@@ -24,7 +24,6 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final TalonFX arm;
   private TalonFXConfiguration armConfigs = new TalonFXConfiguration();
 
-  // Torque current control requests
   final MotionMagicTorqueCurrentFOC m_armRequest = new MotionMagicTorqueCurrentFOC(0).withSlot(0);
   final VelocityVoltage m_flywheelRequest = new VelocityVoltage(0).withSlot(0);
   // Inputs from flywheel
@@ -58,14 +57,6 @@ public class IntakeIOTalonFX implements IntakeIO {
     flywheelConfigs.Slot0.kA = IntakeConstants.flywheelkA;
     flywheelConfigs.Slot0.kS = IntakeConstants.flywheelkS;
     flywheelConfigs.Slot0.kV = IntakeConstants.flywheelkV;
-
-    flywheelConfigs.MotionMagic.MotionMagicCruiseVelocity =
-        IntakeConstants.flywheelMotionMagicCruiseVelocity;
-    flywheelConfigs.MotionMagic.MotionMagicAcceleration =
-        IntakeConstants.flywheelMotionMagicAcceleration;
-
-    flywheelConfigs.TorqueCurrent.PeakForwardTorqueCurrent = 30.0;
-    flywheelConfigs.TorqueCurrent.PeakReverseTorqueCurrent = -30.0;
 
     arm = new TalonFX(IntakeConstants.armID, "canivore");
     armConfigs.MotorOutput.withNeutralMode(
