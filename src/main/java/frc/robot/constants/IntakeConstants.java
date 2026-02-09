@@ -1,8 +1,8 @@
 package frc.robot.constants;
 
 public class IntakeConstants {
-  public static final int flywheelID = 37;
-  public static final int armID = 38;
+  public static final int flywheelID = 26;
+  public static final int armID = 25;
 
   public static final boolean flywheel_neutralmode_Coast = true;
   public static final boolean flywheel_inverted_CounterClockwisePositive = true;
