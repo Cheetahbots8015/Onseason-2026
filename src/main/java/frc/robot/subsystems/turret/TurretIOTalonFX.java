@@ -21,6 +21,7 @@ import frc.robot.util.CheetahUtil;
 /** TalonFX + Pigeon2 implementation of TurretIO */
 public class TurretIOTalonFX implements TurretIO {
   private final TalonFX motor;
+  private final Pigeon2 pigeon;
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
 
   private final PositionVoltage positionRequest = new PositionVoltage(0.0);
@@ -30,8 +31,11 @@ public class TurretIOTalonFX implements TurretIO {
   private final StatusSignal<Voltage> motorAppliedVolts;
   private final StatusSignal<Current> motorCurrent;
 
+  private final StatusSignal<Angle> pigeonYawDeg;
+
   public TurretIOTalonFX() {
     motor = new TalonFX(TurretConstants.kTurretMotorID, TurretConstants.kCANBusName);
+    pigeon = new Pigeon2(TurretConstants.kPigeonId, TurretConstants.kCANBusName);
 
     motorConfigs.MotorOutput.withNeutralMode(
         TurretConstants.kMotorNeutralCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
@@ -47,26 +51,30 @@ public class TurretIOTalonFX implements TurretIO {
     motorConfigs.Slot0.kV = TurretConstants.kSlot_kV;
 
     motor.getConfigurator().apply(motorConfigs);
+    pigeon.getConfigurator().apply(new Pigeon2Configuration());
 
     motorPosition = motor.getPosition();
     motorVelocity = motor.getVelocity();
     motorAppliedVolts = motor.getMotorVoltage();
     motorCurrent = motor.getTorqueCurrent();
 
+    pigeonYawDeg = pigeon.getYaw();
+
     BaseStatusSignal.setUpdateFrequencyForAll(
         TurretConstants.kStatusUpdateFrequency,
         motorPosition,
         motorVelocity,
         motorAppliedVolts,
-        motorCurrent);
+        motorCurrent,
+        pigeonYawDeg);
 
-    ParentDevice.optimizeBusUtilizationForAll(motor);
+    ParentDevice.optimizeBusUtilizationForAll(motor, pigeon);
   }
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
     BaseStatusSignal.refreshAll(
-        motorPosition, motorVelocity, motorAppliedVolts, motorCurrent);
+        motorPosition, motorVelocity, motorAppliedVolts, motorCurrent, pigeonYawDeg);
 
     inputs.motorPositionDeg = Units.rotationsToDegrees(motorPosition.getValueAsDouble());
     inputs.motorVelocityRotPerSec = motorVelocity.getValueAsDouble();
@@ -74,6 +82,8 @@ public class TurretIOTalonFX implements TurretIO {
     inputs.motorCurrentAmps = motorCurrent.getValueAsDouble();
 
     inputs.turretPositionDeg = CheetahUtil.turretRotationsToDeg(motorPosition.getValueAsDouble());
+
+    inputs.pigeonYawDeg = pigeonYawDeg.getValueAsDouble();
   }
 
   @Override

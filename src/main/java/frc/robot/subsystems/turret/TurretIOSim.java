@@ -10,6 +10,7 @@ public class TurretIOSim implements TurretIO {
   private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(1);
   private final DCMotorSim motorSim;
   private double appliedVolts = 0.0;
+  private double pigeonYawDeg = 0.0;
 
   public TurretIOSim() {
     motorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(GEARBOX, 0.001, 1), GEARBOX);
@@ -28,6 +29,9 @@ public class TurretIOSim implements TurretIO {
     inputs.turretPositionDeg =
         CheetahUtil.turretRotationsToDeg(motorSim.getAngularPositionRad() / (2.0 * Math.PI));
 
+    // Simulate pigeon yaw from motor position (convert to degrees)
+    pigeonYawDeg = Math.toDegrees(motorSim.getAngularPositionRad());
+    inputs.pigeonYawDeg = pigeonYawDeg;
   }
 
   @Override

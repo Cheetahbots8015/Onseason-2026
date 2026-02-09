@@ -13,6 +13,8 @@ public interface TurretIO {
 
     public double turretPositionDeg = 0.0;
 
+    // Pigeon / yaw
+    public double pigeonYawDeg = 0.0;
   }
 
   /** Update inputs for logging and state. */

@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -21,7 +20,6 @@ import frc.robot.constants.ShooterConstants;
 public class ShooterIOTalonFX implements ShooterIO {
   private final TalonFX left;
   private final TalonFX right;
-  private final Pigeon2 pigeon;
 
   private final VelocityVoltage m_velocityLeft = new VelocityVoltage(0).withSlot(0);
 
@@ -43,7 +41,6 @@ public class ShooterIOTalonFX implements ShooterIO {
     // Initialize hardware on the RIO CAN bus
     left = new TalonFX(ShooterConstants.kLeftMotorID, "canivore");
     right = new TalonFX(ShooterConstants.kRightMotorID, "canivore");
-    pigeon = new Pigeon2(ShooterConstants.kPigeonID, "canivore");
 
     TalonFXConfiguration leftConfigs = new TalonFXConfiguration();
     TalonFXConfiguration rightConfigs = new TalonFXConfiguration();

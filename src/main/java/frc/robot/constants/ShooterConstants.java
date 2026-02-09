@@ -6,7 +6,6 @@ public final class ShooterConstants {
   // CAN IDs
   public static final int kLeftMotorID = 44;
   public static final int kRightMotorID = 45;
-  public static final int kPigeonID = 6;
 
   // Motor configuration
   public static final boolean kMotorNeutralCoast = true;
