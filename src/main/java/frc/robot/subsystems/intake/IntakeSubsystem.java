@@ -67,8 +67,8 @@ public class IntakeSubsystem extends SubsystemBase {
     io.armMotionMagic(targetPosition);
   }
 
-  public void flywheelMotionMagic() {
-    io.flywheelMotionMagic();
+  public void flywheelVelocityVoltage(double targetVelocity) {
+    io.flywheelVelocityVoltage(targetVelocity);
   }
 
   public void flywheelStop() {
@@ -77,7 +77,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void deployIntake() {
     io.armMotionMagic(ARM_DEPLOY_POSITION);
-    io.flywheelMotionMagic();
+    io.flywheelVelocityVoltage(0.0);
   }
 
   public void retractIntake() {

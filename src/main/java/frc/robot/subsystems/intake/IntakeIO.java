@@ -28,7 +28,7 @@ public interface IntakeIO {
 
   public default void armMotionMagic(double targetPosition) {}
 
-  public default void flywheelMotionMagic() {}
+  public default void flywheelVelocityVoltage(double targetVelocity) {}
 
   public default void flywheelStop() {}
 
