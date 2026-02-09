@@ -1,7 +1,7 @@
 package frc.robot.constants;
 
 public class HoodConstants {
-  public static final int hoodID = 1;
+  public static final int hoodID = 46;
 
   public static final boolean hood_neutralmode_Coast = false;
   public static final boolean hood_inverted_CounterClockwisePositive = true;

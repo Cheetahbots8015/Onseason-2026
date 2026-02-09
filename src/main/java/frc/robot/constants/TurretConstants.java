@@ -7,8 +7,7 @@ public final class TurretConstants {
   public static final String kCANBusName = "canivore";
 
   // Motor and sensor IDs
-  public static final int kTurretMotorID = 42;
-  public static final int kPigeonId = 2;
+  public static final int kTurretMotorID = 49;
 
   // Motor configuration
   public static final boolean kMotorNeutralCoast = true;

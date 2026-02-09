@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -19,6 +20,7 @@ import frc.robot.constants.FeederConstants;
 public class FeederIOTalonFX implements FeederIO {
   // Hardware objects
   private final TalonFX feeder;
+  private final CANcoder sensor;
   private TalonFXConfiguration feederConfigs = new TalonFXConfiguration();
 
   // Voltage control requests
@@ -31,7 +33,8 @@ public class FeederIOTalonFX implements FeederIO {
   private final StatusSignal<Current> FeederCurrent;
 
   public FeederIOTalonFX() {
-    feeder = new TalonFX(FeederConstants.feederID, "rio");
+    feeder = new TalonFX(FeederConstants.feederID, "canivore");
+    sensor = new CANcoder(FeederConstants.sensorID, "canivore");
     feederConfigs.MotorOutput.withNeutralMode(
         FeederConstants.feeder_neutralmode_Coast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
 

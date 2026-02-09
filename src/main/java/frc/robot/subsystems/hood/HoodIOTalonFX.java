@@ -31,7 +31,7 @@ public class HoodIOTalonFX implements HoodIO {
   private final StatusSignal<Current> HoodCurrent;
 
   public HoodIOTalonFX() {
-    hood = new TalonFX(HoodConstants.hoodID, "rio");
+    hood = new TalonFX(HoodConstants.hoodID, "canivore");
     hoodConfigs.MotorOutput.withNeutralMode(
         HoodConstants.hood_neutralmode_Coast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
 
