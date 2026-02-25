@@ -26,12 +26,12 @@ public class ShooterIOSim implements ShooterIO {
     leftSim.update(0.02);
     rightSim.update(0.02);
 
-    inputs.leftPositionRad = leftSim.getAngularPositionRad();
+    inputs.leftPositionRot = leftSim.getAngularPositionRotations();
     inputs.leftVelocityRotPerSec = Units.radiansToRotations(leftSim.getAngularVelocityRadPerSec());
     inputs.leftAppliedVolts = leftSim.getInputVoltage();
     inputs.leftCurrentAmps = Math.abs(leftSim.getCurrentDrawAmps());
 
-    inputs.rightPositionRad = rightSim.getAngularPositionRad();
+    inputs.rightPositionRot = rightSim.getAngularPositionRotations();
     inputs.rightVelocityRotPerSec =
         Units.radiansToRotations(rightSim.getAngularVelocityRadPerSec());
     inputs.rightAppliedVolts = rightSim.getInputVoltage();

@@ -10,7 +10,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -116,12 +115,12 @@ public class ShooterIOTalonFX implements ShooterIO {
         rightAppliedVolts,
         rightCurrent);
 
-    inputs.leftPositionRad = Units.rotationsToRadians(leftPosition.getValueAsDouble());
+    inputs.leftPositionRot = leftPosition.getValueAsDouble();
     inputs.leftVelocityRotPerSec = leftVelocity.getValueAsDouble();
     inputs.leftAppliedVolts = leftAppliedVolts.getValueAsDouble();
     inputs.leftCurrentAmps = leftCurrent.getValueAsDouble();
 
-    inputs.rightPositionRad = Units.rotationsToRadians(rightPosition.getValueAsDouble());
+    inputs.rightPositionRot = rightPosition.getValueAsDouble();
     inputs.rightVelocityRotPerSec = rightVelocity.getValueAsDouble();
     inputs.rightAppliedVolts = rightAppliedVolts.getValueAsDouble();
     inputs.rightCurrentAmps = rightCurrent.getValueAsDouble();
