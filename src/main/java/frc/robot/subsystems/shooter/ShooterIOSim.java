@@ -39,21 +39,9 @@ public class ShooterIOSim implements ShooterIO {
   }
 
   @Override
-  public void setMotorVoltage(double leftVolts, double rightVolts) {
-    leftAppliedVolts = leftVolts;
-    rightAppliedVolts = rightVolts;
-  }
-
-  @Override
   public void setMotorVoltage(double volts) {
     leftAppliedVolts = volts;
     rightAppliedVolts = volts;
-  }
-
-  @Override
-  public void setVelocityControl(double leftRadPerSec, double rightRadPerSec) {
-    leftAppliedVolts = leftRadPerSec * 0.01;
-    rightAppliedVolts = rightRadPerSec * 0.01;
   }
 
   @Override

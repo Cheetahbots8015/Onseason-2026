@@ -31,10 +31,15 @@ public final class ShooterConstants {
 
   public static final double kTolerence = 0.0;
 
+  public static final double kMaxVoltage = 12.0; // Maximum voltage for the motors
+
   // Voltage Constants
   public static final double kShootingVoltage = 0.0;
 
   // Velocity Constants
   public static final double kShootingSpeed = 0.0;
   public static final double kIdleSpeed = 0.0;
+
+  // Loop timing
+  public static final double kLoopTime = 0.02; // 20 ms
 }

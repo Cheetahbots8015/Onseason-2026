@@ -19,13 +19,13 @@ public class ShooterSetVelocityCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.setVelocityControl(
+    m_subsystem.setTargetVelocity(
         SmartDashboard.getNumber("kShootingSpeed", ShooterConstants.kShootingSpeed));
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.shutdown();
+    m_subsystem.setIdle(true);
   }
 
   @Override

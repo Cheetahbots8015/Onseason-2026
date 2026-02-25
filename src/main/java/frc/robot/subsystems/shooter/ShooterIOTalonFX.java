@@ -4,12 +4,18 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.LinearQuadraticRegulator;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -21,10 +27,10 @@ public class ShooterIOTalonFX implements ShooterIO {
   private final TalonFX left;
   private final TalonFX right;
 
-  private final VelocityVoltage m_velocityLeft = new VelocityVoltage(0).withSlot(0);
-
   private final Follower m_follower =
       new Follower(ShooterConstants.kLeftMotorID, MotorAlignmentValue.Aligned);
+
+  private final LinearQuadraticRegulator<N1, N1, N1> LQR;
 
   // Status signals for telemetry and odometry
   private final StatusSignal<Angle> leftPosition;
@@ -41,6 +47,17 @@ public class ShooterIOTalonFX implements ShooterIO {
     // Initialize hardware on the RIO CAN bus
     left = new TalonFX(ShooterConstants.kLeftMotorID, "rio");
     right = new TalonFX(ShooterConstants.kRightMotorID, "rio");
+
+    LinearSystem<N1, N1, N1> flywheelSystem =
+        LinearSystemId.identifyVelocitySystem(
+            ShooterConstants.kLeftSlot_kV, ShooterConstants.kLeftSlot_kA);
+
+    LQR =
+        new LinearQuadraticRegulator<>(
+            flywheelSystem,
+            VecBuilder.fill(ShooterConstants.kTolerence),
+            VecBuilder.fill(ShooterConstants.kMaxVoltage),
+            ShooterConstants.kLoopTime);
 
     TalonFXConfiguration leftConfigs = new TalonFXConfiguration();
     TalonFXConfiguration rightConfigs = new TalonFXConfiguration();
@@ -63,17 +80,6 @@ public class ShooterIOTalonFX implements ShooterIO {
             : InvertedValue.Clockwise_Positive;
 
     // Apply PID and Feedforward gains
-    leftConfigs.Slot0.kP = ShooterConstants.kLeftSlot_kP;
-    leftConfigs.Slot0.kI = ShooterConstants.kLeftSlot_kI;
-    leftConfigs.Slot0.kD = ShooterConstants.kLeftSlot_kD;
-    leftConfigs.Slot0.kS = ShooterConstants.kLeftSlot_kS;
-    leftConfigs.Slot0.kV = ShooterConstants.kLeftSlot_kV;
-
-    rightConfigs.Slot0.kP = ShooterConstants.kRightSlot_kP;
-    rightConfigs.Slot0.kI = ShooterConstants.kRightSlot_kI;
-    rightConfigs.Slot0.kD = ShooterConstants.kRightSlot_kD;
-    rightConfigs.Slot0.kS = ShooterConstants.kRightSlot_kS;
-    rightConfigs.Slot0.kV = ShooterConstants.kRightSlot_kV;
 
     left.getConfigurator().apply(leftConfigs);
     right.getConfigurator().apply(rightConfigs);
@@ -128,14 +134,26 @@ public class ShooterIOTalonFX implements ShooterIO {
   }
 
   @Override
-  public void setMotorVoltage(double volts) {
-    left.setVoltage(volts);
-    right.setControl(m_follower);
+  public void updateOutputs(ShooterIO.ShooterIOInputs inputs, double targetVelocity) {
+    // Apply LQR control to the left motor
+    LQR.calculate(VecBuilder.fill(inputs.leftVelocityRotPerSec), VecBuilder.fill(targetVelocity));
+    this.setMotorVoltage(LQR.getU().get(0, 0));
   }
 
   @Override
-  public void setVelocityControl(double rotPerSec) {
-    left.setControl(m_velocityLeft.withVelocity(rotPerSec));
+  public void idle(ShooterIO.ShooterIOInputs inputs) {
+    if (inputs.leftVelocityRotPerSec > ShooterConstants.kIdleSpeed + ShooterConstants.kTolerence) {
+      left.setControl(new NeutralOut());
+      right.setControl(m_follower);
+    } else {
+      updateOutputs(inputs, ShooterConstants.kIdleSpeed);
+    }
+  }
+
+  @Override
+  public void setMotorVoltage(double volts) {
+    left.setVoltage(
+        MathUtil.clamp(volts, -ShooterConstants.kMaxVoltage, ShooterConstants.kMaxVoltage));
     right.setControl(m_follower);
   }
 }
