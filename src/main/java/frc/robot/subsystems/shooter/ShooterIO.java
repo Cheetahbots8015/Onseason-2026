@@ -1,6 +1,9 @@
 package frc.robot.subsystems.shooter;
 
+import org.littletonrobotics.junction.AutoLog;
+
 public interface ShooterIO {
+  @AutoLog
   public static class ShooterIOInputs {
     // Left motor
     public double leftPositionRad = 0.0;
@@ -28,4 +31,6 @@ public interface ShooterIO {
   public default void setVelocityControl(double rotPerSec) {}
 
   public default void idle(ShooterIOInputs inputs) {}
+
+  public default void resetFilter() {}
 }

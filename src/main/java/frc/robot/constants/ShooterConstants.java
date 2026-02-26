@@ -18,9 +18,9 @@ public final class ShooterConstants {
   public static final double kLeftSlot_kP = 0.0;
   public static final double kLeftSlot_kI = 0.0;
   public static final double kLeftSlot_kD = 0.0;
-  public static final double kLeftSlot_kA = 0.0;
+  public static final double kLeftSlot_kA = 0.015;
   public static final double kLeftSlot_kS = 0.0;
-  public static final double kLeftSlot_kV = 0.0;
+  public static final double kLeftSlot_kV = 0.11505;
 
   public static final double kRightSlot_kP = 0.0;
   public static final double kRightSlot_kI = 0.0;
@@ -29,9 +29,9 @@ public final class ShooterConstants {
   public static final double kRightSlot_kS = 0.0;
   public static final double kRightSlot_kV = 0.0;
 
-  public static final double kTolerence = 0.0;
+  public static final double kTolerence = 5;
 
-  public static final double kMaxVoltage = 12.0; // Maximum voltage for the motors
+  public static final double kMaxVoltage = 7; // Maximum voltage for the motors
 
   // Voltage Constants
   public static final double kShootingVoltage = 0.0;
@@ -42,4 +42,10 @@ public final class ShooterConstants {
 
   // Loop timing
   public static final double kLoopTime = 0.02; // 20 ms
+
+  // Kalman filter constants
+  public static final double kKalmanModelStandardDeviation =
+      3.0; // How accurate we think our model is
+  public static final double kKalmanEncoderStandardDeviation =
+      0.01; // How accurate we think our encoder data is
 }

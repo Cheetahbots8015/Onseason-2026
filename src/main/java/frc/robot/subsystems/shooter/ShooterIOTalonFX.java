@@ -11,10 +11,14 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.LinearQuadraticRegulator;
+import edu.wpi.first.math.estimator.KalmanFilter;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.LinearSystemLoop;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -30,7 +34,8 @@ public class ShooterIOTalonFX implements ShooterIO {
   private final Follower m_follower =
       new Follower(ShooterConstants.kLeftMotorID, MotorAlignmentValue.Aligned);
 
-  private final LinearQuadraticRegulator<N1, N1, N1> LQR;
+  private final LinearSystemLoop<N1, N1, N1> m_loop;
+  private final Matrix<N1, N1> shooterLeftState = VecBuilder.fill(0.0);
 
   // Status signals for telemetry and odometry
   private final StatusSignal<Angle> leftPosition;
@@ -52,12 +57,35 @@ public class ShooterIOTalonFX implements ShooterIO {
         LinearSystemId.identifyVelocitySystem(
             ShooterConstants.kLeftSlot_kV, ShooterConstants.kLeftSlot_kA);
 
-    LQR =
+    KalmanFilter<N1, N1, N1> m_observer =
+        new KalmanFilter<>(
+            Nat.N1(),
+            Nat.N1(),
+            flywheelSystem,
+            VecBuilder.fill(
+                ShooterConstants
+                    .kKalmanModelStandardDeviation), // How accurate we think our model is
+            VecBuilder.fill(
+                ShooterConstants
+                    .kKalmanEncoderStandardDeviation), // How accurate we think our encoder data is
+            ShooterConstants.kLoopTime);
+
+    LinearQuadraticRegulator<N1, N1, N1> LQR =
         new LinearQuadraticRegulator<>(
             flywheelSystem,
             VecBuilder.fill(ShooterConstants.kTolerence),
             VecBuilder.fill(ShooterConstants.kMaxVoltage),
             ShooterConstants.kLoopTime);
+
+    m_loop =
+        new LinearSystemLoop<>(
+            flywheelSystem,
+            LQR,
+            m_observer,
+            ShooterConstants.kMaxVoltage,
+            ShooterConstants.kLoopTime);
+
+    m_loop.reset(shooterLeftState); // Reset the state
 
     TalonFXConfiguration leftConfigs = new TalonFXConfiguration();
     TalonFXConfiguration rightConfigs = new TalonFXConfiguration();
@@ -135,13 +163,19 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   @Override
   public void updateOutputs(ShooterIO.ShooterIOInputs inputs, double targetVelocity) {
+    shooterLeftState.set(0, 0, inputs.leftVelocityRotPerSec);
+    m_loop.setNextR(VecBuilder.fill(targetVelocity));
+    m_loop.correct(shooterLeftState);
+
+    m_loop.predict(ShooterConstants.kLoopTime);
+
     // Apply LQR control to the left motor
-    LQR.calculate(VecBuilder.fill(inputs.leftVelocityRotPerSec), VecBuilder.fill(targetVelocity));
-    this.setMotorVoltage(LQR.getU().get(0, 0));
+    this.setMotorVoltage(m_loop.getU(0));
   }
 
   @Override
   public void idle(ShooterIO.ShooterIOInputs inputs) {
+    resetFilter();
     if (inputs.leftVelocityRotPerSec > ShooterConstants.kIdleSpeed + ShooterConstants.kTolerence) {
       left.setControl(new NeutralOut());
       right.setControl(m_follower);
@@ -155,5 +189,10 @@ public class ShooterIOTalonFX implements ShooterIO {
     left.setVoltage(
         MathUtil.clamp(volts, -ShooterConstants.kMaxVoltage, ShooterConstants.kMaxVoltage));
     right.setControl(m_follower);
+  }
+
+  @Override
+  public void resetFilter() {
+    m_loop.reset(shooterLeftState);
   }
 }
