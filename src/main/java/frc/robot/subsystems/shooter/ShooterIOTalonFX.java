@@ -4,13 +4,11 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
@@ -25,6 +23,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.ShooterConstants;
 
 public class ShooterIOTalonFX implements ShooterIO {
@@ -78,14 +77,9 @@ public class ShooterIOTalonFX implements ShooterIO {
             ShooterConstants.kLoopTime);
 
     m_loop =
-        new LinearSystemLoop<>(
-            flywheelSystem,
-            LQR,
-            m_observer,
-            ShooterConstants.kMaxVoltage,
-            ShooterConstants.kLoopTime);
+        new LinearSystemLoop<>(flywheelSystem, LQR, m_observer, 3.0, ShooterConstants.kLoopTime);
 
-    m_loop.reset(shooterLeftState); // Reset the state
+    // m_loop.reset(shooterLeftState); // Reset the state
 
     TalonFXConfiguration leftConfigs = new TalonFXConfiguration();
     TalonFXConfiguration rightConfigs = new TalonFXConfiguration();
@@ -151,21 +145,21 @@ public class ShooterIOTalonFX implements ShooterIO {
         rightCurrent);
 
     inputs.leftPositionRad = Units.rotationsToRadians(leftPosition.getValueAsDouble());
-    inputs.leftVelocityRotPerSec = leftVelocity.getValueAsDouble();
+    inputs.leftVelocityRadPerSec = Units.rotationsToRadians(leftVelocity.getValueAsDouble());
     inputs.leftAppliedVolts = leftAppliedVolts.getValueAsDouble();
     inputs.leftCurrentAmps = leftCurrent.getValueAsDouble();
 
     inputs.rightPositionRad = Units.rotationsToRadians(rightPosition.getValueAsDouble());
-    inputs.rightVelocityRotPerSec = rightVelocity.getValueAsDouble();
+    inputs.rightVelocityRadPerSec = Units.rotationsToRadians(rightVelocity.getValueAsDouble());
     inputs.rightAppliedVolts = rightAppliedVolts.getValueAsDouble();
     inputs.rightCurrentAmps = rightCurrent.getValueAsDouble();
   }
 
   @Override
   public void updateOutputs(ShooterIO.ShooterIOInputs inputs, double targetVelocity) {
-    shooterLeftState.set(0, 0, inputs.leftVelocityRotPerSec);
+    shooterLeftState.set(0, 0, inputs.leftVelocityRadPerSec);
     m_loop.setNextR(VecBuilder.fill(targetVelocity));
-    m_loop.correct(shooterLeftState);
+    m_loop.correct(VecBuilder.fill(inputs.leftVelocityRadPerSec));
 
     m_loop.predict(ShooterConstants.kLoopTime);
 
@@ -175,24 +169,21 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   @Override
   public void idle(ShooterIO.ShooterIOInputs inputs) {
-    resetFilter();
-    if (inputs.leftVelocityRotPerSec > ShooterConstants.kIdleSpeed + ShooterConstants.kTolerence) {
-      left.setControl(new NeutralOut());
-      right.setControl(m_follower);
-    } else {
-      updateOutputs(inputs, ShooterConstants.kIdleSpeed);
-    }
+    updateOutputs(inputs, ShooterConstants.kIdleSpeed);
   }
 
   @Override
   public void setMotorVoltage(double volts) {
-    left.setVoltage(
-        MathUtil.clamp(volts, -ShooterConstants.kMaxVoltage, ShooterConstants.kMaxVoltage));
-    right.setControl(m_follower);
-  }
+    SmartDashboard.putNumber("LQR/R", m_loop.getNextR(0));
+    SmartDashboard.putNumber("LQR/U", m_loop.getU(0));
+    SmartDashboard.putNumber("LQR/Error", m_loop.getError(0));
+    SmartDashboard.putNumber("LQR/XHat", m_loop.getXHat(0));
 
-  @Override
-  public void resetFilter() {
-    m_loop.reset(shooterLeftState);
+    SmartDashboard.putNumber("LQR/FeedForward", m_loop.getFeedforward().getUff(0));
+
+    SmartDashboard.putNumber("LQR/motorVolts", left.getMotorVoltage().getValueAsDouble());
+
+    left.setVoltage(volts);
+    // right.setControl(m_follower);
   }
 }

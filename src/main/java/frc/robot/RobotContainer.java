@@ -186,6 +186,10 @@ public class RobotContainer {
 
     controller.leftTrigger().whileTrue(new ShooterSetVelocityCommand(shooter));
 
+    controller.a().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    controller.b().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    controller.x().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    controller.y().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     SmartDashboard.putNumber("kShootingSpeed", 90);
   }
 

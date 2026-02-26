@@ -1,35 +1,52 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
   private final ShooterIO io;
   private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
   private double targetVelocity = 0.0; // Default target velocity
-  private boolean idle = true;
+
+  private final SysIdRoutine sysId;
 
   public ShooterSubsystem(ShooterIO io) {
     this.io = io;
+
+    sysId =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Shooter/SysIdState", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (voltage) -> io.setMotorVoltage(voltage.in(Units.Volt)), null, this));
   }
 
   @Override
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
-    if (idle) {
-      io.idle(inputs);
-    } else {
-      io.updateOutputs(inputs, targetVelocity);
-    }
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysId.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysId.dynamic(direction);
   }
 
   public void setTargetVelocity(double rotPerSec) {
-    this.idle = false;
     targetVelocity = rotPerSec;
+    io.updateOutputs(inputs, targetVelocity);
   }
 
   public void setIdle(boolean idle) {
-    this.idle = idle;
+    io.idle(inputs);
   }
 }
