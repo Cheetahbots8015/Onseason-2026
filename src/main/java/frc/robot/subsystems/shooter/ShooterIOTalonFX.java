@@ -4,7 +4,6 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -24,7 +23,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.ShooterConstants;
 
 public class ShooterIOTalonFX implements ShooterIO {
@@ -171,19 +169,23 @@ public class ShooterIOTalonFX implements ShooterIO {
   @Override
   public void idle(ShooterIO.ShooterIOInputs inputs) {
 
-    if(inputs.rightVelocityRadPerSec > ShooterConstants.kIdleSpeed + ShooterConstants.kTolerence){
-      left.setControl(new NeutralOut());
-    }
-    else{
+    if (inputs.rightVelocityRadPerSec > ShooterConstants.kIdleSpeed + ShooterConstants.kTolerence) {
+      stop();
+      ;
+    } else {
       updateOutputs(inputs, ShooterConstants.kIdleSpeed);
     }
-    
   }
 
   @Override
   public void setMotorVoltage(double volts) {
-    
+
     left.setVoltage(volts);
     // right.setControl(m_follower);
+  }
+
+  public void stop() {
+    left.setVoltage(0);
+    ;
   }
 }

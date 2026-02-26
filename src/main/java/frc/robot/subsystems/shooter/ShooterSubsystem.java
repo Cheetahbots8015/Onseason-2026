@@ -13,6 +13,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private final SysIdRoutine sysId;
 
+  private boolean isIDLE = true;
+
   public ShooterSubsystem(ShooterIO io) {
     this.io = io;
 
@@ -31,6 +33,11 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
+    if (isIDLE) {
+      io.idle(inputs);
+    } else {
+      io.updateOutputs(inputs, targetVelocity);
+    }
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
@@ -42,11 +49,15 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setTargetVelocity(double rotPerSec) {
+    isIDLE = false;
     targetVelocity = rotPerSec;
-    io.updateOutputs(inputs, targetVelocity);
   }
 
   public void setIdle(boolean idle) {
-    io.idle(inputs);
+    isIDLE = idle;
+  }
+
+  public void setNeutralOut() {
+    io.stop();
   }
 }
