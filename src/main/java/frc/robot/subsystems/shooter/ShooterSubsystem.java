@@ -9,8 +9,11 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterSubsystem extends SubsystemBase {
   private final ShooterIO io;
   private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
+  private double targetVelocity = 0.0; // Default target velocity
 
   private final SysIdRoutine sysId;
+
+  private boolean isIDLE = true;
 
   public ShooterSubsystem(ShooterIO io) {
     this.io = io;
@@ -23,25 +26,39 @@ public class ShooterSubsystem extends SubsystemBase {
                 null,
                 (state) -> Logger.recordOutput("Shooter/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
-                (voltage) -> setMotorVoltage(voltage.in(Units.Volt)), null, this));
+                (voltage) -> io.setMotorVoltage(voltage.in(Units.Volt)), null, this));
   }
 
   @Override
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
+    if (isIDLE) {
+      io.idle(inputs);
+    } else {
+      io.updateOutputs(inputs, targetVelocity);
+    }
   }
 
-  public void shutdown() {
-    io.setMotorVoltage(0.0);
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysId.quasistatic(direction);
   }
 
-  public void setMotorVoltage(double volts) {
-    io.setMotorVoltage(volts);
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysId.dynamic(direction);
   }
 
-  public void setVelocityControl(double rotPerSec) {
-    io.setVelocityControl(rotPerSec);
+  public void setTargetVelocity(double rotPerSec) {
+    isIDLE = false;
+    targetVelocity = rotPerSec;
+  }
+
+  public void setIdle(boolean idle) {
+    isIDLE = idle;
+  }
+
+  public void setNeutralOut() {
+    io.stop();
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {

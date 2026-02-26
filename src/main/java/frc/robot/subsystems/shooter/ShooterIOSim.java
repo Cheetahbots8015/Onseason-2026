@@ -26,34 +26,22 @@ public class ShooterIOSim implements ShooterIO {
     leftSim.update(0.02);
     rightSim.update(0.02);
 
-    inputs.leftPositionRot = leftSim.getAngularPositionRotations();
-    inputs.leftVelocityRotPerSec = Units.radiansToRotations(leftSim.getAngularVelocityRadPerSec());
+    inputs.leftPositionRad = leftSim.getAngularPositionRad();
+    inputs.leftVelocityRadPerSec = Units.radiansToRotations(leftSim.getAngularVelocityRadPerSec());
     inputs.leftAppliedVolts = leftSim.getInputVoltage();
     inputs.leftCurrentAmps = Math.abs(leftSim.getCurrentDrawAmps());
 
-    inputs.rightPositionRot = rightSim.getAngularPositionRotations();
-    inputs.rightVelocityRotPerSec =
+    inputs.rightPositionRad = rightSim.getAngularPositionRad();
+    inputs.rightVelocityRadPerSec =
         Units.radiansToRotations(rightSim.getAngularVelocityRadPerSec());
     inputs.rightAppliedVolts = rightSim.getInputVoltage();
     inputs.rightCurrentAmps = Math.abs(rightSim.getCurrentDrawAmps());
   }
 
   @Override
-  public void setMotorVoltage(double leftVolts, double rightVolts) {
-    leftAppliedVolts = leftVolts;
-    rightAppliedVolts = rightVolts;
-  }
-
-  @Override
   public void setMotorVoltage(double volts) {
     leftAppliedVolts = volts;
     rightAppliedVolts = volts;
-  }
-
-  @Override
-  public void setVelocityControl(double leftRadPerSec, double rightRadPerSec) {
-    leftAppliedVolts = leftRadPerSec * 0.01;
-    rightAppliedVolts = rightRadPerSec * 0.01;
   }
 
   @Override
