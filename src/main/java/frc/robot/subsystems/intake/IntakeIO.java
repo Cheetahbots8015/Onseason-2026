@@ -14,6 +14,8 @@ public interface IntakeIO {
     public double ArmVelocityRadPerSec = 0.0;
     public double ArmAppliedVolts = 0.0;
     public double ArmCurrentAmps = 0.0;
+
+    public double SensorDegrees = 0.0;
   }
 
   /** Updates the set of loggable inputs. */

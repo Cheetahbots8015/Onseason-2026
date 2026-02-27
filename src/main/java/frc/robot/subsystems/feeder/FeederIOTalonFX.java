@@ -32,6 +32,8 @@ public class FeederIOTalonFX implements FeederIO {
   private final StatusSignal<Voltage> FeederAppliedVolts;
   private final StatusSignal<Current> FeederCurrent;
 
+  private final StatusSignal<Angle> SensorDegrees;
+
   public FeederIOTalonFX() {
     feeder = new TalonFX(FeederConstants.feederID, "canivore");
     sensor = new CANcoder(FeederConstants.sensorID, "canivore");
@@ -66,23 +68,28 @@ public class FeederIOTalonFX implements FeederIO {
     FeederAppliedVolts = feeder.getMotorVoltage();
     FeederCurrent = feeder.getTorqueCurrent();
 
+    SensorDegrees = sensor.getPosition();
+
     BaseStatusSignal.setUpdateFrequencyForAll(
         FeederConstants.statusUpdateFrequency,
         FeederPosition,
         FeederVelocity,
         FeederAppliedVolts,
-        FeederCurrent);
+        FeederCurrent,
+        SensorDegrees);
     ParentDevice.optimizeBusUtilizationForAll(feeder);
   }
 
   @Override
   public void updateInputs(FeederIOInputs inputs) {
-    BaseStatusSignal.refreshAll(FeederPosition, FeederVelocity, FeederAppliedVolts, FeederCurrent);
+    BaseStatusSignal.refreshAll(
+        FeederPosition, FeederVelocity, FeederAppliedVolts, FeederCurrent, SensorDegrees);
     // Update motor inputs
     inputs.FeederPositionRad = Units.rotationsToRadians(FeederPosition.getValueAsDouble());
     inputs.FeederVelocityRotPerSec = FeederVelocity.getValueAsDouble();
     inputs.FeederAppliedVolts = FeederAppliedVolts.getValueAsDouble();
     inputs.FeederCurrentAmps = FeederCurrent.getValueAsDouble();
+    inputs.SensorDegrees = SensorDegrees.getValueAsDouble();
   }
 
   @Override
