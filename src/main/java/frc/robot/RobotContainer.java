@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
-import frc.robot.commands.ShooterCommands.ShooterSetVoltageCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.barrel.BarrelIOSim;
@@ -186,7 +185,6 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.leftTrigger().whileTrue(new ShooterSetVelocityCommand(shooter));
-    controller.rightTrigger().whileTrue(new ShooterSetVoltageCommand(shooter));
 
     controller.a().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
     controller.b().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
