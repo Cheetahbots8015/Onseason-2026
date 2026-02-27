@@ -76,7 +76,12 @@ public class ShooterIOTalonFX implements ShooterIO {
             ShooterConstants.kLoopTime);
 
     m_loop =
-        new LinearSystemLoop<>(flywheelSystem, LQR, m_observer, 3.0, ShooterConstants.kLoopTime);
+        new LinearSystemLoop<>(
+            flywheelSystem,
+            LQR,
+            m_observer,
+            ShooterConstants.kMaxVoltage,
+            ShooterConstants.kLoopTime);
 
     // m_loop.reset(shooterLeftState); // Reset the state
 
@@ -180,12 +185,12 @@ public class ShooterIOTalonFX implements ShooterIO {
   @Override
   public void setMotorVoltage(double volts) {
 
-    left.setVoltage(volts);
-    // right.setControl(m_follower);
+    right.setVoltage(volts);
+    // left.setControl(m_follower);
   }
 
   public void stop() {
-    left.setVoltage(0);
+    right.setVoltage(0);
     ;
   }
 }

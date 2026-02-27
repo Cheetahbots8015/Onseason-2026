@@ -18,16 +18,16 @@ public final class ShooterConstants {
   public static final double kLeftSlot_kP = 0.0;
   public static final double kLeftSlot_kI = 0.0;
   public static final double kLeftSlot_kD = 0.0;
-  public static final double kLeftSlot_kA = 0.0013901;
+  public static final double kLeftSlot_kA = 0.0048354;
   public static final double kLeftSlot_kS = 0.0;
-  public static final double kLeftSlot_kV = 0.018461;
+  public static final double kLeftSlot_kV = 0.020908;
 
   public static final double kRightSlot_kP = 0.0;
   public static final double kRightSlot_kI = 0.0;
   public static final double kRightSlot_kD = 0.0;
-  public static final double kRightSlot_kA = 0.0;
+  public static final double kRightSlot_kA = 0.0048354;
   public static final double kRightSlot_kS = 0.0;
-  public static final double kRightSlot_kV = 0.0;
+  public static final double kRightSlot_kV = 0.020908;
 
   public static final double kTolerence = 3;
 

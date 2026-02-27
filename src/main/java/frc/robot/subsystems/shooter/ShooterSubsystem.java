@@ -34,9 +34,9 @@ public class ShooterSubsystem extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
     if (isIDLE) {
-      io.idle(inputs);
+      // io.idle(inputs);
     } else {
-      io.updateOutputs(inputs, targetVelocity);
+      // io.updateOutputs(inputs, targetVelocity);
     }
   }
 
@@ -67,5 +67,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysId.dynamic(direction);
+  }
+
+  public void setMotorVoltage(double volts) {
+    io.setMotorVoltage(volts);
   }
 }
