@@ -40,14 +40,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysId.quasistatic(direction);
-  }
-
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysId.dynamic(direction);
-  }
-
   public void setTargetVelocity(double rotPerSec) {
     isIDLE = false;
     targetVelocity = rotPerSec;
