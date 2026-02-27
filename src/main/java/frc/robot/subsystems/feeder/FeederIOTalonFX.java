@@ -73,7 +73,7 @@ public class FeederIOTalonFX implements FeederIO {
         new LinearQuadraticRegulator<>(
             flywheelSystem,
             VecBuilder.fill(FeederConstants.kTolerence),
-            VecBuilder.fill(FeederConstants.kMaxVoltage),
+            VecBuilder.fill(FeederConstants.kVoltageTolerance),
             FeederConstants.kLoopTime);
 
     m_loop =
@@ -81,7 +81,7 @@ public class FeederIOTalonFX implements FeederIO {
             flywheelSystem,
             LQR,
             m_observer,
-            FeederConstants.kMaxVoltage,
+            FeederConstants.feederMaxVoltage,
             FeederConstants.kLoopTime);
 
     // Create drive status signals
