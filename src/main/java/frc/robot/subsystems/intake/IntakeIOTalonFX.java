@@ -42,7 +42,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final StatusSignal<Angle> SensorDegrees;
 
   public IntakeIOTalonFX() {
-    flywheel = new TalonFX(IntakeConstants.flywheelID, "rio");
+    flywheel = new TalonFX(IntakeConstants.flywheelID, "canivore");
     flywheelConfigs.MotorOutput.withNeutralMode(
         IntakeConstants.flywheel_neutralmode_Coast
             ? NeutralModeValue.Coast
@@ -62,7 +62,7 @@ public class IntakeIOTalonFX implements IntakeIO {
     flywheelConfigs.Slot0.kS = IntakeConstants.flywheelkS;
     flywheelConfigs.Slot0.kV = IntakeConstants.flywheelkV;
 
-    arm = new TalonFX(IntakeConstants.armID, "rio");
+    arm = new TalonFX(IntakeConstants.armID, "canivore");
     armConfigs.MotorOutput.withNeutralMode(
         IntakeConstants.arm_neutralmode_Coast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
 

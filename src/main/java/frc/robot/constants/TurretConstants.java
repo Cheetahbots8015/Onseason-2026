@@ -4,7 +4,7 @@ public final class TurretConstants {
   private TurretConstants() {}
 
   // CANbus name
-  public static final String kCANBusName = "rio";
+  public static final String kCANBusName = "canivore";
 
   // Motor and sensor IDs
   public static final int kTurretMotorID = 49;
