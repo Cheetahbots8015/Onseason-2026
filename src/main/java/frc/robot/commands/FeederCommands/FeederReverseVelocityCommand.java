@@ -19,13 +19,13 @@ public class FeederReverseVelocityCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.setFeederVelocityVoltage(
+    m_subsystem.setTargetVelocity(
         SmartDashboard.getNumber("FeederReverseVelocity", FeederConstants.feederReverseVelocity));
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.stop();
+    m_subsystem.setIdle();
   }
 
   @Override

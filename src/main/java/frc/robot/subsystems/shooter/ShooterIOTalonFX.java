@@ -9,7 +9,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.LinearQuadraticRegulator;
@@ -33,7 +32,6 @@ public class ShooterIOTalonFX implements ShooterIO {
       new Follower(ShooterConstants.kLeftMotorID, MotorAlignmentValue.Aligned);
 
   private final LinearSystemLoop<N1, N1, N1> m_loop;
-  private final Matrix<N1, N1> shooterLeftState = VecBuilder.fill(0.0);
 
   // Status signals for telemetry and odometry
   private final StatusSignal<Angle> leftPosition;
@@ -76,7 +74,12 @@ public class ShooterIOTalonFX implements ShooterIO {
             ShooterConstants.kLoopTime);
 
     m_loop =
-        new LinearSystemLoop<>(flywheelSystem, LQR, m_observer, 3.0, ShooterConstants.kLoopTime);
+        new LinearSystemLoop<>(
+            flywheelSystem,
+            LQR,
+            m_observer,
+            ShooterConstants.kMaxVoltage,
+            ShooterConstants.kLoopTime);
 
     // m_loop.reset(shooterLeftState); // Reset the state
 
@@ -156,7 +159,6 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   @Override
   public void updateOutputs(ShooterIO.ShooterIOInputs inputs, double targetVelocity) {
-    shooterLeftState.set(0, 0, inputs.leftVelocityRadPerSec);
     m_loop.setNextR(VecBuilder.fill(targetVelocity));
     m_loop.correct(VecBuilder.fill(inputs.leftVelocityRadPerSec));
 
@@ -168,10 +170,8 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   @Override
   public void idle(ShooterIO.ShooterIOInputs inputs) {
-
     if (inputs.rightVelocityRadPerSec > ShooterConstants.kIdleSpeed + ShooterConstants.kTolerence) {
       stop();
-      ;
     } else {
       updateOutputs(inputs, ShooterConstants.kIdleSpeed);
     }
@@ -179,13 +179,11 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   @Override
   public void setMotorVoltage(double volts) {
-
     left.setVoltage(volts);
     // right.setControl(m_follower);
   }
 
   public void stop() {
     left.setVoltage(0);
-    ;
   }
 }

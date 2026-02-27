@@ -9,18 +9,22 @@ import org.littletonrobotics.junction.Logger;
 public class FeederSubsystem extends SubsystemBase {
   private final FeederIO io;
   private final FeederIOInputsAutoLogged inputs = new FeederIOInputsAutoLogged();
+  private boolean isIDLE = true;
+  private double targetVelocity = 0.0;
 
   public FeederSubsystem(FeederIO io) {
     this.io = io;
   }
 
+  @Override
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Feeder", inputs);
-  }
-
-  public void stop() {
-    io.setFeederVoltage(0);
+    if (isIDLE) {
+      io.idle(inputs);
+    } else {
+      io.updateOutputs(inputs, targetVelocity);
+    }
   }
 
   public FeederIO getIO() {
@@ -31,15 +35,16 @@ public class FeederSubsystem extends SubsystemBase {
     return inputs;
   }
 
-  public void setOpenLoop(double motorOutput) {
-    io.setOpenLoop(motorOutput);
-  }
-
   public void setFeederVoltage(double volts) {
     io.setFeederVoltage(volts);
   }
 
-  public void setFeederVelocityVoltage(double velocity) {
-    io.setFeederVelocityVoltage(velocity);
+  public void setTargetVelocity(double velocity) {
+    targetVelocity = velocity;
+    isIDLE = false;
+  }
+
+  public void setIdle() {
+    isIDLE = true;
   }
 }

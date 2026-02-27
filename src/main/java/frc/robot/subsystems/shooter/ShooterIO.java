@@ -32,7 +32,5 @@ public interface ShooterIO {
 
   public default void idle(ShooterIOInputs inputs) {}
 
-  public default void resetFilter() {}
-
   public default void stop() {}
 }

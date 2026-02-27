@@ -31,4 +31,19 @@ public class FeederConstants {
   public static final double feederForwardVelocity = 60;
 
   public static final double feederReverseVelocity = -20;
+
+  public static final double kTolerence = 3;
+
+  public static final double kMaxVoltage = 12; // Maximum voltage for the motors
+
+  // Loop timing
+  public static final double kLoopTime = 0.02; // 20 ms
+
+  // Kalman filter constants
+  public static final double kKalmanModelStandardDeviation =
+      3.0; // How accurate we think our model is
+  public static final double kKalmanEncoderStandardDeviation =
+      3.0; // How accurate we think our encoder data is
+
+  public static final double kIdleSpeed = 10.0; // Speed at which the feeder should idle
 }
