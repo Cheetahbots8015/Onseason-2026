@@ -1,5 +1,6 @@
 package frc.robot.commands.BarrelCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.BarrelConstants;
 import frc.robot.subsystems.barrel.BarrelSubsystem;
@@ -18,12 +19,13 @@ public class BarrelReverseVelocityCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.setBarrelVelocity(BarrelConstants.BarrelReverseVelocity);
+    m_subsystem.setBarrelVelocity(
+        SmartDashboard.getNumber("BarrelReverseVelocity", BarrelConstants.BarrelReverseVelocity));
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.stop();
+    m_subsystem.setIdle(true);
   }
 
   @Override

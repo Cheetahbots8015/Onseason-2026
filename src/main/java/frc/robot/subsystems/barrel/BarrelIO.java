@@ -6,7 +6,7 @@ public interface BarrelIO {
   @AutoLog
   public static class BarrelIOInputs {
     public double BarrelPositionRad = 0.0;
-    public double BarrelVelocityRotPerSec = 0.0;
+    public double BarrelVelocityRadPerSec = 0.0;
     public double BarrelAppliedVolts = 0.0;
     public double BarrelCurrentAmps = 0.0;
   }
@@ -19,4 +19,12 @@ public interface BarrelIO {
   public default void setBarrelVelocity(double velocity) {}
 
   public default void stop() {}
+
+  public default void idle(BarrelIOInputs inputs) {}
+
+  /** Updates the motor outputs with LQR. */
+  public default void updateOutputs(BarrelIOInputs inputs, double targetVelocity) {}
+
+  /** Direct set motor voltage - single motor (applied to both/follower). */
+  public default void setMotorVoltage(double volts) {}
 }

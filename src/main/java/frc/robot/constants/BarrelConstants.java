@@ -22,8 +22,26 @@ public class BarrelConstants {
 
   public static final boolean statorCurrentLimitEnable = false;
 
-  public static final boolean supplyCurrentLimitEnable = true;
+  public static final boolean supplyCurrentLimitEnable = false;
 
-  public static final double BarrelForwardVelocity = 60;
-  public static final double BarrelReverseVelocity = -60;
+  public static final double kLeftSlot_kV = 0;
+
+  public static final double kLeftSlot_kA = 0;
+
+  public static final double kKalmanModelStandardDeviation = 3.0;
+
+  public static final double kKalmanEncoderStandardDeviation = 99999.0;
+
+  public static final double kLoopTime = 0.02;
+
+  public static final double kVoltageTolerance = 12;
+  public static final double kTolerence = 3;
+
+  public static final double kIdleSpeed = 0;
+
+  public static final double BarrelReverseVelocity = 0;
+
+  public static final double BarrelForwardVelocity = 0;
+
+  public static final double barrelMaxVoltage = 5.0;
 }
