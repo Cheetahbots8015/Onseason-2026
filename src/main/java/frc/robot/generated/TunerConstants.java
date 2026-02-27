@@ -59,7 +59,7 @@ public class TunerConstants {
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
   private static final Pigeon2Configuration pigeonConfigs = null;
 
-  public static final CANBus kCANBus = new CANBus("rio", "./logs/example.hoot");
+  public static final CANBus kCANBus = new CANBus("canivore", "./logs/example.hoot");
 
   public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.73);
 
@@ -72,7 +72,7 @@ public class TunerConstants {
   private static final boolean kInvertLeftSide = false;
   private static final boolean kInvertRightSide = true;
 
-  private static final int kPigeonId = 0;
+  private static final int kPigeonId = 5;
 
   private static final MomentOfInertia kSteerInertia = KilogramSquareMeters.of(0.004);
   private static final MomentOfInertia kDriveInertia = KilogramSquareMeters.of(0.025);
