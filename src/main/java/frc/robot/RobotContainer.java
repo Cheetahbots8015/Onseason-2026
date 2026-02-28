@@ -25,7 +25,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.BarrelCommands.BarrelForwardVelocityCommand;
+import frc.robot.commands.BarrelCommands.BarrelReverseVelocityCommand;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
+import frc.robot.commands.FeederCommands.FeederReverseVelocityCommand;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
@@ -186,12 +190,23 @@ public class RobotContainer {
 
     controller.leftTrigger().whileTrue(new ShooterSetVelocityCommand(shooter));
 
+    controller
+        .rightTrigger()
+        .whileTrue(
+            new FeederForwardVelocityCommand(feeder)
+                .alongWith(new BarrelForwardVelocityCommand(barrel)));
+    controller
+        .rightBumper()
+        .whileTrue(
+            new FeederReverseVelocityCommand(feeder)
+                .alongWith(new BarrelReverseVelocityCommand(barrel)));
+
     controller.a().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
     controller.b().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     controller.x().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     controller.y().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
-    SmartDashboard.putNumber("kShootingSpeed", 90);
+    SmartDashboard.putNumber("kShootingSpeed", 220);
     SmartDashboard.putNumber("kShootingVoltage", 2.0);
   }
 
