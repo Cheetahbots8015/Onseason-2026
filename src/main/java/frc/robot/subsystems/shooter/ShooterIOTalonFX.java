@@ -48,8 +48,8 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   public ShooterIOTalonFX() {
     // Initialize hardware on the RIO CAN bus
-    left = new TalonFX(ShooterConstants.kLeftMotorID, "rio");
-    right = new TalonFX(ShooterConstants.kRightMotorID, "rio");
+    left = new TalonFX(ShooterConstants.kLeftMotorID, "canivore");
+    right = new TalonFX(ShooterConstants.kRightMotorID, "canivore");
 
     LinearSystem<N1, N1, N1> flywheelSystem =
         LinearSystemId.identifyVelocitySystem(

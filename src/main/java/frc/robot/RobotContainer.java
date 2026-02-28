@@ -31,7 +31,6 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
 import frc.robot.commands.FeederCommands.FeederReverseVelocityCommand;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
-import frc.robot.commands.ShooterCommands.ShooterSetVoltageCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.barrel.BarrelIOSim;
@@ -190,9 +189,7 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.leftTrigger().whileTrue(new ShooterSetVelocityCommand(shooter));
-<<<<<<< Updated upstream
     controller.rightTrigger().whileTrue(new ShooterSetVoltageCommand(shooter));
-=======
     controller
         .rightTrigger()
         .whileTrue(
@@ -203,7 +200,6 @@ public class RobotContainer {
         .whileTrue(
             new FeederReverseVelocityCommand(feeder)
                 .alongWith(new BarrelReverseVelocityCommand(barrel)));
->>>>>>> Stashed changes
 
     controller.a().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
     controller.b().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));

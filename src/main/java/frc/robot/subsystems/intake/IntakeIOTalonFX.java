@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -23,6 +24,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   private TalonFXConfiguration flywheelConfigs = new TalonFXConfiguration();
   private final TalonFX arm;
   private TalonFXConfiguration armConfigs = new TalonFXConfiguration();
+  private final CANcoder sensor = new CANcoder(IntakeConstants.sensorID, "canivore");
 
   final MotionMagicTorqueCurrentFOC m_armRequest = new MotionMagicTorqueCurrentFOC(0).withSlot(0);
   final VelocityVoltage m_flywheelRequest = new VelocityVoltage(0).withSlot(0);
@@ -37,8 +39,10 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final StatusSignal<Voltage> ArmAppliedVolts;
   private final StatusSignal<Current> ArmCurrent;
 
+  private final StatusSignal<Angle> SensorDegrees;
+
   public IntakeIOTalonFX() {
-    flywheel = new TalonFX(IntakeConstants.flywheelID, "rio");
+    flywheel = new TalonFX(IntakeConstants.flywheelID, "canivore");
     flywheelConfigs.MotorOutput.withNeutralMode(
         IntakeConstants.flywheel_neutralmode_Coast
             ? NeutralModeValue.Coast
@@ -58,7 +62,7 @@ public class IntakeIOTalonFX implements IntakeIO {
     flywheelConfigs.Slot0.kS = IntakeConstants.flywheelkS;
     flywheelConfigs.Slot0.kV = IntakeConstants.flywheelkV;
 
-    arm = new TalonFX(IntakeConstants.armID, "rio");
+    arm = new TalonFX(IntakeConstants.armID, "canivore");
     armConfigs.MotorOutput.withNeutralMode(
         IntakeConstants.arm_neutralmode_Coast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
 
@@ -98,6 +102,9 @@ public class IntakeIOTalonFX implements IntakeIO {
     ArmAppliedVolts = arm.getMotorVoltage();
     ArmCurrent = arm.getTorqueCurrent();
 
+    // Create status signals for the sensor
+    SensorDegrees = sensor.getPosition();
+
     BaseStatusSignal.setUpdateFrequencyForAll(
         IntakeConstants.statusUpdateFrequency,
         FlywheelPosition,
@@ -107,7 +114,8 @@ public class IntakeIOTalonFX implements IntakeIO {
         ArmPosition,
         ArmVelocity,
         ArmAppliedVolts,
-        ArmCurrent);
+        ArmCurrent,
+        SensorDegrees);
     ParentDevice.optimizeBusUtilizationForAll(flywheel);
   }
 
@@ -121,7 +129,8 @@ public class IntakeIOTalonFX implements IntakeIO {
         ArmPosition,
         ArmVelocity,
         ArmAppliedVolts,
-        ArmCurrent);
+        ArmCurrent,
+        SensorDegrees);
     // Update motor inputs
     inputs.FlywheelPositionRad = Units.rotationsToRadians(FlywheelPosition.getValueAsDouble());
     inputs.FlywheelVelocityRadPerSec =
@@ -133,6 +142,7 @@ public class IntakeIOTalonFX implements IntakeIO {
     inputs.ArmVelocityRadPerSec = Units.rotationsToRadians(ArmVelocity.getValueAsDouble());
     inputs.ArmAppliedVolts = ArmAppliedVolts.getValueAsDouble();
     inputs.ArmCurrentAmps = ArmCurrent.getValueAsDouble();
+    inputs.SensorDegrees = SensorDegrees.getValueAsDouble();
   }
 
   @Override

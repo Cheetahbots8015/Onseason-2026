@@ -29,7 +29,7 @@ public class BarrelIOTalonFX implements BarrelIO {
   private final StatusSignal<Current> BarrelCurrent;
 
   public BarrelIOTalonFX() {
-    barrel = new TalonFX(BarrelConstants.barrelID, "rio");
+    barrel = new TalonFX(BarrelConstants.barrelID, "canivore");
     barrelConfigs.MotorOutput.withNeutralMode(
         BarrelConstants.barrel_neutralmode_Coast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
     // Set motor inversion based on desired rotation direction

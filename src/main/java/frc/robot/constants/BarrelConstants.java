@@ -1,7 +1,7 @@
 package frc.robot.constants;
 
 public class BarrelConstants {
-  public static final int barrelID = 33;
+  public static final int barrelID = 35;
 
   public static final boolean barrel_neutralmode_Coast = true;
   public static final boolean barrel_inverted_CounterClockwisePositive = true;
