@@ -189,7 +189,7 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.leftTrigger().whileTrue(new ShooterSetVelocityCommand(shooter));
-    controller.rightTrigger().whileTrue(new ShooterSetVoltageCommand(shooter));
+
     controller
         .rightTrigger()
         .whileTrue(
@@ -206,7 +206,7 @@ public class RobotContainer {
     controller.x().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     controller.y().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
-    SmartDashboard.putNumber("kShootingSpeed", 90);
+    SmartDashboard.putNumber("kShootingSpeed", 220);
     SmartDashboard.putNumber("kShootingVoltage", 2.0);
   }
 

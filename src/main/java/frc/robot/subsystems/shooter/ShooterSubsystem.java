@@ -21,8 +21,8 @@ public class ShooterSubsystem extends SubsystemBase {
     sysId =
         new SysIdRoutine(
             new SysIdRoutine.Config(
-                null,
-                null,
+                Units.Volts.of(0.3).per(Units.Second),
+                Units.Volts.of(3.0),
                 null,
                 (state) -> Logger.recordOutput("Shooter/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
@@ -34,9 +34,9 @@ public class ShooterSubsystem extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
     if (isIDLE) {
-      // io.idle(inputs);
+      io.idle(inputs);
     } else {
-      // io.updateOutputs(inputs, targetVelocity);
+      io.updateOutputs(inputs, targetVelocity);
     }
   }
 
