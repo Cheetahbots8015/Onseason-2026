@@ -165,8 +165,8 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
+            () -> Math.abs(controller.getLeftY()) > 0.2 ? -controller.getLeftY() * 0.8 : 0,
+            () -> Math.abs(controller.getLeftX()) > 0.2 ? -controller.getLeftX() * 0.8 : 0,
             () -> -controller.getRightX()));
 
     controller
@@ -201,6 +201,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new Command() {};
+    return autoChooser.get();
   }
 }
