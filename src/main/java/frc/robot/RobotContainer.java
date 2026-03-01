@@ -30,6 +30,8 @@ import frc.robot.commands.BarrelCommands.BarrelReverseVelocityCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
 import frc.robot.commands.FeederCommands.FeederReverseVelocityCommand;
+import frc.robot.commands.HoodCommands.setHoodPositionCommand;
+import frc.robot.commands.HoodCommands.setHoodVoltageCommand;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
@@ -208,6 +210,12 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("kShootingSpeed", 220);
     SmartDashboard.putNumber("kShootingVoltage", 2.0);
+    
+    controller.povUp().onTrue(new setHoodPositionCommand(hood));
+
+
+    // Units: Degrees
+    SmartDashboard.putNumber("HoodPosition", 280);
   }
 
   /**
