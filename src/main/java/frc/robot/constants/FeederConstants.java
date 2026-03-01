@@ -2,7 +2,6 @@ package frc.robot.constants;
 
 public class FeederConstants {
   public static final int feederID = 36;
-  public static final int sensorID = 37;
 
   public static final boolean feeder_neutralmode_Coast = true;
   public static final boolean feeder_inverted_CounterClockwisePositive = false;
