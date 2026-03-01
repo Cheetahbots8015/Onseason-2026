@@ -3,10 +3,12 @@ package frc.robot.subsystems.shooter;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
@@ -181,7 +183,11 @@ public class ShooterIOTalonFX implements ShooterIO {
   public void setMotorVoltage(double volts) {
 
     // right.setVoltage(volts);
-    right.setVoltage(volts);
+
+    SmartDashboard.putNumber("LQR/supplyVolts", right.getSupplyVoltage(true).getValueAsDouble());
+    right.setControl(
+        new VoltageOut(
+            MathUtil.clamp(volts, volts, right.getSupplyVoltage(true).getValueAsDouble())));
     SmartDashboard.putNumber("LQR/volts", volts);
     SmartDashboard.putNumber("LQR/error", m_loop.getError(0));
     SmartDashboard.putNumber("LQR/u", m_loop.getU(0));
