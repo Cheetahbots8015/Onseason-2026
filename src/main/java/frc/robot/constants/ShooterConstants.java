@@ -48,5 +48,5 @@ public final class ShooterConstants {
       3.0; // How accurate we think our model is
   public static final double kKalmanEncoderStandardDeviation =
       0.15; // How accurate we think our encoder data is
-  public static final double kVoltageTolerance = 12.0;
+  public static final double kVoltageTolerance = 16.0;
 }

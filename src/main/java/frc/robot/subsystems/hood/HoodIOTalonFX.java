@@ -76,7 +76,7 @@ public class HoodIOTalonFX implements HoodIO {
   @Override
   public void updateInputs(HoodIOInputs inputs) {
     BaseStatusSignal.refreshAll(HoodPosition, HoodVelocity, HoodAppliedVolts, HoodCurrent);
-    // Update motor inputs 
+    // Update motor inputs
     inputs.HoodPositionDeg = CheetahUtil.hoodRotationToDegrees(HoodPosition.getValueAsDouble());
     inputs.HoodVelocityRadPerSec = Units.rotationsToRadians(HoodVelocity.getValueAsDouble());
     inputs.HoodAppliedVolts = HoodAppliedVolts.getValueAsDouble();
