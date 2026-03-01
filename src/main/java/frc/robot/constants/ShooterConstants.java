@@ -27,7 +27,7 @@ public final class ShooterConstants {
   public static final double kRightSlot_kD = 0.0;
   public static final double kRightSlot_kA = 0.00430785;
   public static final double kRightSlot_kS = 0.0;
-  public static final double kRightSlot_kV = 0.0310575; 
+  public static final double kRightSlot_kV = 0.0310575;
 
   public static final double kTolerence = 1;
 
