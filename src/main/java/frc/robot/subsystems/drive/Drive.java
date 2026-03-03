@@ -291,7 +291,7 @@ public class Drive extends SubsystemBase {
     doRejectUpdate = false;
 
     LimelightHelpers.SetRobotOrientation(
-        "limelight-left",
+        "limelight-chassis",
         poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
         0,
         0,
@@ -304,9 +304,9 @@ public class Drive extends SubsystemBase {
     }
     try {
       doRejectUpdate = false;
-      LimelightHelpers.SetFiducialIDFiltersOverride("limelight-left", validateID);
+      LimelightHelpers.SetFiducialIDFiltersOverride("limelight-chassis", validateID);
       LimelightHelpers.PoseEstimate mt1 =
-          LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-left");
+          LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-chassis");
       if (mt1.tagCount == 0) {
         doRejectUpdate = true;
       } else {
@@ -324,33 +324,6 @@ public class Drive extends SubsystemBase {
     } catch (Exception e) {
       // TODO: handle exception
     }
-    try {
-      doRejectUpdater = false;
-      LimelightHelpers.SetRobotOrientation(
-          "limelight-right",
-          poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
-          0,
-          0,
-          0,
-          0,
-          0);
-      LimelightHelpers.SetFiducialIDFiltersOverride("limelight-right", validateID);
-      LimelightHelpers.PoseEstimate mt1r =
-          LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-right");
-      if (mt1r.tagCount == 0) {
-        doRejectUpdater = true;
-      } else {
-        doRejectUpdater = shouldReject(mt1r, validateID);
-      }
-      if (!doRejectUpdater) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
-        poseEstimator.addVisionMeasurement(mt1r.pose, mt1r.timestampSeconds);
-      }
-      Logger.recordOutput("LL/right-pose", mt1r.pose);
-    } catch (Exception e) {
-      // TODO: handle exception
-    }
-
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && ContainerConstants.currentMode != Mode.SIM);
   }

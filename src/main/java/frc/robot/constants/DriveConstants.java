@@ -20,8 +20,10 @@ public class DriveConstants {
   public static final double simTurnKp = 8.0;
   public static final double simTurnKd = 0.0;
 
-  public static final int[] redTags = new int[] {6, 7, 8, 9, 10, 11};
-  public static final int[] blueTags = new int[] {17, 18, 19, 20, 21, 22};
+  public static final int[] redTags =
+      new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+  public static final int[] blueTags =
+      new int[] {17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
 
   public static final double maxAmbiguity = 999;
   public static final double maxCameraDist = 2.0;

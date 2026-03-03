@@ -33,6 +33,7 @@ import frc.robot.commands.FeederCommands.FeederReverseVelocityCommand;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.GameData;
 import frc.robot.subsystems.barrel.BarrelIOSim;
 import frc.robot.subsystems.barrel.BarrelIOTalonFX;
 import frc.robot.subsystems.barrel.BarrelSubsystem;
@@ -74,6 +75,7 @@ public class RobotContainer {
   private final FeederSubsystem feeder;
   private final TurretSubsystem turret;
   private final ClimberSubsystem climber;
+  private final GameData gameData;
 
   // Controller
   private CommandXboxController controller = new CommandXboxController(0);
@@ -99,6 +101,7 @@ public class RobotContainer {
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         turret = new TurretSubsystem(new TurretIOTalonFX());
         climber = new ClimberSubsystem(new ClimberIOTalonFX());
+        gameData = new GameData();
         break;
 
       case SIM:
@@ -116,6 +119,7 @@ public class RobotContainer {
         feeder = new FeederSubsystem(new FeederIOSim());
         turret = new TurretSubsystem(new TurretIOSim());
         climber = new ClimberSubsystem(new ClimberIOSim());
+        gameData = new GameData();
         break;
 
       default:
@@ -133,6 +137,7 @@ public class RobotContainer {
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         turret = new TurretSubsystem(new TurretIOTalonFX());
         climber = new ClimberSubsystem(new ClimberIOTalonFX());
+        gameData = new GameData();
         break;
     }
 
