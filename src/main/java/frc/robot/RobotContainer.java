@@ -215,9 +215,8 @@ public class RobotContainer {
     controller.x().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     controller.y().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
-    SmartDashboard.putNumber("kShootingSpeed", 220);
-    SmartDashboard.putNumber("kShootingVoltage", 2.0);
-    SmartDashboard.putNumber("HoodPosition", 280);
+    SmartDashboard.putNumber("kShootingSpeed", 230);
+    SmartDashboard.putNumber("HoodPosition", 0);
     SmartDashboard.putNumber("FlyWheelVelocity", 400);
 
     controller.povUp().whileTrue(new FlyWheelSetVelocityCommand(intake));

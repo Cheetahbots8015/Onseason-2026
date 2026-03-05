@@ -26,10 +26,10 @@ public final class ShooterConstants {
   public static final double kRightSlot_kI = 0.0;
   public static final double kRightSlot_kD = 0.0;
   // public static final double kRightSlot_kA = 0.00430785;
-  public static final double kRightSlot_kA = 0.0068918;
+  public static final double kRightSlot_kA = 0.00388;
   public static final double kRightSlot_kS = 0.0;
   // public static final double kRightSlot_kV = 0.0310575;
-  public static final double kRightSlot_kV = 0.031003;
+  public static final double kRightSlot_kV = 0.023425;
 
   public static final double kTolerence = 1;
 
@@ -49,6 +49,6 @@ public final class ShooterConstants {
   public static final double kKalmanModelStandardDeviation =
       3.0; // How accurate we think our model is
   public static final double kKalmanEncoderStandardDeviation =
-      0.15; // How accurate we think our encoder data is
+      0.2; // How accurate we think our encoder data is
   public static final double kVoltageTolerance = 16.0;
 }
