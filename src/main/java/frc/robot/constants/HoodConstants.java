@@ -12,7 +12,7 @@ public class HoodConstants {
   // Units: Degrees
   public static final double hoodkP = 3.6;
   public static final double hoodkI = 0.0;
-  public static final double hoodkD = 0.0;
+  public static final double hoodkD = 0.1;
   public static final double hoodkS = 0.0;
   public static final double hoodkV = 0.0;
   public static final double hoodkA = 0.0;

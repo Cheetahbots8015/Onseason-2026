@@ -210,14 +210,13 @@ public class RobotContainer {
             new FeederReverseVelocityCommand(feeder)
                 .alongWith(new BarrelReverseVelocityCommand(barrel)));
 
-    controller.a().whileTrue(intake.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    controller.b().whileTrue(intake.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    controller.x().whileTrue(intake.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    controller.y().whileTrue(intake.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    controller.a().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    controller.b().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    controller.x().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    controller.y().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
-    SmartDashboard.putNumber("kShootingSpeed", 220);
-    SmartDashboard.putNumber("kShootingVoltage", 2.0);
-    SmartDashboard.putNumber("HoodPosition", 280);
+    SmartDashboard.putNumber("kShootingSpeed", 230);
+    SmartDashboard.putNumber("HoodPosition", 0);
     SmartDashboard.putNumber("FlyWheelVelocity", 400);
 
     controller.povUp().whileTrue(new FlyWheelSetVelocityCommand(intake));
