@@ -25,7 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
                 null,
                 (state) -> Logger.recordOutput("Intake/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
-                (voltage) -> io.setFlywheelVoltage(voltage.in(Units.Volt)), null, this));
+                (voltage) -> io.setArmVoltage(voltage.in(Units.Volt)), null, this));
   }
 
   public void periodic() {
