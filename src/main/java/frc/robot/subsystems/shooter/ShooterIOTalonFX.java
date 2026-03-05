@@ -103,6 +103,8 @@ public class ShooterIOTalonFX implements ShooterIO {
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive;
 
+    rightConfigs.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.2;
+
     // Apply PID and Feedforward gains
 
     left.getConfigurator().apply(leftConfigs);

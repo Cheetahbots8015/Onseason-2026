@@ -36,6 +36,7 @@ import frc.robot.commands.IntakeCommands.FlyWheelSetVelocityCommand;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.GameData;
 import frc.robot.subsystems.barrel.BarrelIOSim;
 import frc.robot.subsystems.barrel.BarrelIOTalonFX;
 import frc.robot.subsystems.barrel.BarrelSubsystem;
@@ -80,6 +81,7 @@ public class RobotContainer {
   private final FeederSubsystem feeder;
   private final TurretSubsystem turret;
   private final ClimberSubsystem climber;
+  private final GameData gameData;
   private final IntakeSubsystem intake;
 
   // Controller
@@ -106,6 +108,7 @@ public class RobotContainer {
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         turret = new TurretSubsystem(new TurretIOTalonFX());
         climber = new ClimberSubsystem(new ClimberIOTalonFX());
+        gameData = new GameData();
         intake = new IntakeSubsystem(new IntakeIOTalonFX());
         break;
 
@@ -124,6 +127,7 @@ public class RobotContainer {
         feeder = new FeederSubsystem(new FeederIOSim());
         turret = new TurretSubsystem(new TurretIOSim());
         climber = new ClimberSubsystem(new ClimberIOSim());
+        gameData = new GameData();
         intake = new IntakeSubsystem(new IntakeIOSim());
         break;
 
@@ -142,6 +146,7 @@ public class RobotContainer {
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         turret = new TurretSubsystem(new TurretIOTalonFX());
         climber = new ClimberSubsystem(new ClimberIOTalonFX());
+        gameData = new GameData();
         intake = new IntakeSubsystem(new IntakeIOTalonFX());
         break;
     }
@@ -179,9 +184,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> Math.abs(controller.getLeftY()) > 0.2 ? -controller.getLeftY() * 0.8 : 0,
-            () -> Math.abs(controller.getLeftX()) > 0.2 ? -controller.getLeftX() * 0.8 : 0,
-            () -> Math.abs(controller.getRightX()) > 0.2 ? -controller.getRightX() : 0));
+            () -> -controller.getLeftY(),
+            () -> -controller.getLeftX(),
+            () -> -controller.getRightX()));
 
     controller
         .povUp()
@@ -215,9 +220,8 @@ public class RobotContainer {
     controller.x().onTrue(new ArmSetMotionMagicCommand(intake, 0));
     controller.y().onTrue(new ArmSetMotionMagicCommand(intake, 150));
 
-    SmartDashboard.putNumber("kShootingSpeed", 220);
-    SmartDashboard.putNumber("kShootingVoltage", 2.0);
-    SmartDashboard.putNumber("HoodPosition", 280);
+    SmartDashboard.putNumber("kShootingSpeed", 230);
+    SmartDashboard.putNumber("HoodPosition", 0);
     SmartDashboard.putNumber("FlyWheelVelocity", 400);
   }
 
