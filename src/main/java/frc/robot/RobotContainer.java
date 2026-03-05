@@ -31,6 +31,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
 import frc.robot.commands.FeederCommands.FeederReverseVelocityCommand;
 import frc.robot.commands.HoodCommands.setHoodPositionCommand;
+import frc.robot.commands.IntakeCommands.ArmSetMotionMagicCommand;
 import frc.robot.commands.IntakeCommands.FlyWheelSetVelocityCommand;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
 import frc.robot.constants.ContainerConstants;
@@ -209,22 +210,15 @@ public class RobotContainer {
         .whileTrue(
             new FeederReverseVelocityCommand(feeder)
                 .alongWith(new BarrelReverseVelocityCommand(barrel)));
-
-    controller.a().whileTrue(intake.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    controller.b().whileTrue(intake.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    controller.x().whileTrue(intake.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    controller.y().whileTrue(intake.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    controller.a().whileTrue(new FlyWheelSetVelocityCommand(intake));
+    controller.b().onTrue(new setHoodPositionCommand(hood));
+    controller.x().onTrue(new ArmSetMotionMagicCommand(intake, 0));
+    controller.y().onTrue(new ArmSetMotionMagicCommand(intake, 150));
 
     SmartDashboard.putNumber("kShootingSpeed", 220);
     SmartDashboard.putNumber("kShootingVoltage", 2.0);
     SmartDashboard.putNumber("HoodPosition", 280);
     SmartDashboard.putNumber("FlyWheelVelocity", 400);
-
-    controller.povUp().whileTrue(new FlyWheelSetVelocityCommand(intake));
-    controller.povDown().onTrue(new setHoodPositionCommand(hood));
-
-    // Units: Degrees
-
   }
 
   /**
