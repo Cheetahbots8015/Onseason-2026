@@ -25,9 +25,11 @@ public final class ShooterConstants {
   public static final double kRightSlot_kP = 0.0;
   public static final double kRightSlot_kI = 0.0;
   public static final double kRightSlot_kD = 0.0;
-  public static final double kRightSlot_kA = 0.00430785;
+  // public static final double kRightSlot_kA = 0.00430785;
+  public static final double kRightSlot_kA = 0.007;
   public static final double kRightSlot_kS = 0.0;
-  public static final double kRightSlot_kV = 0.0310575;
+  // public static final double kRightSlot_kV = 0.0310575;
+  public static final double kRightSlot_kV = 0.023425;
 
   public static final double kTolerence = 1;
 
@@ -38,7 +40,7 @@ public final class ShooterConstants {
 
   // Velocity Constants
   public static final double kShootingSpeed = 235;
-  public static final double kIdleSpeed = 20.0;
+  public static final double kIdleSpeed = 60;
 
   // Loop timing
   public static final double kLoopTime = 0.02; // 20 ms
@@ -48,5 +50,5 @@ public final class ShooterConstants {
       3.0; // How accurate we think our model is
   public static final double kKalmanEncoderStandardDeviation =
       0.15; // How accurate we think our encoder data is
-  public static final double kVoltageTolerance = 12.0;
+  public static final double kVoltageTolerance = 16.0;
 }

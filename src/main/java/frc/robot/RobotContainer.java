@@ -30,6 +30,8 @@ import frc.robot.commands.BarrelCommands.BarrelReverseVelocityCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
 import frc.robot.commands.FeederCommands.FeederReverseVelocityCommand;
+import frc.robot.commands.HoodCommands.setHoodPositionCommand;
+import frc.robot.commands.IntakeCommands.FlyWheelSetVelocityCommand;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
@@ -52,6 +54,9 @@ import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hood.HoodIOSim;
 import frc.robot.subsystems.hood.HoodIOTalonFX;
 import frc.robot.subsystems.hood.HoodSubsystem;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOTalonFX;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -76,6 +81,7 @@ public class RobotContainer {
   private final TurretSubsystem turret;
   private final ClimberSubsystem climber;
   private final GameData gameData;
+  private final IntakeSubsystem intake;
 
   // Controller
   private CommandXboxController controller = new CommandXboxController(0);
@@ -102,6 +108,7 @@ public class RobotContainer {
         turret = new TurretSubsystem(new TurretIOTalonFX());
         climber = new ClimberSubsystem(new ClimberIOTalonFX());
         gameData = new GameData();
+        intake = new IntakeSubsystem(new IntakeIOTalonFX());
         break;
 
       case SIM:
@@ -120,6 +127,7 @@ public class RobotContainer {
         turret = new TurretSubsystem(new TurretIOSim());
         climber = new ClimberSubsystem(new ClimberIOSim());
         gameData = new GameData();
+        intake = new IntakeSubsystem(new IntakeIOSim());
         break;
 
       default:
@@ -138,6 +146,7 @@ public class RobotContainer {
         turret = new TurretSubsystem(new TurretIOTalonFX());
         climber = new ClimberSubsystem(new ClimberIOTalonFX());
         gameData = new GameData();
+        intake = new IntakeSubsystem(new IntakeIOTalonFX());
         break;
     }
 
@@ -211,8 +220,15 @@ public class RobotContainer {
     controller.x().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     controller.y().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
-    SmartDashboard.putNumber("kShootingSpeed", 220);
-    SmartDashboard.putNumber("kShootingVoltage", 2.0);
+    SmartDashboard.putNumber("kShootingSpeed", 230);
+    SmartDashboard.putNumber("HoodPosition", 0);
+    SmartDashboard.putNumber("FlyWheelVelocity", 400);
+
+    controller.povUp().whileTrue(new FlyWheelSetVelocityCommand(intake));
+    controller.povDown().onTrue(new setHoodPositionCommand(hood));
+
+    // Units: Degrees
+
   }
 
   /**

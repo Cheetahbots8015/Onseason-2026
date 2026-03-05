@@ -3,7 +3,7 @@ package frc.robot.subsystems.hood;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -22,8 +22,7 @@ public class HoodIOTalonFX implements HoodIO {
   private TalonFXConfiguration hoodConfigs = new TalonFXConfiguration();
 
   // Torque current control requests
-  final MotionMagicTorqueCurrentFOC m_TorqueCurrentFOC = new MotionMagicTorqueCurrentFOC(0);
-
+  final PositionVoltage m_PositionVoltage = new PositionVoltage(0).withSlot(0);
   // Inputs from motor
   private final StatusSignal<Angle> HoodPosition;
   private final StatusSignal<AngularVelocity> HoodVelocity;
@@ -49,18 +48,10 @@ public class HoodIOTalonFX implements HoodIO {
     hoodConfigs.Slot0.kS = HoodConstants.hoodkS;
     hoodConfigs.Slot0.kV = HoodConstants.hoodkV;
 
-    // MotionMagic config
-    hoodConfigs.MotionMagic.MotionMagicCruiseVelocity = HoodConstants.motionMagicCruiseVelocity;
-    hoodConfigs.MotionMagic.MotionMagicAcceleration = HoodConstants.motionMagicAcceleration;
-
-    // Limit TorqueCurrent
-    hoodConfigs.TorqueCurrent.PeakForwardTorqueCurrent = HoodConstants.peakForwardTorqueCurrent;
-    hoodConfigs.TorqueCurrent.PeakReverseTorqueCurrent = HoodConstants.peakReverseTorqueCurrent;
-
     hoodConfigs.SoftwareLimitSwitch.ReverseSoftLimitThreshold =
-        CheetahUtil.hoodDegreesToRotation(HoodConstants.reverseSoftLimitThreshold);
+        HoodConstants.reverseSoftLimitThreshold;
     hoodConfigs.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
-        CheetahUtil.hoodDegreesToRotation(HoodConstants.forwardSoftLimitThreshold);
+        HoodConstants.forwardSoftLimitThreshold;
     hoodConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = HoodConstants.reverseSoftLimitEnable;
     hoodConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = HoodConstants.forwardSoftLimitEnable;
 
@@ -100,6 +91,6 @@ public class HoodIOTalonFX implements HoodIO {
   @Override
   public void setHoodToDegrees(double degrees) {
     double rotation = CheetahUtil.hoodDegreesToRotation(degrees);
-    hood.setControl(m_TorqueCurrentFOC.withPosition(rotation));
+    hood.setControl(m_PositionVoltage.withPosition(rotation));
   }
 }
