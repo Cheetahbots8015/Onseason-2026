@@ -7,8 +7,8 @@ public class IntakeConstants {
 
   public static final boolean flywheel_neutralmode_Coast = true;
   public static final boolean flywheel_inverted_CounterClockwisePositive = false;
-  public static final boolean arm_neutralmode_Coast = true;
-  public static final boolean arm_inverted_CounterClockwisePositive = true;
+  public static final boolean arm_neutralmode_Coast = false;
+  public static final boolean arm_inverted_CounterClockwisePositive = false;
 
   public static final double flywheelVolts = 0.0;
   public static final double armVolts = 0.0;

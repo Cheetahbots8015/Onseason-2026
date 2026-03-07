@@ -103,7 +103,7 @@ public class ShooterIOTalonFX implements ShooterIO {
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive;
 
-    rightConfigs.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.2;
+    // rightConfigs.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.2;
     rightConfigs.CurrentLimits.StatorCurrentLimitEnable = false;
     rightConfigs.CurrentLimits.SupplyCurrentLimit = 80.0;
 
@@ -179,7 +179,7 @@ public class ShooterIOTalonFX implements ShooterIO {
     if (inputs.rightVelocityRadPerSec > ShooterConstants.kIdleSpeed + ShooterConstants.kTolerence) {
       stop();
     } else {
-      updateOutputs(inputs, ShooterConstants.kIdleSpeed);
+      // updateOutputs(inputs, ShooterConstants.kIdleSpeed);
     }
   }
 
@@ -202,6 +202,5 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   public void stop() {
     right.setVoltage(0);
-    ;
   }
 }

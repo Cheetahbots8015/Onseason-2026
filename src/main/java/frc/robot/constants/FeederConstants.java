@@ -28,7 +28,7 @@ public class FeederConstants {
 
   public static final double feederReverseVoltage = 0.0;
 
-  public static final double feederForwardVelocity = 60;
+  public static final double feederForwardVelocity = 40;
 
   public static final double feederReverseVelocity = -20;
 }

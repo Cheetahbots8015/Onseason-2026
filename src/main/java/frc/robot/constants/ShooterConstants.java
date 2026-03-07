@@ -26,14 +26,14 @@ public final class ShooterConstants {
   public static final double kRightSlot_kI = 0.0;
   public static final double kRightSlot_kD = 0.0;
   // public static final double kRightSlot_kA = 0.00430785;
-  public static final double kRightSlot_kA = 0.007;
+  public static final double kRightSlot_kA = 0.0032085;
   public static final double kRightSlot_kS = 0.0;
   // public static final double kRightSlot_kV = 0.0310575;
-  public static final double kRightSlot_kV = 0.023425;
+  public static final double kRightSlot_kV = 0.020658;
 
   public static final double kTolerence = 1;
 
-  public static final double kMaxVoltage = 9; // Maximum voltage for the motors
+  public static final double kMaxVoltage = 8; // Maximum voltage for the motors
 
   // Voltage Constants
   public static final double kShootingVoltage = 0.0;

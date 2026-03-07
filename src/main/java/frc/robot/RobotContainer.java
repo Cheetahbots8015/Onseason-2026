@@ -26,14 +26,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.BarrelCommands.BarrelForwardVelocityCommand;
-import frc.robot.commands.BarrelCommands.BarrelReverseVelocityCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
-import frc.robot.commands.FeederCommands.FeederReverseVelocityCommand;
 import frc.robot.commands.HoodCommands.setHoodPositionCommand;
-import frc.robot.commands.IntakeCommands.ArmSetMotionMagicCommand;
-import frc.robot.commands.IntakeCommands.FlyWheelSetVelocityCommand;
+import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
+import frc.robot.commands.TurretCommands.setTurretPositionCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.GameData;
@@ -86,6 +84,7 @@ public class RobotContainer {
 
   // Controller
   private CommandXboxController controller = new CommandXboxController(0);
+  private CommandXboxController subcontroller = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -203,26 +202,23 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.leftTrigger().whileTrue(new ShooterSetVelocityCommand(shooter));
+    controller.rightBumper().whileTrue(new ShooterSetVelocityCommand(shooter));
 
     controller
         .rightTrigger()
         .whileTrue(
             new FeederForwardVelocityCommand(feeder)
                 .alongWith(new BarrelForwardVelocityCommand(barrel)));
-    controller
-        .rightBumper()
-        .whileTrue(
-            new FeederReverseVelocityCommand(feeder)
-                .alongWith(new BarrelReverseVelocityCommand(barrel)));
-    controller.a().whileTrue(new FlyWheelSetVelocityCommand(intake));
-    controller.b().onTrue(new setHoodPositionCommand(hood));
-    controller.x().onTrue(new ArmSetMotionMagicCommand(intake, 0));
-    controller.y().onTrue(new ArmSetMotionMagicCommand(intake, 150));
 
-    SmartDashboard.putNumber("kShootingSpeed", 200);
-    SmartDashboard.putNumber("HoodPosition", 320);
+    controller.leftTrigger().whileTrue(new IntakeCommand(intake));
+
+    hood.setDefaultCommand(new setHoodPositionCommand(hood));
+
+    SmartDashboard.putNumber("kShootingSpeed", 330);
+    SmartDashboard.putNumber("HoodPosition", 60);
     SmartDashboard.putNumber("FlyWheelVelocity", 400);
+
+    subcontroller.a().whileTrue(new setTurretPositionCommand(turret, 0));
   }
 
   /**

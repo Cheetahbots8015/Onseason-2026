@@ -21,8 +21,8 @@ public class ShooterSubsystem extends SubsystemBase {
     sysId =
         new SysIdRoutine(
             new SysIdRoutine.Config(
-                Units.Volts.of(0.3).per(Units.Second),
-                Units.Volts.of(3.0),
+                Units.Volts.of(0.5).per(Units.Second),
+                Units.Volts.of(5.0),
                 null,
                 (state) -> Logger.recordOutput("Shooter/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
