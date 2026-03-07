@@ -87,7 +87,7 @@ public class CheetahUtil {
   }
 
   public static double hoodDegreesToRotation(double degrees) {
-    return degrees / 360.0 / HoodConstants.reductionRatio;
+    return (degrees / 360.0 / HoodConstants.reductionRatio);
   }
 
   public static double climberRotationsToDeg(double rotations) {

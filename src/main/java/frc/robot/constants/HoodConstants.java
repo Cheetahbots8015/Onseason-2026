@@ -7,6 +7,7 @@ public class HoodConstants {
   public static final boolean hood_inverted_CounterClockwisePositive = true;
 
   public static final double reductionRatio = 15.0 / 36.0;
+  public static final double offset = 0.227539;
   public static final double statusUpdateFrequency = 50;
 
   // Units: Degrees
@@ -18,7 +19,7 @@ public class HoodConstants {
   public static final double hoodkA = 0.0;
 
   // Units: Rotations
-  public static final double reverseSoftLimitThreshold = 0.012;
+  public static final double reverseSoftLimitThreshold = 0.227539;
   public static final double forwardSoftLimitThreshold = 1.95;
 
   public static final boolean reverseSoftLimitEnable = true;

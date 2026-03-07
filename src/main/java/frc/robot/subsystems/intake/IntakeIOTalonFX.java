@@ -73,7 +73,7 @@ public class IntakeIOTalonFX implements IntakeIO {
             : InvertedValue.Clockwise_Positive);
 
     armConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    armConfigs.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 22;
+    armConfigs.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 43;
     armConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     armConfigs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
 
