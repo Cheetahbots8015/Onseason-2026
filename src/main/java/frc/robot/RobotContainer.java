@@ -220,8 +220,8 @@ public class RobotContainer {
     controller.x().onTrue(new ArmSetMotionMagicCommand(intake, 0));
     controller.y().onTrue(new ArmSetMotionMagicCommand(intake, 150));
 
-    SmartDashboard.putNumber("kShootingSpeed", 230);
-    SmartDashboard.putNumber("HoodPosition", 0);
+    SmartDashboard.putNumber("kShootingSpeed", 200);
+    SmartDashboard.putNumber("HoodPosition", 320);
     SmartDashboard.putNumber("FlyWheelVelocity", 400);
   }
 
