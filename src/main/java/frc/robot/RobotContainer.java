@@ -183,8 +183,14 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
+            () ->
+                -controller.getLeftY() > 0
+                    ? Math.pow(controller.getLeftY(), 2)
+                    : -Math.pow(controller.getLeftY(), 2),
+            () ->
+                -controller.getLeftX() > 0
+                    ? Math.pow(controller.getLeftX(), 2)
+                    : -Math.pow(controller.getLeftX(), 2),
             () -> -controller.getRightX()));
 
     controller
@@ -219,6 +225,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("FlyWheelVelocity", 400);
 
     subcontroller.a().whileTrue(new setTurretPositionCommand(turret, 0));
+    subcontroller.b().whileTrue(new setTurretPositionCommand(turret, 100));
+    subcontroller.x().whileTrue(new setTurretPositionCommand(turret, 200));
   }
 
   /**

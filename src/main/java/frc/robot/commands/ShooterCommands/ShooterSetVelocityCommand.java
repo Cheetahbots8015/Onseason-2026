@@ -39,6 +39,7 @@ public class ShooterSetVelocityCommand extends Command {
 
   @Override
   public void execute() {
+
     SmartDashboard.putNumber("FeederForwardVelocity", 40);
     temp =
         m_filter.calculate(
