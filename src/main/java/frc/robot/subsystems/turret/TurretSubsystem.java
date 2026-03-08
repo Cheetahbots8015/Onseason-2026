@@ -55,37 +55,43 @@ public class TurretSubsystem extends SubsystemBase {
             SmartDashboard.getNumberArray("translation", new double[] {0.0, 0.0})[1]);
 
     double rotation = SmartDashboard.getNumber("rotation", 0.0);
-    
+
     SmartDashboard.putNumberArray(
         "shooter/translation", new double[] {currentPose.getX(), currentPose.getY()});
 
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == Alliance.Red) {
-          isRedAlliance = true;
+      isRedAlliance = true;
       target =
           new Translation2d(
               (12.519177399999998 + 11.3118646) / 2, 4.0346376); // Target for Red alliance
-      }
-      else{
-            isRedAlliance = false;
-        target =
-            new Translation2d(
-                (5.229174199999999 + 4.0218614) / 2, 4.0346376); // Target for Blue alliance
-      }
+    } else {
+      isRedAlliance = false;
+      target =
+          new Translation2d(
+              (5.229174199999999 + 4.0218614) / 2, 4.0346376); // Target for Blue alliance
+    }
     if (currentPose.getX() < 11.3118646 && currentPose.getX() > 5.229174199999999) {
       inNeutralZone = true;
     } else {
       inNeutralZone = false;
     }
-    if(isRedAlliance&&!inNeutralZone || !isRedAlliance&&inNeutralZone){
-      calculated_angle = Math.toDegrees(Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX())-rotation+180);
+    SmartDashboard.putBoolean("isRed", isRedAlliance);
+    SmartDashboard.putBoolean("inNeutral", inNeutralZone);
+    if (isRedAlliance && !inNeutralZone || !isRedAlliance && inNeutralZone) {
+      calculated_angle =
+          Math.toDegrees(
+              Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX())
+                  - rotation
+                  - 180);
+    } else {
+      calculated_angle =
+          Math.toDegrees(
+              Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX())
+                  - rotation);
     }
-    else{
-      calculated_angle = Math.toDegrees(Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX())-rotation);
-    }    
-    calculated_angle = (calculated_angle + 360) % 360; // Normalize to [0, 360)
+    calculated_angle = (-calculated_angle + 360) % 360; // Normalize to [0, 360)
     SmartDashboard.putNumber("calculated_angle", calculated_angle);
-
   }
 
   public void setMotorVoltage(double volts) {
