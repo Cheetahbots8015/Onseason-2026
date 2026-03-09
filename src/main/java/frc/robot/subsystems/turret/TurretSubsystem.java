@@ -108,7 +108,7 @@ public class TurretSubsystem extends SubsystemBase {
             - pigeon_offset;
 
     calculated_angle = inputs.turretPositionDeg + calculated_difference;
-    calculated_angle = (calculated_angle + 360) % 360; // Normalize to [0, 360)
+    calculated_angle = ((calculated_angle) % 360 + 360) % 360; // Normalize to [0, 360)
     SmartDashboard.putNumber("calculated_angle", calculated_angle);
     SmartDashboard.putNumber("calculated_difference", calculated_difference);
     return calculated_angle;
