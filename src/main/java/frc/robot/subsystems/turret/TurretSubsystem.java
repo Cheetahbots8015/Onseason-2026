@@ -22,6 +22,11 @@ public class TurretSubsystem extends SubsystemBase {
   private boolean inNeutralZone = false;
   private boolean turretAngleOK = false;
   private final XboxController driverController = new XboxController(0);
+  private final Translation2d RED_TARGET =
+      new Translation2d(
+          (12.519177399999998 + 11.3118646) / 2, 4.0346376); // Target for Red alliance
+  private final Translation2d BLUE_TARGET =
+      new Translation2d((5.229174199999999 + 4.0218614) / 2, 4.0346376); // Target for Blue alliance
 
   private double calculated_angle = 0.0;
   Translation2d target = new Translation2d(0.0, 0.0); // Placeholder for target translation
@@ -39,13 +44,9 @@ public class TurretSubsystem extends SubsystemBase {
                 (voltage) -> io.setMotorVoltage(voltage.in(Units.Volt)), null, this));
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == Alliance.Red) {
-      target =
-          new Translation2d(
-              (12.519177399999998 + 11.3118646) / 2, 4.0346376); // Target for Red alliance
+      target = RED_TARGET;
     } else {
-      target =
-          new Translation2d(
-              (5.229174199999999 + 4.0218614) / 2, 4.0346376); // Target for Blue alliance
+      target = BLUE_TARGET;
     }
   }
 
@@ -75,14 +76,10 @@ public class TurretSubsystem extends SubsystemBase {
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == Alliance.Red) {
       isRedAlliance = true;
-      target =
-          new Translation2d(
-              (12.519177399999998 + 11.3118646) / 2, 4.0346376); // Target for Red alliance
+      target = RED_TARGET;
     } else {
       isRedAlliance = false;
-      target =
-          new Translation2d(
-              (5.229174199999999 + 4.0218614) / 2, 4.0346376); // Target for Blue alliance
+      target = BLUE_TARGET;
     }
     if (currentPose.getX() < 11.3118646 && currentPose.getX() > 5.229174199999999) {
       inNeutralZone = true;
