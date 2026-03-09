@@ -27,17 +27,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.ShooterConstants;
 
 public class ShooterIOTalonFX implements ShooterIO {
-  private final TalonFX left;
   private final TalonFX right;
 
   private final LinearSystemLoop<N1, N1, N1> m_loop;
   private final Matrix<N1, N1> shooterRightState = VecBuilder.fill(0.0);
 
   // Status signals for telemetry and odometry
-  private final StatusSignal<Angle> leftPosition;
-  private final StatusSignal<AngularVelocity> leftVelocity;
-  private final StatusSignal<Voltage> leftAppliedVolts;
-  private final StatusSignal<Current> leftCurrent;
 
   private final StatusSignal<Angle> rightPosition;
   private final StatusSignal<AngularVelocity> rightVelocity;
@@ -46,7 +41,6 @@ public class ShooterIOTalonFX implements ShooterIO {
 
   public ShooterIOTalonFX() {
     // Initialize hardware on the RIO CAN bus
-    left = new TalonFX(ShooterConstants.kLeftMotorID, "canivore");
     right = new TalonFX(ShooterConstants.kRightMotorID, "canivore");
 
     LinearSystem<N1, N1, N1> flywheelSystem =
@@ -109,14 +103,7 @@ public class ShooterIOTalonFX implements ShooterIO {
 
     // Apply PID and Feedforward gains
 
-    left.getConfigurator().apply(leftConfigs);
     right.getConfigurator().apply(rightConfigs);
-
-    // Setup status signals
-    leftPosition = left.getPosition();
-    leftVelocity = left.getVelocity();
-    leftAppliedVolts = left.getMotorVoltage();
-    leftCurrent = left.getTorqueCurrent();
 
     rightPosition = right.getPosition();
     rightVelocity = right.getVelocity();
@@ -126,34 +113,17 @@ public class ShooterIOTalonFX implements ShooterIO {
     // Optimize CAN bus usage
     BaseStatusSignal.setUpdateFrequencyForAll(
         ShooterConstants.kStatusUpdateFrequency,
-        leftPosition,
-        leftVelocity,
-        leftAppliedVolts,
-        leftCurrent,
         rightPosition,
         rightVelocity,
         rightAppliedVolts,
         rightCurrent);
 
-    ParentDevice.optimizeBusUtilizationForAll(left, right);
+    ParentDevice.optimizeBusUtilizationForAll(right);
   }
 
   @Override
   public void updateInputs(ShooterIO.ShooterIOInputs inputs) {
-    BaseStatusSignal.refreshAll(
-        leftPosition,
-        leftVelocity,
-        leftAppliedVolts,
-        leftCurrent,
-        rightPosition,
-        rightVelocity,
-        rightAppliedVolts,
-        rightCurrent);
-
-    inputs.leftPositionRad = Units.rotationsToRadians(leftPosition.getValueAsDouble());
-    inputs.leftVelocityRadPerSec = Units.rotationsToRadians(leftVelocity.getValueAsDouble());
-    inputs.leftAppliedVolts = leftAppliedVolts.getValueAsDouble();
-    inputs.leftCurrentAmps = leftCurrent.getValueAsDouble();
+    BaseStatusSignal.refreshAll(rightPosition, rightVelocity, rightAppliedVolts, rightCurrent);
 
     inputs.rightPositionRad = Units.rotationsToRadians(rightPosition.getValueAsDouble());
     inputs.rightVelocityRadPerSec = Units.rotationsToRadians(rightVelocity.getValueAsDouble());

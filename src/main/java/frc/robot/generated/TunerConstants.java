@@ -40,22 +40,24 @@ public class TunerConstants {
 
   private static final Current kSlipCurrent = Amps.of(120.0);
 
-  private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
-  private static final TalonFXConfiguration steerInitialConfigs =
+  private static final TalonFXConfiguration driveInitialConfigs =
       new TalonFXConfiguration()
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  .withStatorCurrentLimit(Amps.of(60))
-                  .withStatorCurrentLimitEnable(true));
+                  .withStatorCurrentLimitEnable(false)
+                  .withSupplyCurrentLimit(Amps.of(30))
+                  .withSupplyCurrentLimitEnable(true))
+          .withClosedLoopRamps(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.1));
+  private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration();
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
   private static final Pigeon2Configuration pigeonConfigs = null;
 
   public static final CANBus kCANBus = new CANBus("canivore", "./logs/example.hoot");
 
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.04);
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.212);
   private static final double kCoupleRatio = 3.5714285714285716;
 
-  private static final double kDriveGearRatio = 6.746031746031747;
+  private static final double kDriveGearRatio = 6.12;
   private static final double kSteerGearRatio = 21.428571428571427;
   private static final Distance kWheelRadius = Inches.of(2.079);
 

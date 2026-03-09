@@ -8,28 +8,18 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class ShooterIOSim implements ShooterIO {
   private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(1);
-  private final DCMotorSim leftSim;
   private final DCMotorSim rightSim;
 
-  private double leftAppliedVolts = 0.0;
   private double rightAppliedVolts = 0.0;
 
   public ShooterIOSim() {
-    leftSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(GEARBOX, 0.001, 1), GEARBOX);
     rightSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(GEARBOX, 0.001, 1), GEARBOX);
   }
 
   @Override
   public void updateInputs(ShooterIO.ShooterIOInputs inputs) {
-    leftSim.setInputVoltage(MathUtil.clamp(leftAppliedVolts, -12.0, 12.0));
     rightSim.setInputVoltage(MathUtil.clamp(rightAppliedVolts, -12.0, 12.0));
-    leftSim.update(0.02);
     rightSim.update(0.02);
-
-    inputs.leftPositionRad = leftSim.getAngularPositionRad();
-    inputs.leftVelocityRadPerSec = Units.radiansToRotations(leftSim.getAngularVelocityRadPerSec());
-    inputs.leftAppliedVolts = leftSim.getInputVoltage();
-    inputs.leftCurrentAmps = Math.abs(leftSim.getCurrentDrawAmps());
 
     inputs.rightPositionRad = rightSim.getAngularPositionRad();
     inputs.rightVelocityRadPerSec =
@@ -40,13 +30,11 @@ public class ShooterIOSim implements ShooterIO {
 
   @Override
   public void setMotorVoltage(double volts) {
-    leftAppliedVolts = volts;
     rightAppliedVolts = volts;
   }
 
   @Override
   public void setVelocityControl(double radPerSec) {
-    leftAppliedVolts = radPerSec * 0.01;
     rightAppliedVolts = radPerSec * 0.01;
   }
 }

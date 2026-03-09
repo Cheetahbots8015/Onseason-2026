@@ -16,6 +16,7 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -40,6 +41,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Alert;
@@ -55,6 +57,7 @@ import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.constants.ContainerConstants.Mode;
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.TurretConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -115,6 +118,8 @@ public class Drive extends SubsystemBase {
   private ChassisSpeeds preSpeeds;
   private RobotConfig robotconfig;
 
+  private Pigeon2 turret_pigeon = new Pigeon2(TurretConstants.kPigeonId, "canivore");
+
   public boolean autoFliped = false;
 
   public Drive(
@@ -128,6 +133,8 @@ public class Drive extends SubsystemBase {
     modules[1] = new Module(frModuleIO, 1, TunerConstants.FrontRight);
     modules[2] = new Module(blModuleIO, 2, TunerConstants.BackLeft);
     modules[3] = new Module(brModuleIO, 3, TunerConstants.BackRight);
+
+    turret_pigeon.setYaw(0.0);
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
@@ -205,23 +212,23 @@ public class Drive extends SubsystemBase {
         });
   }
 
-  private boolean shouldReject(PoseEstimate mt1, int[] validateID) {
+  private boolean shouldReject(PoseEstimate mt2, int[] validateID) {
     // ambiguity check
-    if (mt1.tagCount == 0) {
+    if (mt2.tagCount == 0) {
       return false;
-    } else if (mt1.tagCount == 1 && mt1.rawFiducials.length == 1) {
-      if (mt1.rawFiducials[0].ambiguity > 0.5) {
+    } else if (mt2.tagCount == 1 && mt2.rawFiducials.length == 1) {
+      if (mt2.rawFiducials[0].ambiguity > 0.5) {
         return true;
       }
       // check distance
-      if (mt1.rawFiducials[0].distToCamera > 2.0) {
+      if (mt2.rawFiducials[0].distToCamera > 4.0) {
         return true;
       }
       // check if allowed
       else {
         boolean allowed = false;
         for (int i : validateID) {
-          if (mt1.rawFiducials[0].id == i) {
+          if (mt2.rawFiducials[0].id == i) {
             allowed = true;
           }
         }
@@ -230,7 +237,7 @@ public class Drive extends SubsystemBase {
     }
     // if multiple tags
     else {
-      return mt1.avgTagDist > 2.0;
+      return mt2.avgTagDist > 4.0;
     }
   }
 
@@ -290,6 +297,63 @@ public class Drive extends SubsystemBase {
     }
     doRejectUpdate = false;
 
+    SmartDashboard.putNumber("shooter/pigeon", turret_pigeon.getYaw().getValueAsDouble());
+
+    LimelightHelpers.setCameraPose_RobotSpace(
+        "limelight-shooter",
+        -0.06142
+            + 0.14468
+                * Math.cos(
+                    Units.degreesToRadians(
+                        turret_pigeon.getYaw().getValueAsDouble()
+                            - gyroInputs.yawPosition.getDegrees())),
+        -0.06142
+            + 0.14468
+                * Math.sin(
+                    Units.degreesToRadians(
+                        turret_pigeon.getYaw().getValueAsDouble()
+                            - gyroInputs.yawPosition.getDegrees())),
+        0.51653,
+        0,
+        25,
+        turret_pigeon.getYaw().getValueAsDouble() - gyroInputs.yawPosition.getDegrees());
+
+    LimelightHelpers.SetRobotOrientation(
+        "limelight-shooter",
+        poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
+        0,
+        0,
+        0,
+        0,
+        0);
+    LimelightHelpers.SetIMUMode("limelight-shooter", 1);
+    int[] validateID = DriveConstants.blueTags;
+    if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+      validateID = DriveConstants.redTags;
+    }
+    try {
+      doRejectUpdate = false;
+      LimelightHelpers.SetFiducialIDFiltersOverride("limelight-shooter", validateID);
+      LimelightHelpers.PoseEstimate mt2 =
+          LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
+      if (mt2.tagCount == 0) {
+        doRejectUpdate = true;
+      } else {
+        doRejectUpdate = shouldReject(mt2, validateID);
+      }
+      if (!doRejectUpdate) {
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+        poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+      }
+      Logger.recordOutput("LL/turret-pose", mt2.pose);
+      Logger.recordOutput("LL/turret-timestamp", mt2.timestampSeconds);
+      Logger.recordOutput("LL/turret-avgdist", mt2.avgTagDist);
+      Logger.recordOutput("LL/turret-latency", mt2.latency);
+
+    } catch (Exception e) {
+      // TODO: handle exception
+    }
+
     LimelightHelpers.SetRobotOrientation(
         "limelight-chassis",
         poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
@@ -298,32 +362,38 @@ public class Drive extends SubsystemBase {
         0,
         0,
         0);
-    int[] validateID = DriveConstants.blueTags;
-    if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-      validateID = DriveConstants.redTags;
-    }
+    LimelightHelpers.SetIMUMode("limelight-chassis", 1);
     try {
       doRejectUpdate = false;
       LimelightHelpers.SetFiducialIDFiltersOverride("limelight-chassis", validateID);
-      LimelightHelpers.PoseEstimate mt1 =
-          LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-chassis");
-      if (mt1.tagCount == 0) {
+      LimelightHelpers.PoseEstimate mt2 =
+          LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-chassis");
+      if (mt2.tagCount == 0) {
         doRejectUpdate = true;
       } else {
-        doRejectUpdate = shouldReject(mt1, validateID);
+        doRejectUpdate = shouldReject(mt2, validateID);
       }
       if (!doRejectUpdate) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
-        poseEstimator.addVisionMeasurement(mt1.pose, mt1.timestampSeconds);
+        // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+        // poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       }
-      Logger.recordOutput("LL/left-pose", mt1.pose);
-      Logger.recordOutput("LL/left-timestamp", mt1.timestampSeconds);
-      Logger.recordOutput("LL/avgdist", mt1.avgTagDist);
-      Logger.recordOutput("LL/latency", mt1.latency);
+      Logger.recordOutput("LL/chassis-pose", mt2.pose);
+      Logger.recordOutput("LL/chassis-timestamp", mt2.timestampSeconds);
+      Logger.recordOutput("LL/chassis-avgdist", mt2.avgTagDist);
+      Logger.recordOutput("LL/chassis-latency", mt2.latency);
 
     } catch (Exception e) {
       // TODO: handle exception
     }
+
+    SmartDashboard.putNumberArray(
+        "translation",
+        new double[] {
+          poseEstimator.getEstimatedPosition().getTranslation().getX(),
+          poseEstimator.getEstimatedPosition().getTranslation().getY()
+        });
+    SmartDashboard.putNumber(
+        "rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && ContainerConstants.currentMode != Mode.SIM);
   }
