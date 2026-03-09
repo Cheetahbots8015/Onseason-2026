@@ -78,7 +78,6 @@ public class CheetahUtil {
    * @return Equivalent motor rotations.
    */
   public static double turretRotationsToDeg(double rotations) {
-    // Assuming a gear ratio of 6:1 and 360 degrees per rotation
     return rotations * TurretConstants.gearRatio * 360.0;
   }
 
@@ -87,7 +86,7 @@ public class CheetahUtil {
   }
 
   public static double hoodDegreesToRotation(double degrees) {
-    return degrees / 360.0 / HoodConstants.reductionRatio;
+    return (degrees / 360.0 / HoodConstants.reductionRatio);
   }
 
   public static double climberRotationsToDeg(double rotations) {

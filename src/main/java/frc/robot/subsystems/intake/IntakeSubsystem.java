@@ -53,8 +53,8 @@ public class IntakeSubsystem extends SubsystemBase {
     return inputs;
   }
 
-  public void armMotionMagic(double targetPosition) {
-    io.armMotionMagic(targetPosition);
+  public void ArmPositionVoltage(double targetPosition) {
+    io.ArmPositionVoltage(targetPosition);
   }
 
   public void flywheelVelocityVoltage(double targetVelocity) {
@@ -66,11 +66,11 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void deployIntake() {
-    io.armMotionMagic(IntakeConstants.armDeployPosition);
+    io.ArmPositionVoltage(IntakeConstants.armDeployPosition);
   }
 
   public void retractIntake() {
-    io.armMotionMagic(IntakeConstants.armRetractPosition);
+    io.ArmPositionVoltage(IntakeConstants.armRetractPosition);
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {

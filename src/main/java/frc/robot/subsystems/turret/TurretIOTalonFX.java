@@ -2,11 +2,9 @@ package frc.robot.subsystems.turret;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -18,10 +16,8 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.constants.TurretConstants;
 import frc.robot.util.CheetahUtil;
 
-/** TalonFX + Pigeon2 implementation of TurretIO */
 public class TurretIOTalonFX implements TurretIO {
   private final TalonFX motor;
-  private final Pigeon2 pigeon;
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
 
   private final PositionVoltage positionRequest = new PositionVoltage(0.0);
@@ -31,11 +27,8 @@ public class TurretIOTalonFX implements TurretIO {
   private final StatusSignal<Voltage> motorAppliedVolts;
   private final StatusSignal<Current> motorCurrent;
 
-  private final StatusSignal<Angle> pigeonYawDeg;
-
   public TurretIOTalonFX() {
     motor = new TalonFX(TurretConstants.kTurretMotorID, TurretConstants.kCANBusName);
-    pigeon = new Pigeon2(TurretConstants.kPigeonId, TurretConstants.kCANBusName);
 
     motorConfigs.MotorOutput.withNeutralMode(
         TurretConstants.kMotorNeutralCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
@@ -43,6 +36,14 @@ public class TurretIOTalonFX implements TurretIO {
         TurretConstants.kMotorInvertCCWPositive
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive);
+    motorConfigs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+    motorConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+
+    motorConfigs.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.5;
+
+    motorConfigs.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
+        CheetahUtil.turretDegToRotations(270.0);
+    motorConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
 
     motorConfigs.Slot0.kP = TurretConstants.kSlot_kP;
     motorConfigs.Slot0.kI = TurretConstants.kSlot_kI;
@@ -50,31 +51,29 @@ public class TurretIOTalonFX implements TurretIO {
     motorConfigs.Slot0.kS = TurretConstants.kSlot_kS;
     motorConfigs.Slot0.kV = TurretConstants.kSlot_kV;
 
+    motorConfigs.Voltage.PeakForwardVoltage = 3.0;
+    motorConfigs.Voltage.PeakReverseVoltage = -3.0;
+
     motor.getConfigurator().apply(motorConfigs);
-    pigeon.getConfigurator().apply(new Pigeon2Configuration());
 
     motorPosition = motor.getPosition();
     motorVelocity = motor.getVelocity();
     motorAppliedVolts = motor.getMotorVoltage();
     motorCurrent = motor.getTorqueCurrent();
 
-    pigeonYawDeg = pigeon.getYaw();
-
     BaseStatusSignal.setUpdateFrequencyForAll(
         TurretConstants.kStatusUpdateFrequency,
         motorPosition,
         motorVelocity,
         motorAppliedVolts,
-        motorCurrent,
-        pigeonYawDeg);
+        motorCurrent);
 
-    ParentDevice.optimizeBusUtilizationForAll(motor, pigeon);
+    ParentDevice.optimizeBusUtilizationForAll(motor);
   }
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-    BaseStatusSignal.refreshAll(
-        motorPosition, motorVelocity, motorAppliedVolts, motorCurrent, pigeonYawDeg);
+    BaseStatusSignal.refreshAll(motorPosition, motorVelocity, motorAppliedVolts, motorCurrent);
 
     inputs.motorPositionDeg = Units.rotationsToDegrees(motorPosition.getValueAsDouble());
     inputs.motorVelocityRotPerSec = motorVelocity.getValueAsDouble();
@@ -82,8 +81,6 @@ public class TurretIOTalonFX implements TurretIO {
     inputs.motorCurrentAmps = motorCurrent.getValueAsDouble();
 
     inputs.turretPositionDeg = CheetahUtil.turretRotationsToDeg(motorPosition.getValueAsDouble());
-
-    inputs.pigeonYawDeg = pigeonYawDeg.getValueAsDouble();
   }
 
   @Override

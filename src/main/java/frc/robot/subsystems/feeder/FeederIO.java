@@ -9,7 +9,6 @@ public interface FeederIO {
     public double FeederVelocityRotPerSec = 0.0;
     public double FeederAppliedVolts = 0.0;
     public double FeederCurrentAmps = 0.0;
-    public double SensorDegrees = 0.0;
   }
 
   public default void setOpenLoop(double motorOutput) {}

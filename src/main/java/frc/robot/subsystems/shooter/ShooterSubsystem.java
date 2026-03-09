@@ -21,8 +21,8 @@ public class ShooterSubsystem extends SubsystemBase {
     sysId =
         new SysIdRoutine(
             new SysIdRoutine.Config(
-                null,
-                null,
+                Units.Volts.of(0.5).per(Units.Second),
+                Units.Volts.of(5.0),
                 null,
                 (state) -> Logger.recordOutput("Shooter/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
@@ -59,5 +59,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysId.dynamic(direction);
+  }
+
+  public void setMotorVoltage(double volts) {
+    io.setMotorVoltage(volts);
   }
 }

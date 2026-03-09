@@ -4,7 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
@@ -26,7 +26,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   private TalonFXConfiguration armConfigs = new TalonFXConfiguration();
   private final CANcoder sensor = new CANcoder(IntakeConstants.sensorID, "canivore");
 
-  final MotionMagicTorqueCurrentFOC m_armRequest = new MotionMagicTorqueCurrentFOC(0).withSlot(0);
+  final MotionMagicVoltage m_armRequest = new MotionMagicVoltage(0).withSlot(0);
   final VelocityVoltage m_flywheelRequest = new VelocityVoltage(0).withSlot(0);
   // Inputs from flywheel
   private final StatusSignal<Angle> FlywheelPosition;
@@ -72,6 +72,11 @@ public class IntakeIOTalonFX implements IntakeIO {
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive);
 
+    armConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    armConfigs.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 43;
+    armConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    armConfigs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+
     // Set PID and feedforward constants from constants file
     armConfigs.Slot0.kP = IntakeConstants.armkP;
     armConfigs.Slot0.kI = IntakeConstants.armkI;
@@ -81,11 +86,8 @@ public class IntakeIOTalonFX implements IntakeIO {
     armConfigs.Slot0.kV = IntakeConstants.armkV;
     armConfigs.Slot0.kG = IntakeConstants.armkG;
 
-    armConfigs.MotionMagic.MotionMagicCruiseVelocity = IntakeConstants.armMotionMagicCruiseVelocity;
-    armConfigs.MotionMagic.MotionMagicAcceleration = IntakeConstants.armMotionMagicAcceleration;
-
-    armConfigs.TorqueCurrent.PeakForwardTorqueCurrent = 25.0;
-    armConfigs.TorqueCurrent.PeakReverseTorqueCurrent = -25.0;
+    armConfigs.MotionMagic.MotionMagicCruiseVelocity = 40;
+    armConfigs.MotionMagic.MotionMagicAcceleration = 160;
 
     // Apply the configuration to the motor
     flywheel.getConfigurator().apply(flywheelConfigs);
@@ -167,13 +169,13 @@ public class IntakeIOTalonFX implements IntakeIO {
   }
 
   @Override
-  public void armMotionMagic(double targetPosition) {
-    arm.setControl(m_armRequest.withPosition(targetPosition));
+  public void ArmPositionVoltage(double targetPosition) {
+    arm.setControl(m_armRequest.withPosition(Units.radiansToRotations(targetPosition)));
   }
 
   @Override
   public void flywheelVelocityVoltage(double targetVelocity) {
-    flywheel.setControl(m_flywheelRequest.withVelocity(targetVelocity));
+    flywheel.setControl(m_flywheelRequest.withVelocity(Units.radiansToRotations(targetVelocity)));
   }
 
   public void flywheelStop() {

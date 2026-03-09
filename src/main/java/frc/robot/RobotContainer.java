@@ -25,10 +25,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.BarrelCommands.BarrelForwardVelocityCommand;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
+import frc.robot.commands.HoodCommands.setHoodPositionCommand;
+import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
+import frc.robot.commands.TurretCommands.setTurretPositionCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.GameData;
 import frc.robot.subsystems.barrel.BarrelIOSim;
 import frc.robot.subsystems.barrel.BarrelIOTalonFX;
 import frc.robot.subsystems.barrel.BarrelSubsystem;
@@ -47,6 +53,9 @@ import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hood.HoodIOSim;
 import frc.robot.subsystems.hood.HoodIOTalonFX;
 import frc.robot.subsystems.hood.HoodSubsystem;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOTalonFX;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -70,9 +79,12 @@ public class RobotContainer {
   private final FeederSubsystem feeder;
   private final TurretSubsystem turret;
   private final ClimberSubsystem climber;
+  private final GameData gameData;
+  private final IntakeSubsystem intake;
 
   // Controller
   private CommandXboxController controller = new CommandXboxController(0);
+  private CommandXboxController subcontroller = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -95,6 +107,8 @@ public class RobotContainer {
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         turret = new TurretSubsystem(new TurretIOTalonFX());
         climber = new ClimberSubsystem(new ClimberIOTalonFX());
+        gameData = new GameData();
+        intake = new IntakeSubsystem(new IntakeIOTalonFX());
         break;
 
       case SIM:
@@ -112,6 +126,8 @@ public class RobotContainer {
         feeder = new FeederSubsystem(new FeederIOSim());
         turret = new TurretSubsystem(new TurretIOSim());
         climber = new ClimberSubsystem(new ClimberIOSim());
+        gameData = new GameData();
+        intake = new IntakeSubsystem(new IntakeIOSim());
         break;
 
       default:
@@ -129,6 +145,8 @@ public class RobotContainer {
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         turret = new TurretSubsystem(new TurretIOTalonFX());
         climber = new ClimberSubsystem(new ClimberIOTalonFX());
+        gameData = new GameData();
+        intake = new IntakeSubsystem(new IntakeIOTalonFX());
         break;
     }
 
@@ -165,8 +183,14 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
+            () ->
+                -controller.getLeftY() > 0
+                    ? Math.pow(controller.getLeftY(), 2)
+                    : -Math.pow(controller.getLeftY(), 2),
+            () ->
+                -controller.getLeftX() > 0
+                    ? Math.pow(controller.getLeftX(), 2)
+                    : -Math.pow(controller.getLeftX(), 2),
             () -> -controller.getRightX()));
 
     controller
@@ -184,15 +208,25 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.leftTrigger().whileTrue(new ShooterSetVelocityCommand(shooter));
+    controller.rightBumper().whileTrue(new ShooterSetVelocityCommand(shooter));
 
-    controller.a().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    controller.b().whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    controller.x().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    controller.y().whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    controller
+        .rightTrigger()
+        .whileTrue(
+            new FeederForwardVelocityCommand(feeder)
+                .alongWith(new BarrelForwardVelocityCommand(barrel)));
 
-    SmartDashboard.putNumber("kShootingSpeed", 90);
-    SmartDashboard.putNumber("kShootingVoltage", 2.0);
+    controller.leftTrigger().whileTrue(new IntakeCommand(intake));
+
+    hood.setDefaultCommand(new setHoodPositionCommand(hood));
+
+    SmartDashboard.putNumber("kShootingSpeed", 330);
+    SmartDashboard.putNumber("HoodPosition", 60);
+    SmartDashboard.putNumber("FlyWheelVelocity", 400);
+
+    subcontroller.a().whileTrue(new setTurretPositionCommand(turret, 0));
+    subcontroller.b().whileTrue(new setTurretPositionCommand(turret, 100));
+    subcontroller.x().whileTrue(new setTurretPositionCommand(turret, 200));
   }
 
   /**
@@ -201,6 +235,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new Command() {};
+    return autoChooser.get();
   }
 }

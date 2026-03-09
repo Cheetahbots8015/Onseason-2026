@@ -12,9 +12,6 @@ public interface TurretIO {
     public double motorCurrentAmps = 0.0;
 
     public double turretPositionDeg = 0.0;
-
-    // Pigeon / yaw
-    public double pigeonYawDeg = 0.0;
   }
 
   /** Update inputs for logging and state. */
@@ -25,6 +22,4 @@ public interface TurretIO {
 
   /** Position control (MotionMagic/PositionVoltage) - angle in radians */
   public default void setPosition(double positionRad) {}
-
-  public default void calibrateTurret() {}
 }
