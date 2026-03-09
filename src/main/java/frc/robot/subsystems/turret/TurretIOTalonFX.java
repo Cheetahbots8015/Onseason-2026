@@ -42,7 +42,7 @@ public class TurretIOTalonFX implements TurretIO {
     motorConfigs.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.5;
 
     motorConfigs.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
-        CheetahUtil.turretDegToRotations(270.0);
+        CheetahUtil.turretDegToRotations(TurretConstants.kForwardSoftLimitDeg);
     motorConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
 
     motorConfigs.Slot0.kP = TurretConstants.kSlot_kP;

@@ -1,6 +1,9 @@
 package frc.robot.constants;
 
 public final class TurretConstants {
+  // Tunable turret constants
+  public static double kForwardSoftLimitDeg = 270.0;
+
   private TurretConstants() {}
 
   // CANbus name

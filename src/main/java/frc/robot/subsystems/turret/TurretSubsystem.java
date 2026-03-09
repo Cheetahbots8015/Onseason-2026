@@ -4,10 +4,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.constants.TurretConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class TurretSubsystem extends SubsystemBase {
@@ -17,6 +20,8 @@ public class TurretSubsystem extends SubsystemBase {
 
   private boolean isRedAlliance = false;
   private boolean inNeutralZone = false;
+  private boolean turretAngleOK = false;
+  private final XboxController driverController = new XboxController(0);
 
   private double calculated_angle = 0.0;
   Translation2d target = new Translation2d(0.0, 0.0); // Placeholder for target translation
@@ -49,6 +54,17 @@ public class TurretSubsystem extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Turret", inputs);
 
+    double calculated_angle = calculateTurretAngle();
+    turretAngleOK = calculated_angle <= TurretConstants.kForwardSoftLimitDeg;
+    SmartDashboard.putBoolean("turretAngleOK", turretAngleOK);
+    if (turretAngleOK) {
+      driverController.setRumble(RumbleType.kLeftRumble, 0.0);
+    } else {
+      driverController.setRumble(RumbleType.kLeftRumble, 0.1);
+    }
+  }
+
+  private double calculateTurretAngle() {
     Translation2d currentPose =
         new Translation2d(
             SmartDashboard.getNumberArray("translation", new double[] {0.0, 0.0})[0],
@@ -76,16 +92,16 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("isRed", isRedAlliance);
     SmartDashboard.putBoolean("inNeutral", inNeutralZone);
 
-
-
     double calculated_difference =
         Math.toDegrees(
-            Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX()))-shooterPosDegrees;
+                Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX()))
+            - shooterPosDegrees;
 
     calculated_angle = inputs.turretPositionDeg + calculated_difference;
     calculated_angle = (-calculated_angle + 360) % 360; // Normalize to [0, 360)
     SmartDashboard.putNumber("calculated_angle", calculated_angle);
     SmartDashboard.putNumber("calculated_difference", calculated_difference);
+    return calculated_angle;
   }
 
   public void setMotorVoltage(double volts) {
