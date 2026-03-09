@@ -324,6 +324,7 @@ public class Drive extends SubsystemBase {
         0,
         0,
         0);
+    LimelightHelpers.SetIMUMode("limelight-shooter", 4);
     int[] validateID = DriveConstants.blueTags;
     if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
       validateID = DriveConstants.redTags;
