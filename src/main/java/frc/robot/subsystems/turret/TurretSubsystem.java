@@ -54,10 +54,7 @@ public class TurretSubsystem extends SubsystemBase {
             SmartDashboard.getNumberArray("translation", new double[] {0.0, 0.0})[0],
             SmartDashboard.getNumberArray("translation", new double[] {0.0, 0.0})[1]);
 
-    double rotation = SmartDashboard.getNumber("rotation", 0.0);
-
-    SmartDashboard.putNumberArray(
-        "shooter/translation", new double[] {currentPose.getX(), currentPose.getY()});
+    double shooterPosDegrees = SmartDashboard.getNumber("shooter/pigeon", 0.0);
 
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == Alliance.Red) {
@@ -78,20 +75,17 @@ public class TurretSubsystem extends SubsystemBase {
     }
     SmartDashboard.putBoolean("isRed", isRedAlliance);
     SmartDashboard.putBoolean("inNeutral", inNeutralZone);
-    if (isRedAlliance && !inNeutralZone || !isRedAlliance && inNeutralZone) {
-      calculated_angle =
-          Math.toDegrees(
-              Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX())
-                  - rotation
-                  - 180);
-    } else {
-      calculated_angle =
-          Math.toDegrees(
-              Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX())
-                  - rotation);
-    }
+
+
+
+    double calculated_difference =
+        Math.toDegrees(
+            Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX()))-shooterPosDegrees;
+
+    calculated_angle = inputs.turretPositionDeg + calculated_difference;
     calculated_angle = (-calculated_angle + 360) % 360; // Normalize to [0, 360)
     SmartDashboard.putNumber("calculated_angle", calculated_angle);
+    SmartDashboard.putNumber("calculated_difference", calculated_difference);
   }
 
   public void setMotorVoltage(double volts) {
