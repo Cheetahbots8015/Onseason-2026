@@ -1,5 +1,6 @@
 package frc.robot.subsystems.turret;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -31,6 +32,8 @@ public class TurretSubsystem extends SubsystemBase {
   private double calculated_angle = 0.0;
   Translation2d target = new Translation2d(0.0, 0.0); // Placeholder for target translation
 
+  private double pigeon_offset = 0.0;
+
   public TurretSubsystem(TurretIO io) {
     this.io = io;
     sysId =
@@ -45,8 +48,10 @@ public class TurretSubsystem extends SubsystemBase {
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == Alliance.Red) {
       target = RED_TARGET;
+      pigeon_offset = 90;
     } else {
       target = BLUE_TARGET;
+      pigeon_offset = -90;
     }
   }
 
@@ -60,6 +65,7 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("turretAngleOK", turretAngleOK);
     if (turretAngleOK) {
       driverController.setRumble(RumbleType.kLeftRumble, 0.0);
+      setPosition(calculated_angle);
     } else {
       driverController.setRumble(RumbleType.kLeftRumble, 0.1);
     }
@@ -70,6 +76,10 @@ public class TurretSubsystem extends SubsystemBase {
         new Translation2d(
             SmartDashboard.getNumberArray("translation", new double[] {0.0, 0.0})[0],
             SmartDashboard.getNumberArray("translation", new double[] {0.0, 0.0})[1]);
+    Translation2d offset = new Translation2d(-0.06142, -0.06142);
+    currentPose =
+        currentPose.plus(
+            offset.rotateBy(new Rotation2d(SmartDashboard.getNumber("rotation", 0.0))));
 
     double shooterPosDegrees = SmartDashboard.getNumber("shooter/pigeon", 0.0);
 
@@ -77,9 +87,11 @@ public class TurretSubsystem extends SubsystemBase {
         && DriverStation.getAlliance().get() == Alliance.Red) {
       isRedAlliance = true;
       target = RED_TARGET;
+      pigeon_offset = 90;
     } else {
       isRedAlliance = false;
       target = BLUE_TARGET;
+      pigeon_offset = -90;
     }
     if (currentPose.getX() < 11.3118646 && currentPose.getX() > 5.229174199999999) {
       inNeutralZone = true;
@@ -92,10 +104,11 @@ public class TurretSubsystem extends SubsystemBase {
     double calculated_difference =
         Math.toDegrees(
                 Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX()))
-            - shooterPosDegrees;
+            - shooterPosDegrees
+            - pigeon_offset;
 
     calculated_angle = inputs.turretPositionDeg + calculated_difference;
-    calculated_angle = (-calculated_angle + 360) % 360; // Normalize to [0, 360)
+    calculated_angle = (calculated_angle + 360) % 360; // Normalize to [0, 360)
     SmartDashboard.putNumber("calculated_angle", calculated_angle);
     SmartDashboard.putNumber("calculated_difference", calculated_difference);
     return calculated_angle;

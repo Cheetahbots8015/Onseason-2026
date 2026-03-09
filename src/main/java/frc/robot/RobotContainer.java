@@ -31,7 +31,6 @@ import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
 import frc.robot.commands.HoodCommands.setHoodPositionCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
-import frc.robot.commands.TurretCommands.setTurretPositionCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.GameData;
@@ -220,13 +219,27 @@ public class RobotContainer {
 
     hood.setDefaultCommand(new setHoodPositionCommand(hood));
 
+    subcontroller
+        .povUp()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    SmartDashboard.putNumber(
+                        "ShootingSpeedOffset",
+                        SmartDashboard.getNumber("ShootingSpeedOffset", 0.0) + 5)));
+    subcontroller
+        .povDown()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    SmartDashboard.putNumber(
+                        "ShootingSpeedOffset",
+                        SmartDashboard.getNumber("ShootingSpeedOffset", 0.0) - 5)));
+
     SmartDashboard.putNumber("kShootingSpeed", 330);
     SmartDashboard.putNumber("HoodPosition", 60);
     SmartDashboard.putNumber("FlyWheelVelocity", 400);
-
-    subcontroller.a().whileTrue(new setTurretPositionCommand(turret, 0));
-    subcontroller.b().whileTrue(new setTurretPositionCommand(turret, 100));
-    subcontroller.x().whileTrue(new setTurretPositionCommand(turret, 200));
+    SmartDashboard.putNumber("ShootingSpeedOffset", 0);
   }
 
   /**

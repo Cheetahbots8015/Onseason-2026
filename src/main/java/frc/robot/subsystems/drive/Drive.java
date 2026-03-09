@@ -134,6 +134,8 @@ public class Drive extends SubsystemBase {
     modules[2] = new Module(blModuleIO, 2, TunerConstants.BackLeft);
     modules[3] = new Module(brModuleIO, 3, TunerConstants.BackRight);
 
+    turret_pigeon.setYaw(0.0);
+
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
 
@@ -324,7 +326,7 @@ public class Drive extends SubsystemBase {
         0,
         0,
         0);
-    LimelightHelpers.SetIMUMode("limelight-shooter", 4);
+    LimelightHelpers.SetIMUMode("limelight-shooter", 1);
     int[] validateID = DriveConstants.blueTags;
     if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
       validateID = DriveConstants.redTags;
@@ -343,14 +345,47 @@ public class Drive extends SubsystemBase {
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
         poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       }
-      Logger.recordOutput("LL/left-pose", mt2.pose);
-      Logger.recordOutput("LL/left-timestamp", mt2.timestampSeconds);
-      Logger.recordOutput("LL/avgdist", mt2.avgTagDist);
-      Logger.recordOutput("LL/latency", mt2.latency);
+      Logger.recordOutput("LL/turret-pose", mt2.pose);
+      Logger.recordOutput("LL/turret-timestamp", mt2.timestampSeconds);
+      Logger.recordOutput("LL/turret-avgdist", mt2.avgTagDist);
+      Logger.recordOutput("LL/turret-latency", mt2.latency);
 
     } catch (Exception e) {
       // TODO: handle exception
     }
+
+    LimelightHelpers.SetRobotOrientation(
+        "limelight-chassis",
+        poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
+        0,
+        0,
+        0,
+        0,
+        0);
+    LimelightHelpers.SetIMUMode("limelight-chassis", 1);
+    try {
+      doRejectUpdate = false;
+      LimelightHelpers.SetFiducialIDFiltersOverride("limelight-chassis", validateID);
+      LimelightHelpers.PoseEstimate mt2 =
+          LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-chassis");
+      if (mt2.tagCount == 0) {
+        doRejectUpdate = true;
+      } else {
+        doRejectUpdate = shouldReject(mt2, validateID);
+      }
+      if (!doRejectUpdate) {
+        // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+        // poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+      }
+      Logger.recordOutput("LL/chassis-pose", mt2.pose);
+      Logger.recordOutput("LL/chassis-timestamp", mt2.timestampSeconds);
+      Logger.recordOutput("LL/chassis-avgdist", mt2.avgTagDist);
+      Logger.recordOutput("LL/chassis-latency", mt2.latency);
+
+    } catch (Exception e) {
+      // TODO: handle exception
+    }
+
     SmartDashboard.putNumberArray(
         "translation",
         new double[] {
