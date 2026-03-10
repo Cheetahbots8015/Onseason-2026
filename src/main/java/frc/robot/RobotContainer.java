@@ -14,6 +14,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,12 +26,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.BarrelCommands.BarrelForwardVelocityCommand;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
 import frc.robot.commands.HoodCommands.setHoodPositionCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
-import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.StopShootCommand;
+import frc.robot.commands.TurretCommands.reserTurretCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.GameData;
@@ -168,6 +169,11 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
+    NamedCommands.registerCommand("Shoot", new ShootCommand(shooter, barrel, feeder));
+    NamedCommands.registerCommand("StopShoot", new StopShootCommand(shooter, barrel, feeder));
+    NamedCommands.registerCommand("Intake", new IntakeCommand(intake));
+    NamedCommands.registerCommand("StopIntake", getAutonomousCommand());
+
     configureButtonBindings();
   }
 
@@ -207,13 +213,7 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.rightBumper().whileTrue(new ShooterSetVelocityCommand(shooter));
-
-    controller
-        .rightTrigger()
-        .whileTrue(
-            new FeederForwardVelocityCommand(feeder)
-                .alongWith(new BarrelForwardVelocityCommand(barrel)));
+    controller.rightTrigger().whileTrue(new ShootCommand(shooter, barrel, feeder));
 
     controller.leftTrigger().whileTrue(new IntakeCommand(intake));
 
@@ -236,10 +236,36 @@ public class RobotContainer {
                         "ShootingSpeedOffset",
                         SmartDashboard.getNumber("ShootingSpeedOffset", 0.0) - 5)));
 
+    subcontroller
+        .povLeft()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    SmartDashboard.putNumber(
+                        "TurretAngleOffset",
+                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) + 5)));
+    subcontroller
+        .povRight()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    SmartDashboard.putNumber(
+                        "TurretAngleOffset",
+                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) - 5)));
+
+    subcontroller
+        .a()
+        .whileTrue(
+            new reserTurretCommand(turret)
+                .andThen(Commands.runOnce(() -> drive.setTurretPigeonOffset(), drive)));
+
     SmartDashboard.putNumber("kShootingSpeed", 330);
     SmartDashboard.putNumber("HoodPosition", 60);
     SmartDashboard.putNumber("FlyWheelVelocity", 400);
-    SmartDashboard.putNumber("ShootingSpeedOffset", 0);
+    SmartDashboard.putNumber("ShootingSpeedOffset", 0.0);
+    SmartDashboard.putNumber("TurretAngleOffset", 0.0);
+    SmartDashboard.putNumber("BarrelForwardVelocity", 60);
+    SmartDashboard.putNumber("FeederForwardVelocity", 40);
   }
 
   /**

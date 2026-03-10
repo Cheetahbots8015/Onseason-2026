@@ -64,4 +64,8 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setMotorVoltage(double volts) {
     io.setMotorVoltage(volts);
   }
+
+  public double getMotorVelocity() {
+    return inputs.rightVelocityRadPerSec;
+  }
 }

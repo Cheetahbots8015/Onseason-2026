@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.6,
+        "y": 2.091
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.35,
+        "y": 2.091
+      },
+      "isLocked": false,
+      "linkedName": "Red Depot"
+    },
+    {
+      "anchor": {
+        "x": 1.2076822916666665,
+        "y": 2.091
+      },
+      "prevControl": {
+        "x": 1.4576822916666665,
+        "y": 2.091
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Red Depot Intake"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 0.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}

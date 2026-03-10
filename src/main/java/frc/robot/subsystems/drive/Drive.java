@@ -342,7 +342,7 @@ public class Drive extends SubsystemBase {
         doRejectUpdate = shouldReject(mt2, validateID);
       }
       if (!doRejectUpdate) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(3, 3, 9999999));
         poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       }
       Logger.recordOutput("LL/turret-pose", mt2.pose);
@@ -374,8 +374,8 @@ public class Drive extends SubsystemBase {
         doRejectUpdate = shouldReject(mt2, validateID);
       }
       if (!doRejectUpdate) {
-        // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
-        // poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+        poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       }
       Logger.recordOutput("LL/chassis-pose", mt2.pose);
       Logger.recordOutput("LL/chassis-timestamp", mt2.timestampSeconds);
@@ -544,5 +544,9 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  public void setTurretPigeonOffset() {
+    turret_pigeon.setYaw(gyroInputs.yawPosition.getDegrees());
   }
 }
