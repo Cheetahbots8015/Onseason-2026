@@ -19,8 +19,8 @@ public class HoodConstants {
   public static final double hoodkA = 0.0;
 
   // Units: Rotations
-  public static final double reverseSoftLimitThreshold = 0.227539;
-  public static final double forwardSoftLimitThreshold = 1.95;
+  public static final double reverseSoftLimitThreshold = 0;
+  public static final double forwardSoftLimitThreshold = 1.95 + 0.27;
 
   public static final boolean reverseSoftLimitEnable = true;
   public static final boolean forwardSoftLimitEnable = true;

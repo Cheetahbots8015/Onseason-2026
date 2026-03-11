@@ -149,7 +149,7 @@ public class Drive extends SubsystemBase {
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(10.0, 0.0, 0.1), new PIDConstants(5, 0.0, 0.0)),
+            new PIDConstants(5.0, 0.0, 0.1), new PIDConstants(2.5, 0.0, 0.0)),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
@@ -342,7 +342,7 @@ public class Drive extends SubsystemBase {
         doRejectUpdate = shouldReject(mt2, validateID);
       }
       if (!doRejectUpdate) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(3, 3, 9999999));
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(5, 5, 9999999));
         poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       }
       Logger.recordOutput("LL/turret-pose", mt2.pose);

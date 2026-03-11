@@ -5,6 +5,7 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.BarrelConstants;
@@ -13,7 +14,7 @@ import frc.robot.subsystems.barrel.BarrelSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
-public class ShootCommand extends Command {
+public class TimedShootCommand extends Command {
 
   private final ShooterSubsystem m_subsystem;
   private final BarrelSubsystem m_barrelsubsystem;
@@ -24,6 +25,8 @@ public class ShootCommand extends Command {
   private double shootingSpeedOffset;
   private boolean isNearTrench;
   private boolean isRedAlliance = false;
+  private Timer m_timer;
+  private double m_time;
 
   private final Translation2d RED_TARGET =
       new Translation2d(
@@ -34,16 +37,19 @@ public class ShootCommand extends Command {
   private double calculated_angle = 0.0;
   Translation2d target = new Translation2d(0.0, 0.0); // Placeholder for target translation
 
-  public ShootCommand(
+  public TimedShootCommand(
       ShooterSubsystem subsystem,
       BarrelSubsystem barrelsubsystem,
-      FeederSubsystem feedersubsystem) {
+      FeederSubsystem feedersubsystem,
+      double time) {
     m_subsystem = subsystem;
     m_barrelsubsystem = barrelsubsystem;
     m_feedersubsystem = feedersubsystem;
     m_filter = new MedianFilter(3);
     distance = 0;
     temp = 0;
+    m_time = time;
+    m_timer = new Timer();
 
     addRequirements(subsystem, m_barrelsubsystem, m_feedersubsystem);
   }
@@ -51,7 +57,8 @@ public class ShootCommand extends Command {
   @Override
   public void initialize() {
     SmartDashboard.putNumber("HoodPosition", 100);
-
+    m_timer.reset();
+    m_timer.start();
     /*
     isNearTrench = false;
     for (int i = 0; i < LimelightHelpers.getRawFiducials("limelight-shooter").length; i++) {
@@ -120,6 +127,6 @@ public class ShootCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return m_timer.get() > m_time;
   }
 }

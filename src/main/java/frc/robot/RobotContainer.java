@@ -29,8 +29,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.HoodCommands.setHoodPositionCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
+import frc.robot.commands.IntakeCommands.TimedIntakeCommand;
 import frc.robot.commands.ShootCommand;
-import frc.robot.commands.StopShootCommand;
+import frc.robot.commands.TimedShootCommand;
 import frc.robot.commands.TurretCommands.reserTurretCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
@@ -151,6 +152,13 @@ public class RobotContainer {
     }
 
     // Set up auto routines
+
+    NamedCommands.registerCommand("Shoot", new TimedShootCommand(shooter, barrel, feeder, 3));
+    NamedCommands.registerCommand("LongShoot", new TimedShootCommand(shooter, barrel, feeder, 6));
+
+    NamedCommands.registerCommand("Intake", new TimedIntakeCommand(intake, 5));
+    NamedCommands.registerCommand("LongIntake", new TimedIntakeCommand(intake, 7));
+
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
@@ -168,11 +176,6 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-    NamedCommands.registerCommand("Shoot", new ShootCommand(shooter, barrel, feeder));
-    NamedCommands.registerCommand("StopShoot", new StopShootCommand(shooter, barrel, feeder));
-    NamedCommands.registerCommand("Intake", new IntakeCommand(intake));
-    NamedCommands.registerCommand("StopIntake", getAutonomousCommand());
 
     configureButtonBindings();
   }
@@ -259,13 +262,22 @@ public class RobotContainer {
             new reserTurretCommand(turret)
                 .andThen(Commands.runOnce(() -> drive.setTurretPigeonOffset(), drive)));
 
+    subcontroller
+        .rightTrigger()
+        .whileTrue(Commands.run(() -> climber.setClimberVoltage(2), climber))
+        .onFalse(Commands.run(() -> climber.setClimberVoltage(0), climber));
+    subcontroller
+        .leftTrigger()
+        .whileTrue(Commands.run(() -> climber.setClimberVoltage(-2), climber))
+        .onFalse(Commands.run(() -> climber.setClimberVoltage(0), climber));
+
     SmartDashboard.putNumber("kShootingSpeed", 330);
-    SmartDashboard.putNumber("HoodPosition", 60);
+    SmartDashboard.putNumber("HoodPosition", 0);
     SmartDashboard.putNumber("FlyWheelVelocity", 400);
     SmartDashboard.putNumber("ShootingSpeedOffset", 0.0);
     SmartDashboard.putNumber("TurretAngleOffset", 0.0);
     SmartDashboard.putNumber("BarrelForwardVelocity", 60);
-    SmartDashboard.putNumber("FeederForwardVelocity", 40);
+    SmartDashboard.putNumber("FeederForwardVelocity", 60);
   }
 
   /**

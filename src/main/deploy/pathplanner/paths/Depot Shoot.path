@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2076822916666665,
-        "y": 5.926
+        "x": 0.808,
+        "y": 5.926374407582938
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.701172874060137,
-        "y": 5.7600384833218765
+        "x": 1.3014905823934706,
+        "y": 5.7604128909048145
       },
       "isLocked": false,
       "linkedName": "Depot Intake"
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Depot Shoot"
     }
   ],
   "rotationTargets": [],

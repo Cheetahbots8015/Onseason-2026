@@ -1,5 +1,7 @@
 package frc.robot.subsystems.hood;
 
+import static frc.robot.util.PhoenixUtil.tryUntilOk;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -57,6 +59,9 @@ public class HoodIOTalonFX implements HoodIO {
 
     // Apply the configuration to the motor
     hood.getConfigurator().apply(hoodConfigs);
+
+    // clear offset
+    tryUntilOk(5, () -> hood.setPosition(0.0));
 
     // Create drive status signals
     HoodPosition = hood.getPosition();

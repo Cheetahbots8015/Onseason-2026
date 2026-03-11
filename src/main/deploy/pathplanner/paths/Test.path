@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.301744,
-        "y": 0.6366850656271856
+        "x": 4.302,
+        "y": 7.306
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.199713541666666,
-        "y": 0.5628906250000003
+        "x": 4.552,
+        "y": 7.306
       },
       "isLocked": false,
-      "linkedName": "Startpoint 1"
+      "linkedName": "Startpoint 2"
     },
     {
       "anchor": {
-        "x": 1.6,
-        "y": 2.090928
+        "x": 4.302,
+        "y": 7.306
       },
       "prevControl": {
-        "x": 3.4515624999999996,
-        "y": 2.0981770833333337
+        "x": 4.052,
+        "y": 7.306
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Red Depot"
+      "linkedName": "Startpoint 2"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

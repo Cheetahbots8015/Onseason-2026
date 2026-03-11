@@ -27,28 +27,28 @@ public class TunerConstants {
   // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
   private static final Slot0Configs[] driveGains = {
     new Slot0Configs()
-        .withKP(0.3)
+        .withKP(2)
         .withKI(0)
         .withKD(0)
         .withKS(0.30373)
         .withKV(0.73263)
         .withKA(0.046318),
     new Slot0Configs()
-        .withKP(0.12)
+        .withKP(2)
         .withKI(0)
         .withKD(0)
         .withKS(0.28681)
         .withKV(0.7175)
         .withKA(0.045239),
     new Slot0Configs()
-        .withKP(0.20668)
+        .withKP(2)
         .withKI(0)
         .withKD(0)
         .withKS(0.25308)
         .withKV(0.75563)
         .withKA(0.11529),
     new Slot0Configs()
-        .withKP(0.11823)
+        .withKP(2)
         .withKI(0)
         .withKD(0)
         .withKS(0.15459)
@@ -76,6 +76,15 @@ public class TunerConstants {
                   .withSupplyCurrentLimit(Amps.of(30))
                   .withSupplyCurrentLimitEnable(true))
           .withClosedLoopRamps(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.1));
+  private static final TalonFXConfiguration driveHighLoadConfigs =
+      new TalonFXConfiguration()
+          .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimitEnable(false)
+                  .withSupplyCurrentLimit(Amps.of(40))
+                  .withSupplyCurrentLimitEnable(true))
+          .withClosedLoopRamps(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.1));
+
   private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration();
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
   private static final Pigeon2Configuration pigeonConfigs = null;
@@ -124,7 +133,6 @@ public class TunerConstants {
               .withDriveMotorType(kDriveMotorType)
               .withSteerMotorType(kSteerMotorType)
               .withFeedbackSource(kSteerFeedbackType)
-              .withDriveMotorInitialConfigs(driveInitialConfigs)
               .withSteerMotorInitialConfigs(steerInitialConfigs)
               .withEncoderInitialConfigs(encoderInitialConfigs)
               .withSteerInertia(kSteerInertia)
@@ -189,7 +197,8 @@ public class TunerConstants {
                   kInvertLeftSide,
                   kFrontLeftSteerMotorInverted,
                   kFrontLeftEncoderInverted)
-              .withDriveMotorGains(driveGains[0]);
+              .withDriveMotorGains(driveGains[0])
+              .withDriveMotorInitialConfigs(driveInitialConfigs);
   public static final SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
       FrontRight =
@@ -203,7 +212,9 @@ public class TunerConstants {
                   kInvertRightSide,
                   kFrontRightSteerMotorInverted,
                   kFrontRightEncoderInverted)
-              .withDriveMotorGains(driveGains[1]);
+              .withDriveMotorGains(driveGains[1])
+              .withDriveMotorInitialConfigs(driveInitialConfigs);
+  ;
   public static final SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
       BackLeft =
@@ -217,7 +228,8 @@ public class TunerConstants {
                   kInvertLeftSide,
                   kBackLeftSteerMotorInverted,
                   kBackLeftEncoderInverted)
-              .withDriveMotorGains(driveGains[2]);
+              .withDriveMotorGains(driveGains[2])
+              .withDriveMotorInitialConfigs(driveHighLoadConfigs);
   public static final SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
       BackRight =
@@ -231,7 +243,8 @@ public class TunerConstants {
                   kInvertRightSide,
                   kBackRightSteerMotorInverted,
                   kBackRightEncoderInverted)
-              .withDriveMotorGains(driveGains[3]);
+              .withDriveMotorGains(driveGains[3])
+              .withDriveMotorInitialConfigs(driveHighLoadConfigs);
 
   public static class TunerSwerveDrivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> {
     public TunerSwerveDrivetrain(
