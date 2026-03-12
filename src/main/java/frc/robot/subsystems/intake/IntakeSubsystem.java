@@ -14,6 +14,10 @@ public class IntakeSubsystem extends SubsystemBase {
   private final IntakeIO io;
   private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
   private final SysIdRoutine sysId;
+  
+
+   private double flywheelTargetVelocity = 0.0;
+  private boolean Stop = true;
 
   public IntakeSubsystem(IntakeIO io) {
     this.io = io;
@@ -31,6 +35,16 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Intake", inputs);
+    if (Stop) {
+      io.flywheelStop();
+    } else {
+      io.updateOutputs(inputs, flywheelTargetVelocity);
+    }
+  }
+
+   public void setFlyWheelTargetVelocity(double radPerSec) {
+    Stop = false;
+    flywheelTargetVelocity = radPerSec;
   }
 
   public void runVelocity(double flywheelOutput, double armOutput) {
@@ -79,5 +93,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysId.dynamic(direction);
+  }
+
+  public void flyWheelStop() {
+    Stop = true;
   }
 }

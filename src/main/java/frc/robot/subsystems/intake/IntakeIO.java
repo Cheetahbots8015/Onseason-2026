@@ -35,4 +35,8 @@ public interface IntakeIO {
   public default void flywheelStop() {}
 
   public default void resetArmPosition() {}
+
+  public default void updateOutputs(IntakeIO.IntakeIOInputs inputs, double targetVelocity){}
+
+  public default void setFlyWheelVoltage(double volts) {}
 }

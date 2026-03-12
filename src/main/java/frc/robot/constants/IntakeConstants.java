@@ -36,4 +36,12 @@ public class IntakeConstants {
 
   public static final double armDeployPosition = 0.0;
   public static final double armRetractPosition = 0.0;
+public static final double kRightSlot_kV = 0;
+public static final double kRightSlot_kA = 0;
+public static final double kKalmanModelStandardDeviation = 0;
+public static final double kKalmanEncoderStandardDeviation = 0;
+public static final double kLoopTime = 0.02;
+public static final double kTolerence = 0;
+public static final double kVoltageTolerance = 0;
+public static final double kMaxVoltage = 6;
 }

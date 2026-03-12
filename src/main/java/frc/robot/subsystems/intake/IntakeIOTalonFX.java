@@ -6,16 +6,29 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.LinearQuadraticRegulator;
+import edu.wpi.first.math.estimator.KalmanFilter;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.LinearSystemLoop;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.IntakeConstants;
 
 public class IntakeIOTalonFX implements IntakeIO {
@@ -26,8 +39,10 @@ public class IntakeIOTalonFX implements IntakeIO {
   private TalonFXConfiguration armConfigs = new TalonFXConfiguration();
   private final CANcoder sensor = new CANcoder(IntakeConstants.sensorID, "canivore");
 
+  private final LinearSystemLoop<N1, N1, N1> m_loop;
+  private final Matrix<N1, N1> flyWheelState = VecBuilder.fill(0.0);
+
   final MotionMagicVoltage m_armRequest = new MotionMagicVoltage(0).withSlot(0);
-  final VelocityVoltage m_flywheelRequest = new VelocityVoltage(0).withSlot(0).withEnableFOC(true);
   // Inputs from flywheel
   private final StatusSignal<Angle> FlywheelPosition;
   private final StatusSignal<AngularVelocity> FlywheelVelocity;
@@ -43,10 +58,46 @@ public class IntakeIOTalonFX implements IntakeIO {
 
   public IntakeIOTalonFX() {
     flywheel = new TalonFX(IntakeConstants.flywheelID, "canivore");
+
+    LinearSystem<N1, N1, N1> flywheelSystem =
+        LinearSystemId.identifyVelocitySystem(
+            IntakeConstants.kRightSlot_kV, IntakeConstants.kRightSlot_kA);
+
+    KalmanFilter<N1, N1, N1> m_observer =
+        new KalmanFilter<>(
+            Nat.N1(),
+            Nat.N1(),
+            flywheelSystem,
+            VecBuilder.fill(
+                IntakeConstants
+                    .kKalmanModelStandardDeviation), // How accurate we think our model is
+            VecBuilder.fill(
+                IntakeConstants
+                    .kKalmanEncoderStandardDeviation), // How accurate we think our encoder data is
+            IntakeConstants.kLoopTime);
+
+
     flywheelConfigs.MotorOutput.withNeutralMode(
         IntakeConstants.flywheel_neutralmode_Coast
             ? NeutralModeValue.Coast
             : NeutralModeValue.Brake);
+
+    LinearQuadraticRegulator<N1, N1, N1> LQR =
+        new LinearQuadraticRegulator<>(
+            flywheelSystem,
+            VecBuilder.fill(IntakeConstants.kTolerence),
+            VecBuilder.fill(IntakeConstants.kVoltageTolerance),
+            IntakeConstants.kLoopTime);
+
+    m_loop =
+        new LinearSystemLoop<>(
+            flywheelSystem,
+            LQR,
+            m_observer,
+            IntakeConstants.kMaxVoltage,
+            IntakeConstants.kLoopTime);
+
+    m_loop.reset(flyWheelState);
 
     flywheelConfigs.CurrentLimits.withSupplyCurrentLimit(60);
     flywheelConfigs.CurrentLimits.withSupplyCurrentLimitEnable(true);
@@ -154,15 +205,32 @@ public class IntakeIOTalonFX implements IntakeIO {
   }
 
   @Override
-  public void setOpenLoop(double flywheelOutput, double armOutput) {
-    flywheel.setControl(new DutyCycleOut(flywheelOutput));
-    arm.setControl(new DutyCycleOut(armOutput));
+  public void updateOutputs(IntakeIO.IntakeIOInputs inputs, double targetVelocity) {
+    flyWheelState.set(0, 0, inputs.FlywheelVelocityRadPerSec);
+    m_loop.setNextR(VecBuilder.fill(targetVelocity));
+    m_loop.correct(VecBuilder.fill(inputs.FlywheelVelocityRadPerSec));
+
+    m_loop.predict(IntakeConstants.kLoopTime);
+
+    // Apply LQR control to the left motor
+    this.setFlyWheelVoltage(m_loop.getU(0));
   }
 
+
+  
   @Override
-  public void setFlywheelVoltage(double volts) {
-    flywheel.setVoltage(volts);
+  public void setFlyWheelVoltage(double volts) {
+    SmartDashboard.putNumber("LQR/flywheel_supplyVolts", flywheel.getSupplyVoltage(true).getValueAsDouble());
+    flywheel.setControl(
+        new VoltageOut(volts).withEnableFOC(true));
+    SmartDashboard.putNumber("LQR/flywheel_volts", volts);
+    SmartDashboard.putNumber("LQR/flywheel_error", m_loop.getError(0));
+    SmartDashboard.putNumber("LQR/flywheel_u", m_loop.getU(0));
+    SmartDashboard.putNumber("LQR/flywheel_nextR", m_loop.getNextR(0));
+    SmartDashboard.putNumber("LQR/flywheel_xhat", m_loop.getXHat(0));
+    SmartDashboard.putNumber("LQR/flywheel_uff", m_loop.getFeedforward().getUff(0));
   }
+
 
   @Override
   public void setArmVoltage(double volts) {
@@ -177,11 +245,6 @@ public class IntakeIOTalonFX implements IntakeIO {
   @Override
   public void ArmPositionVoltage(double targetPosition) {
     arm.setControl(m_armRequest.withPosition(Units.radiansToRotations(targetPosition)));
-  }
-
-  @Override
-  public void flywheelVelocityVoltage(double targetVelocity) {
-    flywheel.setControl(m_flywheelRequest.withVelocity(Units.radiansToRotations(targetVelocity)));
   }
 
   public void flywheelStop() {

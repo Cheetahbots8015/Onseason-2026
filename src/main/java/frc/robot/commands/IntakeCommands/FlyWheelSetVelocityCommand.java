@@ -18,13 +18,13 @@ public class FlyWheelSetVelocityCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.flywheelVelocityVoltage(SmartDashboard.getNumber("FlyWheelVelocity", 0));
+    m_subsystem.setFlyWheelTargetVelocity(SmartDashboard.getNumber("IntakeFlyWheelVelocity", 400));
     ;
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.flywheelStop();
+    m_subsystem.flyWheelStop();;
     ;
   }
 
