@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.HoodCommands.setHoodPositionCommand;
+import frc.robot.commands.IntakeCommands.ArmSHMCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.IntakeCommands.TimedIntakeCommand;
 import frc.robot.commands.ShootCommand;
@@ -159,6 +160,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake", new TimedIntakeCommand(intake, 5));
     NamedCommands.registerCommand("LongIntake", new TimedIntakeCommand(intake, 7));
 
+    NamedCommands.registerCommand("ArmSHM", new ArmSHMCommand(intake));
+
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
@@ -219,6 +222,26 @@ public class RobotContainer {
     controller.rightTrigger().whileTrue(new ShootCommand(shooter, barrel, feeder));
 
     controller.leftTrigger().whileTrue(new IntakeCommand(intake));
+    if (Math.abs(controller.getLeftX()) > 0.2 || Math.abs(controller.getLeftY()) > 0.2) {
+      controller
+          .rightTrigger()
+          .whileTrue(
+              DriveCommands.joystickDrive(
+                  drive,
+                  () ->
+                      -controller.getLeftY() > 0
+                          ? Math.pow(controller.getLeftY(), 2) * 0.2
+                          : -Math.pow(controller.getLeftY(), 2) * 0.2,
+                  () ->
+                      -controller.getLeftX() > 0
+                          ? Math.pow(controller.getLeftX(), 2) * 0.2
+                          : -Math.pow(controller.getLeftX(), 2) * 0.2,
+                  () -> -controller.getRightX() * 0.2));
+    } else {
+      drive.stopWithX();
+    }
+
+    controller.leftBumper().whileTrue(new ArmSHMCommand(intake));
 
     hood.setDefaultCommand(new setHoodPositionCommand(hood));
 
@@ -273,7 +296,7 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("kShootingSpeed", 330);
     SmartDashboard.putNumber("HoodPosition", 0);
-    SmartDashboard.putNumber("FlyWheelVelocity", 400);
+    SmartDashboard.putNumber("FlyWheelVelocity", 300);
     SmartDashboard.putNumber("ShootingSpeedOffset", 0.0);
     SmartDashboard.putNumber("TurretAngleOffset", 0.0);
     SmartDashboard.putNumber("BarrelForwardVelocity", 60);

@@ -14,6 +14,7 @@
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
+import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -48,6 +49,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -121,6 +123,8 @@ public class Drive extends SubsystemBase {
   private Pigeon2 turret_pigeon = new Pigeon2(TurretConstants.kPigeonId, "canivore");
 
   public boolean autoFliped = false;
+
+  private Field2d field2d;
 
   public Drive(
       GyroIO gyroIO,
@@ -210,6 +214,7 @@ public class Drive extends SubsystemBase {
             builder.addDoubleProperty("Robot Angle", () -> getRotation().getRadians(), null);
           }
         });
+    field2d = new Field2d();
   }
 
   private boolean shouldReject(PoseEstimate mt2, int[] validateID) {
@@ -395,6 +400,8 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber(
         "rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
     // Update gyro alert
+    field2d.setRobotPose(poseEstimator.getEstimatedPosition());
+    SmartDashboard.putData("Field2d", field2d);
     gyroDisconnectedAlert.set(!gyroInputs.connected && ContainerConstants.currentMode != Mode.SIM);
   }
 
@@ -440,7 +447,7 @@ public class Drive extends SubsystemBase {
   public void stopWithX() {
     Rotation2d[] headings = new Rotation2d[4];
     for (int i = 0; i < 4; i++) {
-      headings[i] = getModuleTranslations()[i].getAngle();
+      headings[i] = getModuleTranslations()[i].getAngle().plus(new Rotation2d(90));
     }
     kinematics.resetHeadings(headings);
     stop();
@@ -547,6 +554,6 @@ public class Drive extends SubsystemBase {
   }
 
   public void setTurretPigeonOffset() {
-    turret_pigeon.setYaw(gyroInputs.yawPosition.getDegrees());
+    tryUntilOk(5, () -> turret_pigeon.setYaw(gyroInputs.yawPosition.getDegrees()));
   }
 }

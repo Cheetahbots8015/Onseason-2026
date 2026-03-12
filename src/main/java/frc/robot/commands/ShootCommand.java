@@ -88,19 +88,12 @@ public class ShootCommand extends Command {
     SmartDashboard.putNumber("PredictedVelocity", Math.sqrt(distance * 28409 + 30473));
 
     shootingSpeedOffset = SmartDashboard.getNumber("ShootingSpeedOffset", 0.0);
-    if (shootingSpeedOffset > 20) {
-      shootingSpeedOffset = 20;
-      SmartDashboard.putNumber("ShootingSpeedOffset", 20);
-    } else if (shootingSpeedOffset < -20) {
-      shootingSpeedOffset = -20;
-      SmartDashboard.putNumber("ShootingSpeedOffset", -20);
-    }
 
     m_subsystem.setTargetVelocity(
-        MathUtil.clamp((Math.sqrt(distance * 28409 + 30473)) - 5 + shootingSpeedOffset, 0, 400));
+        MathUtil.clamp((Math.sqrt(distance * 28409 + 30473)) - 20 + shootingSpeedOffset, 0, 400));
 
     if (MathUtil.isNear(
-        MathUtil.clamp((Math.sqrt(distance * 28409 + 30473)) - 5 + shootingSpeedOffset, 0, 400),
+        MathUtil.clamp((Math.sqrt(distance * 28409 + 30473)) - 20 + shootingSpeedOffset, 0, 400),
         m_subsystem.getMotorVelocity(),
         20)) {
       m_feedersubsystem.setFeederVelocityVoltage(

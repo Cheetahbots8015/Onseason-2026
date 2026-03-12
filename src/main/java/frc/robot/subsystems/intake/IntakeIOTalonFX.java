@@ -27,7 +27,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final CANcoder sensor = new CANcoder(IntakeConstants.sensorID, "canivore");
 
   final MotionMagicVoltage m_armRequest = new MotionMagicVoltage(0).withSlot(0);
-  final VelocityVoltage m_flywheelRequest = new VelocityVoltage(0).withSlot(0);
+  final VelocityVoltage m_flywheelRequest = new VelocityVoltage(0).withSlot(0).withEnableFOC(true);
   // Inputs from flywheel
   private final StatusSignal<Angle> FlywheelPosition;
   private final StatusSignal<AngularVelocity> FlywheelVelocity;
@@ -48,6 +48,9 @@ public class IntakeIOTalonFX implements IntakeIO {
             ? NeutralModeValue.Coast
             : NeutralModeValue.Brake);
 
+    flywheelConfigs.CurrentLimits.withSupplyCurrentLimit(60);
+    flywheelConfigs.CurrentLimits.withSupplyCurrentLimitEnable(true);
+
     // Set motor inversion based on desired rotation direction
     flywheelConfigs.MotorOutput.withInverted(
         IntakeConstants.flywheel_inverted_CounterClockwisePositive
@@ -61,6 +64,9 @@ public class IntakeIOTalonFX implements IntakeIO {
     flywheelConfigs.Slot0.kA = IntakeConstants.flywheelkA;
     flywheelConfigs.Slot0.kS = IntakeConstants.flywheelkS;
     flywheelConfigs.Slot0.kV = IntakeConstants.flywheelkV;
+
+    // add ramp
+    flywheelConfigs.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.2;
 
     arm = new TalonFX(IntakeConstants.armID, "canivore");
     armConfigs.MotorOutput.withNeutralMode(
@@ -108,11 +114,11 @@ public class IntakeIOTalonFX implements IntakeIO {
     SensorDegrees = sensor.getPosition();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
-        IntakeConstants.statusUpdateFrequency,
+        IntakeConstants.statusFastUpdateFrequency, FlywheelAppliedVolts, FlywheelCurrent);
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        IntakeConstants.statusrRegularUpdateFrequency,
         FlywheelPosition,
-        FlywheelVelocity,
-        FlywheelAppliedVolts,
-        FlywheelCurrent,
         ArmPosition,
         ArmVelocity,
         ArmAppliedVolts,
