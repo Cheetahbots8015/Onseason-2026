@@ -14,6 +14,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,12 +26,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.BarrelCommands.BarrelForwardVelocityCommand;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.FeederCommands.FeederForwardVelocityCommand;
 import frc.robot.commands.HoodCommands.setHoodPositionCommand;
+import frc.robot.commands.IntakeCommands.ArmSHMCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
-import frc.robot.commands.ShooterCommands.ShooterSetVelocityCommand;
+import frc.robot.commands.IntakeCommands.TimedIntakeCommand;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.TimedShootCommand;
+import frc.robot.commands.TurretCommands.reserTurretCommand;
 import frc.robot.constants.ContainerConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.GameData;
@@ -150,6 +153,15 @@ public class RobotContainer {
     }
 
     // Set up auto routines
+
+    NamedCommands.registerCommand("Shoot", new TimedShootCommand(shooter, barrel, feeder, 3));
+    NamedCommands.registerCommand("LongShoot", new TimedShootCommand(shooter, barrel, feeder, 6));
+
+    NamedCommands.registerCommand("Intake", new TimedIntakeCommand(intake, 5));
+    NamedCommands.registerCommand("LongIntake", new TimedIntakeCommand(intake, 7));
+
+    NamedCommands.registerCommand("ArmSHM", new ArmSHMCommand(intake));
+
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
@@ -207,15 +219,29 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.rightBumper().whileTrue(new ShooterSetVelocityCommand(shooter));
-
-    controller
-        .rightTrigger()
-        .whileTrue(
-            new FeederForwardVelocityCommand(feeder)
-                .alongWith(new BarrelForwardVelocityCommand(barrel)));
+    controller.rightTrigger().whileTrue(new ShootCommand(shooter, barrel, feeder));
 
     controller.leftTrigger().whileTrue(new IntakeCommand(intake));
+    if (Math.abs(controller.getLeftX()) > 0.2 || Math.abs(controller.getLeftY()) > 0.2) {
+      controller
+          .rightTrigger()
+          .whileTrue(
+              DriveCommands.joystickDrive(
+                  drive,
+                  () ->
+                      -controller.getLeftY() > 0
+                          ? Math.pow(controller.getLeftY(), 2) * 0.2
+                          : -Math.pow(controller.getLeftY(), 2) * 0.2,
+                  () ->
+                      -controller.getLeftX() > 0
+                          ? Math.pow(controller.getLeftX(), 2) * 0.2
+                          : -Math.pow(controller.getLeftX(), 2) * 0.2,
+                  () -> -controller.getRightX() * 0.2));
+    } else {
+      drive.stopWithX();
+    }
+
+    controller.leftBumper().whileTrue(new ArmSHMCommand(intake));
 
     hood.setDefaultCommand(new setHoodPositionCommand(hood));
 
@@ -236,10 +262,45 @@ public class RobotContainer {
                         "ShootingSpeedOffset",
                         SmartDashboard.getNumber("ShootingSpeedOffset", 0.0) - 5)));
 
+    subcontroller
+        .povLeft()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    SmartDashboard.putNumber(
+                        "TurretAngleOffset",
+                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) + 5)));
+    subcontroller
+        .povRight()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    SmartDashboard.putNumber(
+                        "TurretAngleOffset",
+                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) - 5)));
+
+    subcontroller
+        .a()
+        .whileTrue(
+            new reserTurretCommand(turret)
+                .andThen(Commands.runOnce(() -> drive.setTurretPigeonOffset(), drive)));
+
+    subcontroller
+        .rightTrigger()
+        .whileTrue(Commands.run(() -> climber.setClimberVoltage(2), climber))
+        .onFalse(Commands.run(() -> climber.setClimberVoltage(0), climber));
+    subcontroller
+        .leftTrigger()
+        .whileTrue(Commands.run(() -> climber.setClimberVoltage(-2), climber))
+        .onFalse(Commands.run(() -> climber.setClimberVoltage(0), climber));
+
     SmartDashboard.putNumber("kShootingSpeed", 330);
-    SmartDashboard.putNumber("HoodPosition", 60);
-    SmartDashboard.putNumber("FlyWheelVelocity", 400);
-    SmartDashboard.putNumber("ShootingSpeedOffset", 0);
+    SmartDashboard.putNumber("HoodPosition", 0);
+    SmartDashboard.putNumber("FlyWheelVelocity", 300);
+    SmartDashboard.putNumber("ShootingSpeedOffset", 0.0);
+    SmartDashboard.putNumber("TurretAngleOffset", 0.0);
+    SmartDashboard.putNumber("BarrelForwardVelocity", 60);
+    SmartDashboard.putNumber("FeederForwardVelocity", 60);
   }
 
   /**

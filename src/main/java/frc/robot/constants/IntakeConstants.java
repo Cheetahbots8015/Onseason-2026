@@ -14,8 +14,9 @@ public class IntakeConstants {
   public static final double armVolts = 0.0;
 
   public static final double dutyCycleDeadband = 0.05;
-  public static final double statusUpdateFrequency = 50.0;
-  public static final double flywheelkP = 0.05;
+  public static final double statusrRegularUpdateFrequency = 50.0;
+  public static final double statusFastUpdateFrequency = 200.0;
+  public static final double flywheelkP = 0.1;
   public static final double flywheelkI = 0.0;
   public static final double flywheelkD = 0.0;
   public static final double flywheelkA = 0.0;

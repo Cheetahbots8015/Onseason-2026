@@ -1,14 +1,13 @@
 package frc.robot.commands.IntakeCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
-public class IntakeCommand extends Command {
+public class StopIntakeCommand extends Command {
 
   private final IntakeSubsystem m_subsystem;
 
-  public IntakeCommand(IntakeSubsystem subsystem) {
+  public StopIntakeCommand(IntakeSubsystem subsystem) {
     m_subsystem = subsystem;
     addRequirements(subsystem);
   }
@@ -17,14 +16,7 @@ public class IntakeCommand extends Command {
   public void initialize() {}
 
   @Override
-  public void execute() {
-    if (m_subsystem.getInput().ArmPositionRad > 50) {
-      m_subsystem.flywheelVelocityVoltage(SmartDashboard.getNumber("FlyWheelVelocity", 0));
-    } else {
-      m_subsystem.flywheelStop();
-    }
-    m_subsystem.ArmPositionVoltage(240);
-  }
+  public void execute() {}
 
   @Override
   public void end(boolean interrupted) {
@@ -34,6 +26,6 @@ public class IntakeCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

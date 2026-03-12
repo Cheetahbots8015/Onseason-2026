@@ -161,7 +161,8 @@ public class ShooterIOTalonFX implements ShooterIO {
     SmartDashboard.putNumber("LQR/supplyVolts", right.getSupplyVoltage(true).getValueAsDouble());
     right.setControl(
         new VoltageOut(
-            MathUtil.clamp(volts, volts, right.getSupplyVoltage(true).getValueAsDouble())));
+                MathUtil.clamp(volts, volts, right.getSupplyVoltage(true).getValueAsDouble()))
+            .withEnableFOC(true));
     SmartDashboard.putNumber("LQR/volts", volts);
     SmartDashboard.putNumber("LQR/error", m_loop.getError(0));
     SmartDashboard.putNumber("LQR/u", m_loop.getU(0));
