@@ -2,14 +2,17 @@ package frc.robot.commands.TurretCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.turret.TurretSubsystem;
 
 public class reserTurretCommand extends Command {
 
   private final TurretSubsystem m_subsystem;
+  private final Drive m_drive;
 
-  public reserTurretCommand(TurretSubsystem subsystem) {
+  public reserTurretCommand(TurretSubsystem subsystem, Drive drive) {
     m_subsystem = subsystem;
+    m_drive = drive;
     addRequirements(subsystem);
   }
 
@@ -22,10 +25,12 @@ public class reserTurretCommand extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_drive.setTurretPigeonOffset();
+  }
 
   @Override
   public boolean isFinished() {
-    return MathUtil.isNear(0, m_subsystem.getPosition(), 2);
+    return MathUtil.isNear(0, m_subsystem.getPosition(), 0.5);
   }
 }

@@ -50,7 +50,6 @@ public class ShootCommand extends Command {
 
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("HoodPosition", 100);
 
     /*
     isNearTrench = false;
@@ -89,17 +88,32 @@ public class ShootCommand extends Command {
 
     shootingSpeedOffset = SmartDashboard.getNumber("ShootingSpeedOffset", 0.0);
 
-    m_subsystem.setTargetVelocity(
-        MathUtil.clamp((Math.sqrt(distance * 28409 + 30473)) - 20 + shootingSpeedOffset, 0, 400));
-
-    if (MathUtil.isNear(
-        MathUtil.clamp((Math.sqrt(distance * 28409 + 30473)) - 20 + shootingSpeedOffset, 0, 400),
-        m_subsystem.getMotorVelocity(),
-        20)) {
-      m_feedersubsystem.setFeederVelocityVoltage(
-          SmartDashboard.getNumber("FeederForwardVelocity", FeederConstants.feederForwardVelocity));
-      m_barrelsubsystem.setBarrelVelocity(
-          SmartDashboard.getNumber("BarrelForwardVelocity", BarrelConstants.BarrelForwardVelocity));
+    if (distance > 1.0) {
+      m_subsystem.setTargetVelocity(
+          MathUtil.clamp((Math.sqrt(distance * 14475 + 56439)) + shootingSpeedOffset, 0, 400));
+      SmartDashboard.putNumber("HoodPosition", 120);
+      if (MathUtil.isNear(
+          MathUtil.clamp((Math.sqrt(distance * 14475 + 56439)) + shootingSpeedOffset, 0, 400),
+          m_subsystem.getMotorVelocity(),
+          20)) {
+        m_feedersubsystem.setFeederVelocityVoltage(
+            SmartDashboard.getNumber(
+                "FeederForwardVelocity", FeederConstants.feederForwardVelocity));
+        m_barrelsubsystem.setBarrelVelocity(
+            SmartDashboard.getNumber(
+                "BarrelForwardVelocity", BarrelConstants.BarrelForwardVelocity));
+      }
+    } else {
+      m_subsystem.setTargetVelocity(280 + shootingSpeedOffset);
+      SmartDashboard.putNumber("HoodPosition", 0);
+      if (MathUtil.isNear(280 + shootingSpeedOffset, m_subsystem.getMotorVelocity(), 20)) {
+        m_feedersubsystem.setFeederVelocityVoltage(
+            SmartDashboard.getNumber(
+                "FeederForwardVelocity", FeederConstants.feederForwardVelocity));
+        m_barrelsubsystem.setBarrelVelocity(
+            SmartDashboard.getNumber(
+                "BarrelForwardVelocity", BarrelConstants.BarrelForwardVelocity));
+      }
     }
   }
 

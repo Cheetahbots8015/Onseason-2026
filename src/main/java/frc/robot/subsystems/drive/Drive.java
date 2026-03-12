@@ -447,7 +447,7 @@ public class Drive extends SubsystemBase {
   public void stopWithX() {
     Rotation2d[] headings = new Rotation2d[4];
     for (int i = 0; i < 4; i++) {
-      headings[i] = getModuleTranslations()[i].getAngle().plus(new Rotation2d(90));
+      headings[i] = getModuleTranslations()[i].getAngle();
     }
     kinematics.resetHeadings(headings);
     stop();

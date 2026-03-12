@@ -1,6 +1,7 @@
 package frc.robot.commands.IntakeCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
@@ -19,15 +20,15 @@ public class ArmSHMCommand extends Command {
   @Override
   public void execute() {
     if (MathUtil.isNear(100, m_subsystem.getInput().ArmPositionRad, 10)) {
-      m_subsystem.ArmPositionVoltage(50);
+      SmartDashboard.putNumber("ArmPosition", 50);
     } else if (MathUtil.isNear(50, m_subsystem.getInput().ArmPositionRad, 10)) {
-      m_subsystem.ArmPositionVoltage(100);
+      SmartDashboard.putNumber("ArmPosition", 100);
     }
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.ArmPositionVoltage(50);
+    SmartDashboard.putNumber("ArmPosition", 0);
   }
 
   @Override

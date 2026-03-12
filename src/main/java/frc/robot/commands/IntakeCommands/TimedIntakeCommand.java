@@ -22,18 +22,22 @@ public class TimedIntakeCommand extends Command {
   public void initialize() {
     m_timer.reset();
     m_timer.start();
+    SmartDashboard.putNumber("ArmPosition", 240);
   }
 
   @Override
   public void execute() {
-    m_subsystem.flywheelVelocityVoltage(SmartDashboard.getNumber("FlyWheelVelocity", 0));
-    m_subsystem.ArmPositionVoltage(250);
+    if (m_subsystem.getInput().ArmPositionRad > 50) {
+      m_subsystem.flywheelVelocityVoltage(SmartDashboard.getNumber("FlyWheelVelocity", 0));
+    } else {
+      m_subsystem.flywheelStop();
+    }
   }
 
   @Override
   public void end(boolean interrupted) {
     m_subsystem.flywheelStop();
-    m_subsystem.ArmPositionVoltage(50);
+    SmartDashboard.putNumber("ArmPosition", 0);
   }
 
   @Override

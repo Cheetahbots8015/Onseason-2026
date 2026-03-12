@@ -14,7 +14,9 @@ public class IntakeCommand extends Command {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    SmartDashboard.putNumber("ArmPosition", 240);
+  }
 
   @Override
   public void execute() {
@@ -23,13 +25,11 @@ public class IntakeCommand extends Command {
     } else {
       m_subsystem.flywheelStop();
     }
-    m_subsystem.ArmPositionVoltage(240);
   }
 
   @Override
   public void end(boolean interrupted) {
     m_subsystem.flywheelStop();
-    m_subsystem.ArmPositionVoltage(50);
   }
 
   @Override
