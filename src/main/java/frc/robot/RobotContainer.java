@@ -271,7 +271,7 @@ public class RobotContainer {
                 () ->
                     SmartDashboard.putNumber(
                         "TurretAngleOffset",
-                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) + 5)));
+                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) + 2.5)));
     subcontroller
         .povRight()
         .onTrue(
@@ -279,18 +279,18 @@ public class RobotContainer {
                 () ->
                     SmartDashboard.putNumber(
                         "TurretAngleOffset",
-                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) - 5)));
+                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) - 2.5)));
 
     subcontroller.a().whileTrue(new reserTurretCommand(turret, drive));
 
-    subcontroller.rightTrigger().whileTrue(new ClimberReverseCommand(climber));
-    subcontroller.leftTrigger().whileTrue(new ClimberUpCommand(climber));
+    subcontroller.x().whileTrue(new ClimberReverseCommand(climber));
+    subcontroller.y().whileTrue(new ClimberUpCommand(climber));
 
     subcontroller.b().whileTrue(Commands.run(() -> SmartDashboard.putNumber("ArmPosition", 0)));
 
     SmartDashboard.putNumber("kShootingSpeed", 330);
     SmartDashboard.putNumber("HoodPosition", 0);
-    SmartDashboard.putNumber("FlyWheelVelocity", 300);
+    SmartDashboard.putNumber("FlyWheelVelocity", 400);
     SmartDashboard.putNumber("ShootingSpeedOffset", 0.0);
     SmartDashboard.putNumber("TurretAngleOffset", 0.0);
     SmartDashboard.putNumber("BarrelForwardVelocity", 60);

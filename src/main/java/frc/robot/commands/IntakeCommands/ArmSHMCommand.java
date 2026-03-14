@@ -15,7 +15,9 @@ public class ArmSHMCommand extends Command {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    SmartDashboard.putNumber("ArmPosition", 100);
+  }
 
   @Override
   public void execute() {

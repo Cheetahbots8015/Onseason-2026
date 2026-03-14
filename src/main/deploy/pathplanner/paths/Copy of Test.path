@@ -3,53 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.6,
-        "y": 2.799
+        "x": 4.301744,
+        "y": 0.6366850656271856
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.489774305555557,
-        "y": 0.41340104166666647
+        "x": 4.551744000000003,
+        "y": 0.6366850656271854
       },
       "isLocked": false,
-      "linkedName": "Right Neutral Intake"
+      "linkedName": "Startpoint 1"
     },
     {
       "anchor": {
-        "x": 6.671727430555555,
+        "x": 4.301744,
         "y": 0.6366850656271856
       },
       "prevControl": {
-        "x": 7.352226557829737,
-        "y": 0.6366850656271857
-      },
-      "nextControl": {
-        "x": 6.073222239707746,
-        "y": 0.6366850656271855
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 4.0,
-        "y": 0.6366850656271856
-      },
-      "prevControl": {
-        "x": 5.362248531086254,
+        "x": 4.051744,
         "y": 0.6366850656271854
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Startpoint 1"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.0175849941383432,
-      "rotationDegrees": -90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -69,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

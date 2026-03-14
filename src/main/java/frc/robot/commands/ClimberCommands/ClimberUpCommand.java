@@ -17,7 +17,7 @@ public class ClimberUpCommand extends Command {
 
   @Override
   public void execute() {
-    m_subsystem.setClimberVoltage(4);
+    m_subsystem.setClimberVoltage(2);
   }
 
   @Override
