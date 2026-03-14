@@ -26,12 +26,11 @@ public class IntakeCommand extends Command {
     } else {
       m_subsystem.flywheelStop();
     }
-    if(MathUtil.isNear(240, m_subsystem.getInput().ArmPositionRad, 5)){
+    if (MathUtil.isNear(240, m_subsystem.getInput().ArmPositionRad, 5)) {
       SmartDashboard.putNumber("ArmPosition", 230);
     } else if (MathUtil.isNear(230, m_subsystem.getInput().ArmPositionRad, 5)) {
       SmartDashboard.putNumber("ArmPosition", 240);
     }
-
   }
 
   @Override
