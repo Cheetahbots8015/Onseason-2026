@@ -63,7 +63,7 @@ public class ClimberIOTalonFX implements ClimberIO {
     climberConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     climberConfigs.Voltage.PeakForwardVoltage = 5;
-    climberConfigs.Voltage.PeakReverseVoltage = 5;
+    climberConfigs.Voltage.PeakReverseVoltage = -5;
 
     // Apply the configuration to the motor
     climber.getConfigurator().apply(climberConfigs);

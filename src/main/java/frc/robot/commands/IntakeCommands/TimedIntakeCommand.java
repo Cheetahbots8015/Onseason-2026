@@ -23,7 +23,7 @@ public class TimedIntakeCommand extends Command {
   public void initialize() {
     m_timer.reset();
     m_timer.start();
-    SmartDashboard.putNumber("ArmPosition", 240);
+    SmartDashboard.putNumber("ArmPosition", 245);
   }
 
   @Override
@@ -33,10 +33,10 @@ public class TimedIntakeCommand extends Command {
     } else {
       m_subsystem.flywheelStop();
     }
-    if (MathUtil.isNear(240, m_subsystem.getInput().ArmPositionRad, 5)) {
-      SmartDashboard.putNumber("ArmPosition", 230);
-    } else if (MathUtil.isNear(230, m_subsystem.getInput().ArmPositionRad, 5)) {
-      SmartDashboard.putNumber("ArmPosition", 240);
+    if (MathUtil.isNear(245, m_subsystem.getInput().ArmPositionRad, 5)) {
+      SmartDashboard.putNumber("ArmPosition", 220);
+    } else if (MathUtil.isNear(220, m_subsystem.getInput().ArmPositionRad, 5)) {
+      SmartDashboard.putNumber("ArmPosition", 245);
     }
   }
 
