@@ -14,7 +14,7 @@ import frc.robot.subsystems.barrel.BarrelSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
-public class TimedShootCommand extends Command {
+public class PreloadTimedShootCommand extends Command {
 
   private final ShooterSubsystem m_subsystem;
   private final BarrelSubsystem m_barrelsubsystem;
@@ -37,7 +37,7 @@ public class TimedShootCommand extends Command {
   private double calculated_angle = 0.0;
   Translation2d target = new Translation2d(0.0, 0.0); // Placeholder for target translation
 
-  public TimedShootCommand(
+  public PreloadTimedShootCommand(
       ShooterSubsystem subsystem,
       BarrelSubsystem barrelsubsystem,
       FeederSubsystem feedersubsystem,

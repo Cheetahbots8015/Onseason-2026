@@ -347,7 +347,7 @@ public class Drive extends SubsystemBase {
         doRejectUpdate = shouldReject(mt2, validateID);
       }
       if (!doRejectUpdate) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(2, 2, 9999999));
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(5, 5, 9999999));
         poseEstimator.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       }
       Logger.recordOutput("LL/turret-pose", mt2.pose);

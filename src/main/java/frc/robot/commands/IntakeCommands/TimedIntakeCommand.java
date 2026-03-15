@@ -34,8 +34,8 @@ public class TimedIntakeCommand extends Command {
       m_subsystem.flywheelStop();
     }
     if (MathUtil.isNear(245, m_subsystem.getInput().ArmPositionRad, 5)) {
-      SmartDashboard.putNumber("ArmPosition", 220);
-    } else if (MathUtil.isNear(220, m_subsystem.getInput().ArmPositionRad, 5)) {
+      SmartDashboard.putNumber("ArmPosition", 235);
+    } else if (MathUtil.isNear(235, m_subsystem.getInput().ArmPositionRad, 5)) {
       SmartDashboard.putNumber("ArmPosition", 245);
     }
   }
