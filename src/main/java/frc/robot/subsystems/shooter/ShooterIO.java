@@ -10,10 +10,6 @@ public interface ShooterIO {
     public double rightVelocityRadPerSec = 0.0;
     public double rightAppliedVolts = 0.0;
     public double rightCurrentAmps = 0.0;
-    public double leftPositionRad = 0.0;
-    public double leftVelocityRadPerSec = 0.0;
-    public double leftAppliedVolts = 0.0;
-    public double leftCurrentAmps = 0.0;
   }
 
   /** Updates the set of loggable inputs. */
@@ -23,17 +19,12 @@ public interface ShooterIO {
   public default void updateOutputs(ShooterIOInputs inputs, double targetVelocity) {}
 
   /** Direct set motor voltage - single motor (applied to both/follower). */
-  public default void setleftMotorVoltage(double volts) {}
-
-  public default void setrightMotorVoltage(double volts) {}
-
+  public default void setMotorVoltage(double volts) {}
 
   /** Velocity control - single argument follower. */
   public default void setVelocityControl(double rotPerSec) {}
 
   public default void idle(ShooterIOInputs inputs) {}
-
-  p
 
   public default void resetFilter() {}
 

@@ -28,6 +28,10 @@ public class ShooterIOSim implements ShooterIO {
     inputs.rightCurrentAmps = Math.abs(rightSim.getCurrentDrawAmps());
   }
 
+  @Override
+  public void setMotorVoltage(double volts) {
+    rightAppliedVolts = volts;
+  }
 
   @Override
   public void setVelocityControl(double radPerSec) {
