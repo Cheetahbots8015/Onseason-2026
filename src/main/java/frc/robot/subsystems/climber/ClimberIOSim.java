@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.util.CheetahUtil;
 
 public class ClimberIOSim implements ClimberIO {
   private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(1);
@@ -22,8 +23,9 @@ public class ClimberIOSim implements ClimberIO {
     climberSim.update(0.02);
 
     // Update motor inputs
-    inputs.ClimberPosition = climberSim.getAngularPositionRotations();
-    inputs.ClimberVelocityRotPerSec = climberSim.getAngularVelocity().magnitude();
+    inputs.ClimberPositionDeg =
+        CheetahUtil.climberRotationsToDeg(climberSim.getAngularPositionRotations());
+    inputs.ClimberVelocityRadPerSec = climberSim.getAngularVelocityRadPerSec();
     inputs.ClimberAppliedVolts = climberSim.getInputVoltage();
     inputs.ClimberCurrentAmps = Math.abs(climberSim.getCurrentDrawAmps());
   }

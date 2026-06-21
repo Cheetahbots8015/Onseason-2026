@@ -42,22 +42,9 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "LongShoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ArmSHM"
-                }
-              }
-            ]
+            "name": "LongShoot"
           }
         }
       ]

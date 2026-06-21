@@ -23,7 +23,7 @@ public class IntakeConstants {
   public static final double flywheelkS = 0.12419;
   public static final double flywheelkV = 0.10696;
 
-  public static final double armkP = 0.9;
+  public static final double armkP = 0.7;
   public static final double armkI = 0.0;
   public static final double armkD = 0.0;
   public static final double armkA = 0.01;

@@ -127,8 +127,6 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathfindingCommand.warmupCommand().schedule();
-    LimelightHelpers.SetIMUMode("limelight-shooter", 1);
-    LimelightHelpers.SetIMUMode("limelight-chassis", 1);
   }
 
   /** This function is called once when the robot is disabled. */

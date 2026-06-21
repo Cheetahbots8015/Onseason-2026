@@ -1,6 +1,5 @@
 package frc.robot.commands.IntakeCommands;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -15,9 +14,7 @@ public class IntakeCommand extends Command {
   }
 
   @Override
-  public void initialize() {
-    SmartDashboard.putNumber("ArmPosition", 245);
-  }
+  public void initialize() {}
 
   @Override
   public void execute() {
@@ -26,16 +23,13 @@ public class IntakeCommand extends Command {
     } else {
       m_subsystem.flywheelStop();
     }
-    if (MathUtil.isNear(245, m_subsystem.getInput().ArmPositionRad, 5)) {
-      SmartDashboard.putNumber("ArmPosition", 235);
-    } else if (MathUtil.isNear(235, m_subsystem.getInput().ArmPositionRad, 5)) {
-      SmartDashboard.putNumber("ArmPosition", 245);
-    }
+    m_subsystem.ArmPositionVoltage(240);
   }
 
   @Override
   public void end(boolean interrupted) {
     m_subsystem.flywheelStop();
+    m_subsystem.ArmPositionVoltage(50);
   }
 
   @Override

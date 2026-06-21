@@ -8,19 +8,20 @@ import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.constants.ClimberConstants;
+import frc.robot.util.CheetahUtil;
 
 public class ClimberIOTalonFX implements ClimberIO {
   // Hardware objects
   private final TalonFX climber;
   private TalonFXConfiguration climberConfigs = new TalonFXConfiguration();
 
-  final MotionMagicVoltage m_motorRequest =
-      new MotionMagicVoltage(0).withSlot(0).withEnableFOC(true);
+  final MotionMagicVoltage m_motorRequest = new MotionMagicVoltage(0).withSlot(0);
 
   // Inputs from motor
   private final StatusSignal<Angle> ClimberPosition;
@@ -55,16 +56,6 @@ public class ClimberIOTalonFX implements ClimberIO {
     climberConfigs.MotionMagic.MotionMagicAcceleration =
         ClimberConstants.climberMotionMagicAcceleration;
 
-    climberConfigs.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
-        ClimberConstants.ForwardSoftLimitThreshold;
-    climberConfigs.SoftwareLimitSwitch.ReverseSoftLimitThreshold =
-        ClimberConstants.ReverseSoftLimitThreshold;
-    climberConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
-    climberConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-
-    climberConfigs.Voltage.PeakForwardVoltage = 5;
-    climberConfigs.Voltage.PeakReverseVoltage = -5;
-
     // Apply the configuration to the motor
     climber.getConfigurator().apply(climberConfigs);
 
@@ -88,8 +79,9 @@ public class ClimberIOTalonFX implements ClimberIO {
     BaseStatusSignal.refreshAll(
         ClimberPosition, ClimberVelocity, ClimberAppliedVolts, ClimberCurrent);
     // Update motor inputs
-    inputs.ClimberPosition = ClimberPosition.getValueAsDouble();
-    inputs.ClimberVelocityRotPerSec = ClimberVelocity.getValueAsDouble();
+    inputs.ClimberPositionDeg =
+        CheetahUtil.climberRotationsToDeg(ClimberPosition.getValueAsDouble());
+    inputs.ClimberVelocityRadPerSec = Units.rotationsToRadians(ClimberVelocity.getValueAsDouble());
     inputs.ClimberAppliedVolts = ClimberAppliedVolts.getValueAsDouble();
     inputs.ClimberCurrentAmps = ClimberCurrent.getValueAsDouble();
   }
@@ -111,7 +103,8 @@ public class ClimberIOTalonFX implements ClimberIO {
   }
 
   @Override
-  public void setClimberPosition(double rot) {
-    climber.setControl(m_motorRequest.withPosition(rot));
+  public void setClimberPosition(double degree) {
+    double rotations = CheetahUtil.climberDegToRotations(degree);
+    climber.setControl(m_motorRequest.withPosition(rotations));
   }
 }

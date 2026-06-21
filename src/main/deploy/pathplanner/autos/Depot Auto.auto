@@ -31,14 +31,32 @@
                 "data": {
                   "pathName": "Depot Intake"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LongShoot"
+                }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "LongIntake"
+            "pathName": "Depot Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Depot Shoot To Tower"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Tower To Climb"
           }
         }
       ]

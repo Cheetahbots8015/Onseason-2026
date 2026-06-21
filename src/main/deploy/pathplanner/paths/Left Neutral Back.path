@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.6,
+        "x": 7.9,
         "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.805771542778295,
+        "x": 8.105771542778296,
         "y": 4.858020874130597
       },
       "isLocked": false,
@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 4.0,
+        "x": 4.302,
         "y": 7.306
       },
       "prevControl": {
-        "x": 4.330675243836292,
+        "x": 4.6326752438362915,
         "y": 7.262650424721928
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Startpoint 2"
     }
   ],
   "rotationTargets": [],

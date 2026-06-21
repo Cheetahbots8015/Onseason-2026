@@ -56,7 +56,7 @@ public class TimedShootCommand extends Command {
 
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("HoodPosition", 120);
+    SmartDashboard.putNumber("HoodPosition", 100);
     m_timer.reset();
     m_timer.start();
     /*
