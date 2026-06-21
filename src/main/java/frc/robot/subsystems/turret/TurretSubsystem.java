@@ -101,9 +101,19 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("isRed", isRedAlliance);
     SmartDashboard.putBoolean("inNeutral", inNeutralZone);
 
+    double distance =
+        Math.sqrt(
+                Math.pow(target.getX() - currentPose.getX(), 2)
+                    + Math.pow(target.getY() - currentPose.getY(), 2))
+            - 0.6036;
+
     double calculated_difference =
         Math.toDegrees(
-                Math.atan2(target.getY() - currentPose.getY(), target.getX() - currentPose.getX()))
+                Math.atan2(
+                    target.getY()
+                        - SmartDashboard.getNumber("xCompensation", 0.0) * Math.pow(distance, 0.5)
+                        - currentPose.getY(),
+                    target.getX() - currentPose.getX()))
             - shooterPosDegrees
             - pigeon_offset;
 

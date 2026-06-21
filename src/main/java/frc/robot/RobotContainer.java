@@ -219,27 +219,29 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.rightTrigger().whileTrue(new ShootCommand(shooter, barrel, feeder));
+    controller
+        .rightTrigger()
+        .whileTrue(new ShootCommand(shooter, barrel, feeder, controller.getHID()));
+
+    controller
+        .rightTrigger()
+        .whileTrue(
+            DriveCommands.joystickDrive(
+                drive,
+                () -> -controller.getLeftY() * 0.5,
+                () -> -controller.getLeftX() * 0.5,
+                () -> -controller.getRightX() * 0.5));
 
     controller.leftTrigger().whileTrue(new IntakeCommand(intake));
-    if (Math.abs(controller.getLeftX()) > 0.2 || Math.abs(controller.getLeftY()) > 0.2) {
-      controller
-          .rightTrigger()
-          .whileTrue(
-              DriveCommands.joystickDrive(
-                  drive,
-                  () ->
-                      -controller.getLeftY() > 0
-                          ? Math.pow(controller.getLeftY(), 2) * 0.2
-                          : -Math.pow(controller.getLeftY(), 2) * 0.2,
-                  () ->
-                      -controller.getLeftX() > 0
-                          ? Math.pow(controller.getLeftX(), 2) * 0.2
-                          : -Math.pow(controller.getLeftX(), 2) * 0.2,
-                  () -> -controller.getRightX() * 0.2));
-    } else {
-      drive.stopWithX();
-    }
+
+    controller
+        .leftTrigger()
+        .whileTrue(
+            DriveCommands.joystickDrive(
+                drive,
+                () -> -controller.getLeftY() * 0.5,
+                () -> -controller.getLeftX() * 0.5,
+                () -> -controller.getRightX() * 0.5));
 
     controller.leftBumper().whileTrue(new ArmSHMCommand(intake));
 
@@ -296,7 +298,7 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("kShootingSpeed", 330);
     SmartDashboard.putNumber("HoodPosition", 0);
-    SmartDashboard.putNumber("FlyWheelVelocity", 300);
+    SmartDashboard.putNumber("FlyWheelVelocity", 400);
     SmartDashboard.putNumber("ShootingSpeedOffset", 0.0);
     SmartDashboard.putNumber("TurretAngleOffset", 0.0);
     SmartDashboard.putNumber("BarrelForwardVelocity", 60);
