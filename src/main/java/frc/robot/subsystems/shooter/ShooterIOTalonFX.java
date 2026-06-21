@@ -99,7 +99,7 @@ public class ShooterIOTalonFX implements ShooterIO {
 
     // rightConfigs.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.2;
     rightConfigs.CurrentLimits.StatorCurrentLimitEnable = false;
-    rightConfigs.CurrentLimits.SupplyCurrentLimit = 80.0;
+    rightConfigs.CurrentLimits.SupplyCurrentLimit = 90.0;
 
     // Apply PID and Feedforward gains
 

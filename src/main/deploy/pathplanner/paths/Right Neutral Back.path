@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.781857638888887,
-        "y": 3.0
+        "x": 7.6,
+        "y": 2.799
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.671631944444444,
-        "y": 0.6144010416666665
+        "x": 7.489774305555557,
+        "y": 0.41340104166666647
       },
       "isLocked": false,
       "linkedName": "Right Neutral Intake"
@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 4.301744,
+        "x": 4.0,
         "y": 0.6366850656271856
       },
       "prevControl": {
-        "x": 5.6639925310862544,
+        "x": 5.362248531086254,
         "y": 0.6366850656271854
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Startpoint 1"
+      "linkedName": null
     }
   ],
   "rotationTargets": [

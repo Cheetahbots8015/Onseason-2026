@@ -306,13 +306,13 @@ public class Drive extends SubsystemBase {
 
     LimelightHelpers.setCameraPose_RobotSpace(
         "limelight-shooter",
-        -0.06142
+        -0.125
             + 0.14468
                 * Math.cos(
                     Units.degreesToRadians(
                         turret_pigeon.getYaw().getValueAsDouble()
                             - gyroInputs.yawPosition.getDegrees())),
-        -0.06142
+        -0.125
             + 0.14468
                 * Math.sin(
                     Units.degreesToRadians(
@@ -331,7 +331,6 @@ public class Drive extends SubsystemBase {
         0,
         0,
         0);
-    LimelightHelpers.SetIMUMode("limelight-shooter", 1);
     int[] validateID = DriveConstants.blueTags;
     if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
       validateID = DriveConstants.redTags;
@@ -341,7 +340,8 @@ public class Drive extends SubsystemBase {
       LimelightHelpers.SetFiducialIDFiltersOverride("limelight-shooter", validateID);
       LimelightHelpers.PoseEstimate mt2 =
           LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
-      if (mt2.tagCount == 0) {
+      if (mt2.tagCount == 0
+          || Math.abs(turret_pigeon.getAngularVelocityZWorld().getValueAsDouble()) > 180) {
         doRejectUpdate = true;
       } else {
         doRejectUpdate = shouldReject(mt2, validateID);
@@ -367,7 +367,6 @@ public class Drive extends SubsystemBase {
         0,
         0,
         0);
-    LimelightHelpers.SetIMUMode("limelight-chassis", 1);
     try {
       doRejectUpdate = false;
       LimelightHelpers.SetFiducialIDFiltersOverride("limelight-chassis", validateID);
@@ -447,7 +446,7 @@ public class Drive extends SubsystemBase {
   public void stopWithX() {
     Rotation2d[] headings = new Rotation2d[4];
     for (int i = 0; i < 4; i++) {
-      headings[i] = getModuleTranslations()[i].getAngle().plus(new Rotation2d(90));
+      headings[i] = getModuleTranslations()[i].getAngle();
     }
     kinematics.resetHeadings(headings);
     stop();

@@ -25,7 +25,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.ClimberCommands.ClimberReverseCommand;
+import frc.robot.commands.ClimberCommands.ClimberUpCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.HoodCommands.setHoodPositionCommand;
 import frc.robot.commands.IntakeCommands.ArmSHMCommand;
@@ -165,6 +166,7 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
+    /*
     autoChooser.addOption(
         "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
     autoChooser.addOption(
@@ -179,7 +181,7 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
+    */
     configureButtonBindings();
   }
 
@@ -271,7 +273,7 @@ public class RobotContainer {
                 () ->
                     SmartDashboard.putNumber(
                         "TurretAngleOffset",
-                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) + 5)));
+                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) + 2.5)));
     subcontroller
         .povRight()
         .onTrue(
@@ -279,22 +281,14 @@ public class RobotContainer {
                 () ->
                     SmartDashboard.putNumber(
                         "TurretAngleOffset",
-                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) - 5)));
+                        SmartDashboard.getNumber("TurretAngleOffset", 0.0) - 2.5)));
 
-    subcontroller
-        .a()
-        .whileTrue(
-            new reserTurretCommand(turret)
-                .andThen(Commands.runOnce(() -> drive.setTurretPigeonOffset(), drive)));
+    subcontroller.a().whileTrue(new reserTurretCommand(turret, drive));
 
-    subcontroller
-        .rightTrigger()
-        .whileTrue(Commands.run(() -> climber.setClimberVoltage(2), climber))
-        .onFalse(Commands.run(() -> climber.setClimberVoltage(0), climber));
-    subcontroller
-        .leftTrigger()
-        .whileTrue(Commands.run(() -> climber.setClimberVoltage(-2), climber))
-        .onFalse(Commands.run(() -> climber.setClimberVoltage(0), climber));
+    subcontroller.x().whileTrue(new ClimberReverseCommand(climber));
+    subcontroller.y().whileTrue(new ClimberUpCommand(climber));
+
+    subcontroller.b().whileTrue(Commands.run(() -> SmartDashboard.putNumber("ArmPosition", 0)));
 
     SmartDashboard.putNumber("kShootingSpeed", 330);
     SmartDashboard.putNumber("HoodPosition", 0);
@@ -303,6 +297,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("TurretAngleOffset", 0.0);
     SmartDashboard.putNumber("BarrelForwardVelocity", 60);
     SmartDashboard.putNumber("FeederForwardVelocity", 60);
+    SmartDashboard.putNumber("ArmPosition", 240);
   }
 
   /**
