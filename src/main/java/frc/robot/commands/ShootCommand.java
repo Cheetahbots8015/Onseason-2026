@@ -84,7 +84,7 @@ public class ShootCommand extends Command {
                 + Math.pow(target.getY() - currentPose.getY(), 2));
     distance = m_filter.calculate(temp - 0.6036);
     SmartDashboard.putNumber("DistanceToTag", distance);
-    SmartDashboard.putNumber("PredictedVelocity", Math.sqrt(distance * 28409 + 30473));
+    SmartDashboard.putNumber("PredictedVelocity", Math.sqrt(distance * 14475 + 56439));
 
     shootingSpeedOffset = SmartDashboard.getNumber("ShootingSpeedOffset", 0.0);
 
