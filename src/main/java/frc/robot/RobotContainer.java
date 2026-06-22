@@ -221,27 +221,28 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.rightTrigger().whileTrue(new ShootCommand(shooter, barrel, feeder));
+    controller
+        .rightTrigger()
+        .whileTrue(new ShootCommand(shooter, barrel, feeder, controller.getHID()));
+
+    controller
+        .rightTrigger()
+        .whileTrue(
+            DriveCommands.joystickDrive(
+                drive,
+                () -> -controller.getLeftY() * 0.5,
+                () -> -controller.getLeftX() * 0.5,
+                () -> -controller.getRightX() * 0.5));
 
     controller.leftTrigger().whileTrue(new IntakeCommand(intake));
-    if (Math.abs(controller.getLeftX()) > 0.2 || Math.abs(controller.getLeftY()) > 0.2) {
-      controller
-          .rightTrigger()
-          .whileTrue(
-              DriveCommands.joystickDrive(
-                  drive,
-                  () ->
-                      -controller.getLeftY() > 0
-                          ? Math.pow(controller.getLeftY(), 2) * 0.2
-                          : -Math.pow(controller.getLeftY(), 2) * 0.2,
-                  () ->
-                      -controller.getLeftX() > 0
-                          ? Math.pow(controller.getLeftX(), 2) * 0.2
-                          : -Math.pow(controller.getLeftX(), 2) * 0.2,
-                  () -> -controller.getRightX() * 0.2));
-    } else {
-      controller.rightTrigger().whileTrue(Commands.run(() -> drive.stopWithX(), drive));
-    }
+    controller
+        .leftTrigger()
+        .whileTrue(
+            DriveCommands.joystickDrive(
+                drive,
+                () -> -controller.getLeftY() * 0.5,
+                () -> -controller.getLeftX() * 0.5,
+                () -> -controller.getRightX() * 0.5));
 
     controller.leftBumper().whileTrue(new ArmSHMCommand(intake));
 

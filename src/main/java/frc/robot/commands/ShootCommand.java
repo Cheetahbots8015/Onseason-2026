@@ -5,6 +5,7 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.BarrelConstants;
@@ -25,6 +26,11 @@ public class ShootCommand extends Command {
   private boolean isNearTrench;
   private boolean isRedAlliance = false;
 
+  // 小巧思
+  private XboxController m_Controller;
+  private double xCompensation;
+  private double yCompensation;
+
   private final Translation2d RED_TARGET =
       new Translation2d(
           (12.519177399999998 + 11.3118646) / 2, 4.0346376); // Target for Red alliance
@@ -37,13 +43,15 @@ public class ShootCommand extends Command {
   public ShootCommand(
       ShooterSubsystem subsystem,
       BarrelSubsystem barrelsubsystem,
-      FeederSubsystem feedersubsystem) {
+      FeederSubsystem feedersubsystem,
+      XboxController controller) {
     m_subsystem = subsystem;
     m_barrelsubsystem = barrelsubsystem;
     m_feedersubsystem = feedersubsystem;
     m_filter = new MedianFilter(3);
     distance = 0;
     temp = 0;
+    m_Controller = controller;
 
     addRequirements(subsystem, m_barrelsubsystem, m_feedersubsystem);
   }
@@ -65,6 +73,8 @@ public class ShootCommand extends Command {
 
   @Override
   public void execute() {
+    xCompensation = m_Controller.getLeftX() * 0.55;
+    yCompensation = m_Controller.getLeftY();
     Translation2d currentPose =
         new Translation2d(
             SmartDashboard.getNumberArray("translation", new double[] {0.0, 0.0})[0],
@@ -115,6 +125,8 @@ public class ShootCommand extends Command {
                 "BarrelForwardVelocity", BarrelConstants.BarrelForwardVelocity));
       }
     }
+    SmartDashboard.putNumber("xCompensation", xCompensation);
+    SmartDashboard.putNumber("yCompensation", yCompensation);
   }
 
   @Override
